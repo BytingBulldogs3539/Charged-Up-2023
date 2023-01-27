@@ -4,8 +4,14 @@
 
 package frc.robot;
 
-public class Constants extends BBC {
+import org.bytingbulldogs.bulldoglibrary.INIConfiguration.BBConstants;
+
+public class IDConstants extends BBConstants {
   
+public IDConstants() {
+        super("//lvuser//IDConstants.ini", false);
+}
+
 public int FLDriveID = 0;
 public String FLSDriveCanID ="";
 
