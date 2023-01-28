@@ -4,5 +4,28 @@
 
 package frc.robot;
 
+import org.bytingbulldogs.bulldoglibrary.INIConfiguration.BBConstants;
+
 /** Add your docs here. */
-public class DrivetrainConstants {}
+public class DriveConstants extends BBConstants{
+
+    public double wheelTrackWidth = 0.0;   //In meters
+    public double wheelBase = 0.0;  //In meters
+    public double wheelDiameter = 0.0;  //In meters
+    public double driveGearReduction = 0.0; // driving gear/driven gear
+    public double steerGearReduction = 0.0; // driving gear/driven gear
+    
+    public double FLModuleGearRatio = 0.0;
+    public double FLSteerOffset = 0.0;
+    
+    public double FRModuleGearRatio = 0.0;
+    public double FRSteerOffset = 0.0;
+
+    public double BLModuleGearRatio = 0.0;
+    public double BLSteerOffset = 0.0;
+
+
+    public DriveConstants() {
+        super("//lvuser//DriveConstants.ini", true);
+    }}
+

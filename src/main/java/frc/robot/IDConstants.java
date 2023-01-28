@@ -13,40 +13,45 @@ public IDConstants() {
 }
 
 public int FLDriveID = 0;
-public String FLSDriveCanID ="";
+public String FLCanCoderID ="";
+public String FLSDriveCanName ="";
 
 public int FLSteeringID = 0;
-public String FLSteeringCanID ="";
+public String FLSteeringCanName ="";
 
 public int FRDriveID = 0;
-public String FRDriveCanID ="";
+public String FRCanCoderID ="";
+public String FRDriveCanName ="";
 
 public int FRSteeringID = 0;
-public String FRSteeringCanID ="";
+public String FRSteeringCanName ="";
 
 public int BLDriveID = 0;
-public String BLDriveCanID ="";
+public String BLDriveCanName ="";
 
 public int BLSteeringID = 0;
-public String BLSteeringCanID ="";
+public String BLSteeringCanName ="";
 
 public int BRDriveID = 0;
-public String BRDriveCanID ="";
+public String BRDriveCanName ="";
 
 public int BRSteeringID = 0;
-public String BRSteeringCanID ="";
+public String BRSteeringCanName ="";
 
 public int IntakeMotorID = 0;
-public String IntakeMotorCanID ="";
+public String IntakeMotorCanName ="";
 
 public int ElevatorMotorID = 0;
-public String ElevatorMotorCanID ="";
+public String ElevatorMotorCanName ="";
 
 public int PDHID = 0;
-public String PDHCanID ="";
+public String PDHCanName ="";
 
 public int PHID = 0;
-public String PHCanID ="";
+public String PHCanName ="";
+
+public int PigeonID = 0;
+public String PigeonCanName ="";
 
 
 }

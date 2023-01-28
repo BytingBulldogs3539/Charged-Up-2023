@@ -67,44 +67,44 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 				tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0,
 						0),
 				// This can either be STANDARD or FAST depending on your gear configuration
-				RobotContainer.constants.getDriveConstants().getFLModuleGearRatio(),
+				RobotContainer.driveConstants.FLModuleGearRatio,
 				// This is the ID of the drive motor
-				RobotContainer.constants.getDriveConstants().getFLDriveID(),
+				RobotContainer.iDConstants.FLDriveID,
 				// This is the ID of the steer motor
-				RobotContainer.constants.getDriveConstants().getFLSteeringID(),
+				RobotContainer.iDConstants.FLSteeringID,
 				// This is the ID of the steer encoder
-				RobotContainer.constants.getDriveConstants().getFLCanEncoderID(),
+				RobotContainer.iDConstants.FLCanCoderID,
 				// This is how much the steer encoder is offset from true zero (In our case,
 				// zero is facing straight forward)
-				RobotContainer.constants.getDriveConstants().getFLSteerOffset());
+				RobotContainer.driveConstants.FLSteerOffset);
 
 		// We will do the same for the other modules
 		m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
 				tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,
 						0),
-				RobotContainer.constants.getDriveConstants().getFRModuleGearRatio(),
-				RobotContainer.constants.getDriveConstants().getFRDriveID(),
-				RobotContainer.constants.getDriveConstants().getFRSteeringID(),
-				RobotContainer.constants.getDriveConstants().getFRCanEncoderID(),
-				RobotContainer.constants.getDriveConstants().getFRSteerOffset());
+				RobotContainer.driveConstants.FRModuleGearRatio,
+				RobotContainer.iDConstants.FRDriveID,
+				RobotContainer.iDConstants.FRSteeringID,
+				RobotContainer.iDConstants.FRCanCoderID,
+				RobotContainer.driveConstants.FRSteerOffset);
 
 		m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,
 						0),
-				RobotContainer.constants.getDriveConstants().getBLModuleGearRatio(),
-				RobotContainer.constants.getDriveConstants().getBLDriveID(),
-				RobotContainer.constants.getDriveConstants().getBLSteeringID(),
-				RobotContainer.constants.getDriveConstants().getBLCanEncoderID(),
-				RobotContainer.constants.getDriveConstants().getBLSteerOffset());
+				RobotContainer.driveConstants.BLModuleGearRatio,
+				RobotContainer.iDConstants.BLDriveID,
+				RobotContainer.iDConstants.BLSteeringID,
+				RobotContainer.iDConstants.BLCanCoderID,
+				RobotContainer.driveConstants.BLSteerOffset);
 
 		m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,
 						0),
-				RobotContainer.constants.getDriveConstants().getBRModuleGearRatio(),
-				RobotContainer.constants.getDriveConstants().getBRDriveID(),
-				RobotContainer.constants.getDriveConstants().getBRSteeringID(),
-				RobotContainer.constants.getDriveConstants().getBRCanEncoderID(),
-				RobotContainer.constants.getDriveConstants().getBRSteerOffset());
+				RobotContainer.driveConstants.BRModuleGearRatio,
+				RobotContainer.iDConstants.BRDriveID,
+				RobotContainer.iDConstants.BRSteeringID,
+				RobotContainer.iDConstants.BRCanCoderID,
+				RobotContainer.iDConstants.BRSteerOffset);
 
   }
 
