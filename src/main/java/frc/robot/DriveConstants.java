@@ -14,15 +14,12 @@ public class DriveConstants extends BBConstants{
     public double wheelDiameter = 0.0;  //In meters
     public double driveGearReduction = 0.0; // driving gear/driven gear
     public double steerGearReduction = 0.0; // driving gear/driven gear
+    public double moduleGearRatio = 0.0;
     
-    public double FLModuleGearRatio = 0.0;
     public double FLSteerOffset = 0.0;
-    
-    public double FRModuleGearRatio = 0.0;
     public double FRSteerOffset = 0.0;
-
-    public double BLModuleGearRatio = 0.0;
     public double BLSteerOffset = 0.0;
+    public double BRSteerOffset = 0.0;
 
 
     public DriveConstants() {

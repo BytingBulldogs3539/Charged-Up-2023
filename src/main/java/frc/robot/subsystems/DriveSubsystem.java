@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
@@ -61,13 +63,17 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+
+	ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+
+
 	m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
 				// This parameter is optional, but will allow you to see the current state of
 				// the module on the dashboard.
 				tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0,
 						0),
 				// This can either be STANDARD or FAST depending on your gear configuration
-				RobotContainer.driveConstants.FLModuleGearRatio,
+			moduleGearRatio,
 				// This is the ID of the drive motor
 				RobotContainer.iDConstants.FLDriveID,
 				// This is the ID of the steer motor
@@ -82,7 +88,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 		m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
 				tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,
 						0),
-				RobotContainer.driveConstants.FRModuleGearRatio,
+				moduleGearRatio,
 				RobotContainer.iDConstants.FRDriveID,
 				RobotContainer.iDConstants.FRSteeringID,
 				RobotContainer.iDConstants.FRCanCoderID,
@@ -91,7 +97,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 		m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,
 						0),
-				RobotContainer.driveConstants.BLModuleGearRatio,
+				moduleGearRatio,
 				RobotContainer.iDConstants.BLDriveID,
 				RobotContainer.iDConstants.BLSteeringID,
 				RobotContainer.iDConstants.BLCanCoderID,
@@ -100,11 +106,11 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 		m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,
 						0),
-				RobotContainer.driveConstants.BRModuleGearRatio,
+				moduleGearRatio,
 				RobotContainer.iDConstants.BRDriveID,
 				RobotContainer.iDConstants.BRSteeringID,
 				RobotContainer.iDConstants.BRCanCoderID,
-				RobotContainer.iDConstants.BRSteerOffset);
+				RobotContainer.driveConstants.BRSteerOffset);
 
   }
 
