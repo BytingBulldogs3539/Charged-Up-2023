@@ -5,8 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
+import com.swervedrivespecialties.swervelib.SdsSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -67,7 +67,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 	ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
 
-	m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+	m_frontLeftModule = SdsSwerveModuleHelper.createFalcon500(
 				// This parameter is optional, but will allow you to see the current state of
 				// the module on the dashboard.
 				tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0,
@@ -85,7 +85,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 				RobotContainer.driveConstants.FLSteerOffset);
 
 		// We will do the same for the other modules
-		m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
+		m_frontRightModule = SdsSwerveModuleHelper.createFalcon500(
 				tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,
 						0),
 				moduleGearRatio,
@@ -94,7 +94,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 				RobotContainer.iDConstants.FRCanCoderID,
 				RobotContainer.driveConstants.FRSteerOffset);
 
-		m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+		m_backLeftModule = SdsSwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,
 						0),
 				moduleGearRatio,
@@ -103,7 +103,7 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 				RobotContainer.iDConstants.BLCanCoderID,
 				RobotContainer.driveConstants.BLSteerOffset);
 
-		m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(
+		m_backRightModule = SdsSwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,
 						0),
 				moduleGearRatio,
