@@ -76,10 +76,14 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 			moduleGearRatio,
 				// This is the ID of the drive motor
 				RobotContainer.iDConstants.FLDriveID,
+				RobotContainer.iDConstants.FLDriveCanName,
+
 				// This is the ID of the steer motor
 				RobotContainer.iDConstants.FLSteeringID,
+				RobotContainer.iDConstants.FLSteeringCanName,
 				// This is the ID of the steer encoder
 				RobotContainer.iDConstants.FLCanCoderID,
+				RobotContainer.iDConstants.FLEncoderCanName,
 				// This is how much the steer encoder is offset from true zero (In our case,
 				// zero is facing straight forward)
 				RobotContainer.driveConstants.FLSteerOffset);
@@ -90,8 +94,11 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 						0),
 				moduleGearRatio,
 				RobotContainer.iDConstants.FRDriveID,
+				RobotContainer.iDConstants.FRDriveCanName,
 				RobotContainer.iDConstants.FRSteeringID,
+				RobotContainer.iDConstants.FRSteeringCanName,
 				RobotContainer.iDConstants.FRCanCoderID,
+				RobotContainer.iDConstants.FREncoderCanName,
 				RobotContainer.driveConstants.FRSteerOffset);
 
 		m_backLeftModule = SdsSwerveModuleHelper.createFalcon500(
@@ -99,8 +106,11 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 						0),
 				moduleGearRatio,
 				RobotContainer.iDConstants.BLDriveID,
+				RobotContainer.iDConstants.BLDriveCanName,
 				RobotContainer.iDConstants.BLSteeringID,
+				RobotContainer.iDConstants.BLSteeringCanName,
 				RobotContainer.iDConstants.BLCanCoderID,
+				RobotContainer.iDConstants.BLEncoderCanName,
 				RobotContainer.driveConstants.BLSteerOffset);
 
 		m_backRightModule = SdsSwerveModuleHelper.createFalcon500(
@@ -108,14 +118,37 @@ public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
 						0),
 				moduleGearRatio,
 				RobotContainer.iDConstants.BRDriveID,
+				RobotContainer.iDConstants.BRDriveCanName,
 				RobotContainer.iDConstants.BRSteeringID,
+				RobotContainer.iDConstants.BRSteeringCanName,
 				RobotContainer.iDConstants.BRCanCoderID,
+				RobotContainer.iDConstants.BREncoderCanName,
 				RobotContainer.driveConstants.BRSteerOffset);
 
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+
+	SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+	SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+	
+	m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+			states[0].angle.getRadians());
+	m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+			states[1].angle.getRadians());
+	m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+			states[2].angle.getRadians());
+	m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+			states[3].angle.getRadians());
+
+	m_pose = m_odometry.update(getGyroscopeRotation(), m_frontLeftModule,
+			getState(m_frontRightModule),
+			getState(m_backLeftModule), getState(m_backRightModule));
+
+	SmartDashboard.putNumber("X Pose", m_pose.getX());
+	SmartDashboard.putNumber("Y Pose", m_pose.getY());
+	SmartDashboard.putNumber("Theta Pose", m_pose.getRotation().getDegrees());
+	SmartDashboard.putNumber("Target Distance", RobotContainer.constants.getShooterConstants().getDistance(getShooterVisionPitch()));
   }
 }

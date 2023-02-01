@@ -13,7 +13,7 @@ public IDConstants() {
 }
 
 public int FLDriveID = 0;
-public String FLSDriveCanName ="";
+public String FLDriveCanName ="";
 
 public int FLCanCoderID = 0;
 public String FLEncoderCanName ="";
