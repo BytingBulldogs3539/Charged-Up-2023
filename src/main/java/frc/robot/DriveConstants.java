@@ -21,6 +21,9 @@ public class DriveConstants extends BBConstants{
     public double BLSteerOffset = 0.0;
     public double BRSteerOffset = 0.0;
 
+    public double driveSpeedMultiplier = 0.5;
+    public double turnSpeedMultiplier = 0.5;
+
 
     public DriveConstants() {
         super("//lvuser//DriveConstants.ini", true);
