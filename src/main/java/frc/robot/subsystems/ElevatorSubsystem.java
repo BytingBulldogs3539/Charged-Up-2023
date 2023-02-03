@@ -4,12 +4,27 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  /** Creates a new ElevatorSubsystem. */
-  public ElevatorSubsystem() {}
+  TalonFX elevatorMotor;
+  TalonFX elevatorRotationMotor;
+  CANCoder elevatorRotationEncoder;
 
+  /** Creates a new ElevatorSubsystem. */
+  public ElevatorSubsystem() {
+    elevatorMotor = new TalonFX(RobotContainer.iDConstants.ElevatorMotorID,RobotContainer.iDConstants.ElevatorMotorCanName);
+    elevatorRotationMotor =new TalonFX(RobotContainer.iDConstants.ElevatorRotationMotorID, RobotContainer.iDConstants.ElevatorRotationMotorCanName);
+    elevatorRotationEncoder = new CANCoder(RobotContainer.iDConstants.);
+    elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+    elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+  }
+ 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

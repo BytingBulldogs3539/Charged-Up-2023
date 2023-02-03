@@ -37,17 +37,13 @@ public class ArmTrajectoryHandler {
             startAngle = 270;
         }
         else{
-            startAngle = Math.toDegrees(Math.atan(differenceInY / differenceInX));
+            startAngle = Math.toDegrees(Math.atan2(differenceInY, differenceInX));
+
+            if(startAngle < 0){
+                startAngle += 360;
+            }
         }
 
-
-        if(differenceInY < 0 && differenceInX > 0){
-            startAngle += 360;
-        }
-
-        else if(differenceInX<0){
-            startAngle += 180;
-        }
 
         Pose2d startPose = new Pose2d(startPoint.getX(), startPoint.getY(), Rotation2d.fromDegrees(startAngle));
 
@@ -86,16 +82,11 @@ public class ArmTrajectoryHandler {
 
     public Point2D xYToPolar(double x, double y) {
 
-        double angle = Math.toDegrees(Math.atan(y / x));
+        double angle = Math.toDegrees(Math.atan2(y,x));
         double length = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         
-
-        if(y < 0 && x > 0){
+        if(angle < 0){
             angle += 360;
-        }
-
-        else if(x<0){
-            angle += 180;
         }
 
         return new Point2D.Double(angle, length);
@@ -114,3 +105,4 @@ public class ArmTrajectoryHandler {
     }
 
 }
+
