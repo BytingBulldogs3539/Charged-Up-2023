@@ -22,7 +22,7 @@ public class DriveConstants extends BBConstants{
     public double BRSteerOffset = 0.0;
 
     public double driveSpeedMultiplier = 0.5;
-    public double turnSpeedMultiplier = 0.5;
+    public double rotationSpeedMultiplier = 0.5;
 
 
     public DriveConstants() {

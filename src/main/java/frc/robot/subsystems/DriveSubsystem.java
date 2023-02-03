@@ -52,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 	SwerveDriveOdometry m_odometry;
 
-	private final Pigeon2 m_pigeon = new Pigeon2(RobotContainer.iDConstants.PigeonID);
+	private final Pigeon2 m_pigeon = new Pigeon2(RobotContainer.iDConstants.PigeonID, RobotContainer.iDConstants.PigeonCanName);
 
 	Pose2d m_pose;
 

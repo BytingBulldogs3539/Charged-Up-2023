@@ -4,8 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
   /** Creates a new DriveCommand. */
@@ -40,15 +43,40 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Rotation2d gyroAngle = RobotContainer.driveSubsystem.getGyroscopeRotation();
     double translationXPercent = modifyAxis(RobotContainer.driverController.getLeftX());
 		double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftY());
 		double rotationPercent = -modifyAxis(RobotContainer.driverController.getRightY());
 
+    double driveSpeedMultiplier = RobotContainer.driveConstants.driveSpeedMultiplier;
+    double rotationSpeedMultiplier = RobotContainer.driveConstants.rotationSpeedMultiplier;
+
+
+    //If the driver is pressing the right trigger then FULL SPEED.
+    if(RobotContainer.driverController.getRightTriggerAxis()>.1)
+		{
+			driveSpeedMultiplier = 1.0;
+		}
+
+    if (RobotContainer.driverController.rightBumper().getAsBoolean()) {
+				
+			gyroAngle = Rotation2d.fromDegrees(0);
+		}
+
+
+    RobotContainer.driveSubsystem.drive(
+				ChassisSpeeds.fromFieldRelativeSpeeds(
+						driveSpeedMultiplier * translationXPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+						driveSpeedMultiplier * translationYPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+						rotationSpeedMultiplier * rotationPercent * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+						gyroAngle));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.driveSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+  }
 
   // Returns true when the command should end.
   @Override
