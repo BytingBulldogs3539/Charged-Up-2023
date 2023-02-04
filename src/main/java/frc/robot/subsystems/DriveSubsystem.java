@@ -129,7 +129,9 @@ public class DriveSubsystem extends SubsystemBase {
 				RobotContainer.iDConstants.BRCanCoderID,
 				RobotContainer.iDConstants.BREncoderCanName,
 				RobotContainer.driveConstants.BRSteerOffset);
-
+		
+				m_odometry = new SwerveDriveOdometry(m_kinematics,getGyroscopeRotation(), getModulePositions(),
+				new Pose2d(0, 0, new Rotation2d()));
 	}
 
 	/**
