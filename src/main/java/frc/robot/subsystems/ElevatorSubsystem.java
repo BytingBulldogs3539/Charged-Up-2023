@@ -18,11 +18,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
-    elevatorMotor = new TalonFX(RobotContainer.iDConstants.ElevatorMotorID,RobotContainer.iDConstants.ElevatorMotorCanName);
-    elevatorRotationMotor =new TalonFX(RobotContainer.iDConstants.ElevatorRotationMotorID, RobotContainer.iDConstants.ElevatorRotationMotorCanName);
-    elevatorRotationEncoder = new CANCoder(RobotContainer.iDConstants.);
-    elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
-    elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+    //elevatorMotor = new TalonFX(RobotContainer.iDConstants.ElevatorMotorID,RobotContainer.iDConstants.ElevatorMotorCanName);
+    //elevatorRotationMotor =new TalonFX(RobotContainer.iDConstants.ElevatorRotationMotorID, RobotContainer.iDConstants.ElevatorRotationMotorCanName);
+    //elevatorRotationEncoder = new CANCoder(RobotContainer.iDConstants.);
+    //elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+    //elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
   }
  
   @Override

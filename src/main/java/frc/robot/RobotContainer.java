@@ -17,10 +17,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
 
   public static IDConstants iDConstants = new IDConstants();
   public static DriveConstants driveConstants = new DriveConstants();
+  
+  public static DriveSubsystem driveSubsystem = new DriveSubsystem();
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
