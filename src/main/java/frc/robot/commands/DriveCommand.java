@@ -7,12 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.DriveConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
   /** Creates a new DriveCommand. */
-  public DriveCommand() {
+  public DriveCommand(DriveSubsystem subsystem) {
+    addRequirements(subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
   private static double deadband(double value, double deadband) {
@@ -44,12 +46,12 @@ public class DriveCommand extends CommandBase {
   @Override
   public void execute() {
     Rotation2d gyroAngle = RobotContainer.driveSubsystem.getGyroscopeRotation();
-    double translationXPercent = modifyAxis(RobotContainer.driverController.getLeftX());
-		double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftY());
-		double rotationPercent = -modifyAxis(RobotContainer.driverController.getRightY());
+    double translationXPercent = -modifyAxis(RobotContainer.driverController.getLeftY());
+		double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftX());
+		double rotationPercent = -modifyAxis(RobotContainer.driverController.getRightX());
 
-    double driveSpeedMultiplier = RobotContainer.driveConstants.driveSpeedMultiplier;
-    double rotationSpeedMultiplier = RobotContainer.driveConstants.rotationSpeedMultiplier;
+    double driveSpeedMultiplier = DriveConstants.driveSpeedMultiplier;
+    double rotationSpeedMultiplier = DriveConstants.rotationSpeedMultiplier;
 
 
     //If the driver is pressing the right trigger then FULL SPEED.
@@ -62,7 +64,6 @@ public class DriveCommand extends CommandBase {
 				
 			gyroAngle = Rotation2d.fromDegrees(0);
 		}
-
 
     RobotContainer.driveSubsystem.drive(
 				ChassisSpeeds.fromFieldRelativeSpeeds(

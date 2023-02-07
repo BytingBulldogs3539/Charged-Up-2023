@@ -9,59 +9,59 @@ import org.bytingbulldogs.bulldoglibrary.INIConfiguration.BBConstants;
 public class IDConstants extends BBConstants {
   
 public IDConstants() {
-        super("//lvuser//IDConstants.ini", false);
+        super("/home/lvuser/IDConstants.ini", false);
 }
 
-public int FLDriveID = 0;
-public String FLDriveCanName ="";
+public static int FLDriveID = 34;
+public static String FLDriveCanName ="roborio";
 
-public int FLCanCoderID = 0;
-public String FLEncoderCanName ="";
+public static int FLCanCoderID = 35;
+public static String FLEncoderCanName ="";
 
-public int FLSteeringID = 0;
-public String FLSteeringCanName ="";
+public static int FLSteeringID = 36;
+public static String FLSteeringCanName ="";
 
-public int FRDriveID = 0;
-public String FRDriveCanName ="";
+public static int FRDriveID = 37;
+public static String FRDriveCanName ="";
 
-public int FRCanCoderID = 0;
-public String FREncoderCanName ="";
+public static int FRCanCoderID = 38;
+public static String FREncoderCanName ="";
 
-public int FRSteeringID = 0;
-public String FRSteeringCanName ="";
+public static int FRSteeringID = 39;
+public static String FRSteeringCanName ="";
 
-public int BLDriveID = 0;
-public String BLDriveCanName ="";
+public static int BLDriveID = 40;
+public static String BLDriveCanName ="";
 
-public int BLCanCoderID = 0;
-public String BLEncoderCanName ="";
+public static int BLCanCoderID = 41;
+public static String BLEncoderCanName ="";
 
-public int BLSteeringID = 0;
-public String BLSteeringCanName ="";
+public static int BLSteeringID = 42;
+public static String BLSteeringCanName ="";
 
-public int BRDriveID = 0;
-public String BRDriveCanName ="";
+public static int BRDriveID = 43;
+public static String BRDriveCanName ="";
 
-public int BRCanCoderID = 0;
-public String BREncoderCanName ="";
+public static int BRCanCoderID = 44;
+public static String BREncoderCanName ="";
 
-public int BRSteeringID = 0;
-public String BRSteeringCanName ="";
+public static int BRSteeringID = 45;
+public static String BRSteeringCanName ="";
 
-public int IntakeMotorID = 0;
-public String IntakeMotorCanName ="";
+public static int IntakeMotorID = 46;
+public static String IntakeMotorCanName ="";
 
-public int ElevatorMotorID = 0;
-public String ElevatorMotorCanName ="";
+public static int ElevatorMotorID = 47;
+public static String ElevatorMotorCanName ="";
 
-public int PDHID = 0;
-public String PDHCanName ="";
+public static int PDHID = 0;
+public static String PDHCanName ="";
 
-public int PHID = 0;
-public String PHCanName ="";
+public static int PHID = 0;
+public static String PHCanName ="";
 
-public int PigeonID = 0;
-public String PigeonCanName ="";
+public static int PigeonID = 48;
+public static String PigeonCanName ="";
 
 
 }

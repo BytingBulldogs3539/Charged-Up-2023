@@ -23,36 +23,39 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DriveConstants;
+import frc.robot.IDConstants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.DriveCommand;
 
 public class DriveSubsystem extends SubsystemBase {
 	public static final double MAX_VOLTAGE = 12.0;
 
 	public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
-			RobotContainer.driveConstants.wheelTrackWidth *
-			RobotContainer.driveConstants.wheelDiameter * Math.PI;
+			DriveConstants.wheelTrackWidth *
+			DriveConstants.wheelDiameter * Math.PI;
 
 	public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
-			Math.hypot(RobotContainer.driveConstants.wheelTrackWidth / 2.0,
-					RobotContainer.driveConstants.wheelTrackWidth / 2.0);
+			Math.hypot(DriveConstants.wheelTrackWidth / 2.0,
+					DriveConstants.wheelTrackWidth / 2.0);
 
 	private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
 			// Front left
-			new Translation2d(RobotContainer.driveConstants.wheelTrackWidth / 2.0,
-					RobotContainer.driveConstants.wheelTrackWidth / 2.0),
+			new Translation2d(DriveConstants.wheelTrackWidth / 2.0,
+					DriveConstants.wheelTrackWidth / 2.0),
 			// Front right
-			new Translation2d(RobotContainer.driveConstants.wheelTrackWidth / 2.0,
-					-RobotContainer.driveConstants.wheelTrackWidth / 2.0),
+			new Translation2d(DriveConstants.wheelTrackWidth / 2.0,
+					-DriveConstants.wheelTrackWidth / 2.0),
 			// Back left
-			new Translation2d(-RobotContainer.driveConstants.wheelTrackWidth / 2.0,
-					RobotContainer.driveConstants.wheelTrackWidth / 2.0),
+			new Translation2d(-DriveConstants.wheelTrackWidth / 2.0,
+					DriveConstants.wheelTrackWidth / 2.0),
 			// Back right
-			new Translation2d(-RobotContainer.driveConstants.wheelTrackWidth / 2.0,
-					-RobotContainer.driveConstants.wheelTrackWidth / 2.0));
+			new Translation2d(-DriveConstants.wheelTrackWidth / 2.0,
+					-DriveConstants.wheelTrackWidth / 2.0));
 
 	SwerveDriveOdometry m_odometry;
 
-	private final Pigeon2 m_pigeon = new Pigeon2(RobotContainer.iDConstants.PigeonID, RobotContainer.iDConstants.PigeonCanName);
+	private final Pigeon2 m_pigeon = new Pigeon2(IDConstants.PigeonID, IDConstants.PigeonCanName);
 
 	Pose2d m_pose;
 
@@ -62,14 +65,14 @@ public class DriveSubsystem extends SubsystemBase {
 	private final SwerveModule m_backRightModule;
 
 	private final ModuleConfiguration moduleGearRatio = new ModuleConfiguration(
-			RobotContainer.driveConstants.wheelDiameter, RobotContainer.driveConstants.driveGearReduction, false,
-			RobotContainer.driveConstants.steerGearReduction, false);
+			DriveConstants.wheelDiameter, DriveConstants.driveGearReduction, false,
+			DriveConstants.steerGearReduction, false);
 
 	private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
-
+		setGyroscope(0);
 		ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
 		m_frontLeftModule = SdsSwerveModuleHelper.createFalcon500(
@@ -80,58 +83,60 @@ public class DriveSubsystem extends SubsystemBase {
 				// This can either be STANDARD or FAST depending on your gear configuration
 				moduleGearRatio,
 				// This is the ID of the drive motor
-				RobotContainer.iDConstants.FLDriveID,
-				RobotContainer.iDConstants.FLDriveCanName,
+				IDConstants.FLDriveID,
+				IDConstants.FLDriveCanName,
 
 				// This is the ID of the steer motor
-				RobotContainer.iDConstants.FLSteeringID,
-				RobotContainer.iDConstants.FLSteeringCanName,
+				IDConstants.FLSteeringID,
+				IDConstants.FLSteeringCanName,
 				// This is the ID of the steer encoder
-				RobotContainer.iDConstants.FLCanCoderID,
-				RobotContainer.iDConstants.FLEncoderCanName,
+				IDConstants.FLCanCoderID,
+				IDConstants.FLEncoderCanName,
 				// This is how much the steer encoder is offset from true zero (In our case,
 				// zero is facing straight forward)
-				RobotContainer.driveConstants.FLSteerOffset);
+				DriveConstants.FLSteerOffset);
 
 		// We will do the same for the other modules
 		m_frontRightModule = SdsSwerveModuleHelper.createFalcon500(
 				tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,
 						0),
 				moduleGearRatio,
-				RobotContainer.iDConstants.FRDriveID,
-				RobotContainer.iDConstants.FRDriveCanName,
-				RobotContainer.iDConstants.FRSteeringID,
-				RobotContainer.iDConstants.FRSteeringCanName,
-				RobotContainer.iDConstants.FRCanCoderID,
-				RobotContainer.iDConstants.FREncoderCanName,
-				RobotContainer.driveConstants.FRSteerOffset);
+				IDConstants.FRDriveID,
+				IDConstants.FRDriveCanName,
+				IDConstants.FRSteeringID,
+				IDConstants.FRSteeringCanName,
+				IDConstants.FRCanCoderID,
+				IDConstants.FREncoderCanName,
+				DriveConstants.FRSteerOffset);
 
 		m_backLeftModule = SdsSwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,
 						0),
 				moduleGearRatio,
-				RobotContainer.iDConstants.BLDriveID,
-				RobotContainer.iDConstants.BLDriveCanName,
-				RobotContainer.iDConstants.BLSteeringID,
-				RobotContainer.iDConstants.BLSteeringCanName,
-				RobotContainer.iDConstants.BLCanCoderID,
-				RobotContainer.iDConstants.BLEncoderCanName,
-				RobotContainer.driveConstants.BLSteerOffset);
+				IDConstants.BLDriveID,
+				IDConstants.BLDriveCanName,
+				IDConstants.BLSteeringID,
+				IDConstants.BLSteeringCanName,
+				IDConstants.BLCanCoderID,
+				IDConstants.BLEncoderCanName,
+				DriveConstants.BLSteerOffset);
 
 		m_backRightModule = SdsSwerveModuleHelper.createFalcon500(
 				tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,
 						0),
 				moduleGearRatio,
-				RobotContainer.iDConstants.BRDriveID,
-				RobotContainer.iDConstants.BRDriveCanName,
-				RobotContainer.iDConstants.BRSteeringID,
-				RobotContainer.iDConstants.BRSteeringCanName,
-				RobotContainer.iDConstants.BRCanCoderID,
-				RobotContainer.iDConstants.BREncoderCanName,
-				RobotContainer.driveConstants.BRSteerOffset);
+				IDConstants.BRDriveID,
+				IDConstants.BRDriveCanName,
+				IDConstants.BRSteeringID,
+				IDConstants.BRSteeringCanName,
+				IDConstants.BRCanCoderID,
+				IDConstants.BREncoderCanName,
+				DriveConstants.BRSteerOffset);
 		
 				m_odometry = new SwerveDriveOdometry(m_kinematics,getGyroscopeRotation(), getModulePositions(),
 				new Pose2d(0, 0, new Rotation2d()));
+
+				setDefaultCommand(new DriveCommand(this));
 	}
 
 	/**

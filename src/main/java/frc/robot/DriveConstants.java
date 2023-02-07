@@ -9,23 +9,22 @@ import org.bytingbulldogs.bulldoglibrary.INIConfiguration.BBConstants;
 /** Add your docs here. */
 public class DriveConstants extends BBConstants{
 
-    public double wheelTrackWidth = 0.0;   //In meters
-    public double wheelBase = 0.0;  //In meters
-    public double wheelDiameter = 0.0;  //In meters
-    public double driveGearReduction = 0.0; // driving gear/driven gear
-    public double steerGearReduction = 0.0; // driving gear/driven gear
-    public double moduleGearRatio = 0.0;
+    public static double wheelTrackWidth = 0.0;   //In meters
+    public static double wheelBase = 0.0;  //In meters
+    public static double wheelDiameter = 0.0;  //In meters
+    public static double driveGearReduction = 0.0; // driving gear/driven gear
+    public static double steerGearReduction = 0.0; // driving gear/driven gear
     
-    public double FLSteerOffset = 0.0;
-    public double FRSteerOffset = 0.0;
-    public double BLSteerOffset = 0.0;
-    public double BRSteerOffset = 0.0;
+    public static double FLSteerOffset = 0.0;
+    public static double FRSteerOffset = 0.0;
+    public static double BLSteerOffset = 0.0;
+    public static double BRSteerOffset = 0.0;
 
-    public double driveSpeedMultiplier = 0.5;
-    public double rotationSpeedMultiplier = 0.5;
+    public static double driveSpeedMultiplier = 0.5;
+    public static double rotationSpeedMultiplier = 0.5;
 
 
     public DriveConstants() {
-        super("//lvuser//DriveConstants.ini", true);
+        super("/home/lvuser/DriveConstants.ini", true);
     }}
 
