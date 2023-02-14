@@ -54,6 +54,12 @@ public static String IntakeMotorCanName ="";
 public static int ElevatorMotorID = 47;
 public static String ElevatorMotorCanName ="";
 
+public static int ElevatorRotationEncoderID = 47;
+public static String ElevatorRotationEncoderCanName = "";
+
+public static int ElevatorRotationMotorID = 0;
+public static String ElevatorRotationMotorCanName = "";
+
 public static int PDHID = 0;
 public static String PDHCanName ="";
 

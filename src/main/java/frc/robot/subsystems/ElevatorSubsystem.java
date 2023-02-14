@@ -4,11 +4,15 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.IDConstants;
 import frc.robot.RobotContainer;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -18,11 +22,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
-    //elevatorMotor = new TalonFX(RobotContainer.iDConstants.ElevatorMotorID,RobotContainer.iDConstants.ElevatorMotorCanName);
-    //elevatorRotationMotor =new TalonFX(RobotContainer.iDConstants.ElevatorRotationMotorID, RobotContainer.iDConstants.ElevatorRotationMotorCanName);
-    //elevatorRotationEncoder = new CANCoder(RobotContainer.iDConstants.);
-    //elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
-    //elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+    elevatorMotor = new TalonFX(IDConstants.ElevatorMotorID,IDConstants.ElevatorMotorCanName);
+    elevatorRotationMotor =new TalonFX(IDConstants.ElevatorRotationMotorID, IDConstants.ElevatorRotationMotorCanName);
+    elevatorRotationEncoder = new CANCoder(IDConstants.ElevatorRotationEncoderID);
+    elevatorRotationMotor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
+    elevatorRotationMotor.configRemoteFeedbackFilter(IDConstants.ElevatorRotationEncoderID, RemoteSensorSource.CANCoder, 0);
+    elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+    elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+  }
+  public void setGripperPositon(double x, double z){
+
   }
  
   @Override
@@ -30,3 +39,4 @@ public class ElevatorSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 }
+

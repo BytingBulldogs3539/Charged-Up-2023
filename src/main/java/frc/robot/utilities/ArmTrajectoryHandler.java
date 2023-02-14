@@ -100,9 +100,7 @@ public class ArmTrajectoryHandler {
         for (Point2D point : points) {
             System.out.println("("+ point.getX()+" ,"+ point.getY()+")");
 
-        }
-      
-    }
+        }}}
 
-}
 
+        
