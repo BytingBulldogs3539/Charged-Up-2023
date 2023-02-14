@@ -4,11 +4,33 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.IDConstants;
+import frc.robot.RobotContainer;
 
 public class IntakeSubsystem extends SubsystemBase {
+
+  private TalonSRX rotationMotor;
+  private CANSparkMax intakeMotor;
   
-  public IntakeSubsystem() {}
+  public IntakeSubsystem() {
+rotationMotor = new TalonSRX(IDConstants.RotationMotorID);
+
+intakeMotor = new CANSparkMax(IDConstants.IntakeMotorID, MotorType.kBrushless);
+
+intakeMotor.setSmartCurrentLimit(30);
+rotationMotor.enableCurrentLimit(true);
+
+}
+
+public void setIntakeSpeed(double speed){
+intakeMotor.set(speed);
+}
+
 
   @Override
   public void periodic() {
