@@ -7,18 +7,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class IntakeCommand extends CommandBase {
-  /** Creates a new IntakeCommand. */
-  double speed;
-  public IntakeCommand(double speed) {
-    this.speed=speed;
+public class ZeroGyroCommand extends CommandBase {
+  /** Creates a new ZeroGyroCommand. */
+  public ZeroGyroCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.intakeSubsystem.setIntakeSpeed(speed);
+    RobotContainer.driveSubsystem.setGyroscope(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +30,6 @@ public class IntakeCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

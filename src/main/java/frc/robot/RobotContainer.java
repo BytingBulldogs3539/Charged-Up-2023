@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -46,7 +48,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    driverController.start().onTrue(new ZeroGyroCommand());
 
+    driverController.a().onTrue(new IntakeCommand(1));
+
+    driverController.b().onTrue(new IntakeCommand(-1));
   }
 
   /**
