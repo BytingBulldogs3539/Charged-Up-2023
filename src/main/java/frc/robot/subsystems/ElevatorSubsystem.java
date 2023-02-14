@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +18,7 @@ import frc.robot.RobotContainer;
 
 public class ElevatorSubsystem extends SubsystemBase {
   TalonFX elevatorMotor;
+  TalonSRX wrist;
   TalonFX elevatorRotationMotor;
   CANCoder elevatorRotationEncoder;
 
@@ -29,6 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorRotationMotor.configRemoteFeedbackFilter(IDConstants.ElevatorRotationEncoderID, RemoteSensorSource.CANCoder, 0);
     elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
     elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+    wrist = new TalonSRX(IDConstants.WristMotorID);
   }
   public void setGripperPositon(double x, double z){
 

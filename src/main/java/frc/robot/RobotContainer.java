@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,6 +23,7 @@ public class RobotContainer {
   public static DriveConstants driveConstants = new DriveConstants();
   
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public static IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
