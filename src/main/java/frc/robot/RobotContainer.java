@@ -52,9 +52,11 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.start().onTrue(new ZeroGyroCommand());
 
-    driverController.a().onTrue(new IntakeCommand(1));
+    operatorController.leftTrigger().whileTrue(new IntakeCommand(1));
 
-    driverController.b().onTrue(new IntakeCommand(-1));
+    operatorController.rightTrigger().whileTrue(new IntakeCommand(-1));
+
+
   }
 
   /**
