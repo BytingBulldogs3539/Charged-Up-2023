@@ -1,0 +1,62 @@
+[IDConstants]
+
+FLDriveID = 16
+FLDriveCanName = canivore
+
+FLCanCoderID = 30
+FLEncoderCanName = canivore
+
+FLSteeringID = 15
+FLSteeringCanName = canivore
+
+FRDriveID = 14
+FRDriveCanName = canivore
+
+FRCanCoderID = 33
+FREncoderCanName = canivore
+
+FRSteeringID = 13
+FRSteeringCanName = canivore
+
+BLDriveID = 0
+BLDriveCanName = canivore
+
+BLCanCoderID =31
+BLEncoderCanName = canivore
+
+BLSteeringID = 1
+BLSteeringCanName = canivore
+
+BRDriveID = 2
+BRDriveCanName = canivore
+
+BRCanCoderID =32
+BREncoderCanName = canivore
+
+BRSteeringID = 3
+BRSteeringCanName = canivore
+
+
+
+
+IntakeMotorID = 17
+IntakeMotorCanName =rio
+
+groundIntakeRightID = 12
+groundIntakeRightCanName = rio
+
+groundIntakeLeftID = 12;
+groundIntakeLeftCanName = rio
+
+ElevatorMotorID = 5
+ElevatorMotorCanName =rio
+
+ElevatorRotationMotorID = 11
+ElevatorRotationMotorCanName = rio
+
+PDHID = 21
+PDHCanName = rio
+
+PigeonID = 23
+PigeonCanName = canivore
+
