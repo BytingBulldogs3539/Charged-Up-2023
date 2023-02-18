@@ -17,60 +17,61 @@ public class DriveCommand extends CommandBase {
     addRequirements(subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
+
   private static double deadband(double value, double deadband) {
-		if (Math.abs(value) > deadband) {
-			if (value > 0.0) {
-				return (value - deadband) / (1.0 - deadband);
-			} else {
-				return (value + deadband) / (1.0 - deadband);
-			}
-		} else {
-			return 0.0;
-		}
-	}
+    if (Math.abs(value) > deadband) {
+      if (value > 0.0) {
+        return (value - deadband) / (1.0 - deadband);
+      } else {
+        return (value + deadband) / (1.0 - deadband);
+      }
+    } else {
+      return 0.0;
+    }
+  }
 
-	private static double modifyAxis(double value) {
-		// Deadband
-		value = deadband(value, 0.05);
+  private static double modifyAxis(double value) {
+    // Deadband
+    value = deadband(value, 0.05);
 
-		// Square the axis
-		value = Math.copySign(value * value, value);
+    // Square the axis
+    value = Math.copySign(value * value, value);
 
-		return value;
-	}
+    return value;
+  }
+
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     Rotation2d gyroAngle = RobotContainer.driveSubsystem.getGyroscopeRotation();
     double translationXPercent = -modifyAxis(RobotContainer.driverController.getLeftY());
-		double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftX());
-		double rotationPercent = -modifyAxis(RobotContainer.driverController.getRightX());
+    double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftX());
+    double rotationPercent = -modifyAxis(RobotContainer.driverController.getRightX());
 
     double driveSpeedMultiplier = DriveConstants.driveSpeedMultiplier;
     double rotationSpeedMultiplier = DriveConstants.rotationSpeedMultiplier;
 
-
-    //If the driver is pressing the right trigger then FULL SPEED.
-    if(RobotContainer.driverController.getRightTriggerAxis()>.1)
-		{
-			driveSpeedMultiplier = 1.0;
-		}
+    // If the driver is pressing the right trigger then FULL SPEED.
+    if (RobotContainer.driverController.getRightTriggerAxis() > .1) {
+      driveSpeedMultiplier = 1.0;
+    }
 
     if (RobotContainer.driverController.rightBumper().getAsBoolean()) {
-				
-			gyroAngle = Rotation2d.fromDegrees(0);
-		}
+
+      gyroAngle = Rotation2d.fromDegrees(0);
+    }
 
     RobotContainer.driveSubsystem.drive(
-				ChassisSpeeds.fromFieldRelativeSpeeds(
-						driveSpeedMultiplier * translationXPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-						driveSpeedMultiplier * translationYPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-						rotationSpeedMultiplier * rotationPercent * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-						gyroAngle));
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            driveSpeedMultiplier * translationXPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            driveSpeedMultiplier * translationYPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            rotationSpeedMultiplier * rotationPercent * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            gyroAngle));
   }
 
   // Called once the command ends or is interrupted.

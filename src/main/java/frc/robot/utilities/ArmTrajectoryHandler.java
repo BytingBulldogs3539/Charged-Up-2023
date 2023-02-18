@@ -25,28 +25,24 @@ public class ArmTrajectoryHandler {
     }
 
     public ArrayList<Point2D> generateTrajectories(Point2D.Double startPoint, Point2D.Double endPoint) {
-        double differenceInX = endPoint.getX() - startPoint.getX();//-60
-        double differenceInY = endPoint.getY() - startPoint.getY();//-60
+        double differenceInX = endPoint.getX() - startPoint.getX();// -60
+        double differenceInY = endPoint.getY() - startPoint.getY();// -60
         double startAngle = 0;
         double endAngle = 0;
 
-        if(differenceInX == 0 && differenceInY > 0){
+        if (differenceInX == 0 && differenceInY > 0) {
             startAngle = 90;
-        }
-        else if(differenceInX == 0 && differenceInY < 0){
+        } else if (differenceInX == 0 && differenceInY < 0) {
             startAngle = 270;
-        }
-        else{
+        } else {
             startAngle = Math.toDegrees(Math.atan2(differenceInY, differenceInX));
 
-            if(startAngle < 0){
+            if (startAngle < 0) {
                 startAngle += 360;
             }
         }
 
-
         Pose2d startPose = new Pose2d(startPoint.getX(), startPoint.getY(), Rotation2d.fromDegrees(startAngle));
-
 
         if (differenceInX < 0) {
             endAngle = 180;
@@ -66,7 +62,7 @@ public class ArmTrajectoryHandler {
         System.out.println(endAngle);
         for (double i = 0; i < traj.getTotalTimeSeconds(); i += 0.015) {
             State s = traj.sample(i);
-            System.out.println("("+ s.poseMeters.getX()+" ,"+s.poseMeters.getY()+")");
+            System.out.println("(" + s.poseMeters.getX() + " ," + s.poseMeters.getY() + ")");
             Point2D p = xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
             output.add(p);
         }
@@ -82,10 +78,10 @@ public class ArmTrajectoryHandler {
 
     public Point2D xYToPolar(double x, double y) {
 
-        double angle = Math.toDegrees(Math.atan2(y,x));
+        double angle = Math.toDegrees(Math.atan2(y, x));
         double length = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        
-        if(angle < 0){
+
+        if (angle < 0) {
             angle += 360;
         }
 
@@ -93,14 +89,12 @@ public class ArmTrajectoryHandler {
 
     };
 
-    public static void main(String[] args)
-    {
-        ArmTrajectoryHandler h = new ArmTrajectoryHandler(60,60);
-        ArrayList<Point2D> points = h.generateTrajectories(new Point2D.Double(42,16), new Point2D.Double(-16,-42));
+    public static void main(String[] args) {
+        ArmTrajectoryHandler h = new ArmTrajectoryHandler(60, 60);
+        ArrayList<Point2D> points = h.generateTrajectories(new Point2D.Double(42, 16), new Point2D.Double(-16, -42));
         for (Point2D point : points) {
-            System.out.println("("+ point.getX()+" ,"+ point.getY()+")");
+            System.out.println("(" + point.getX() + " ," + point.getY() + ")");
 
-        }}}
-
-
-        
+        }
+    }
+}

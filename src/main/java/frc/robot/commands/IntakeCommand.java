@@ -10,8 +10,9 @@ import frc.robot.RobotContainer;
 public class IntakeCommand extends CommandBase {
   /** Creates a new IntakeCommand. */
   double speed;
+
   public IntakeCommand(double speed) {
-    this.speed=speed;
+    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -23,7 +24,8 @@ public class IntakeCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override

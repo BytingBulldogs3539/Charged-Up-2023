@@ -12,62 +12,105 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
+import java.awt.geom.Point2D;
 
+import org.bytingbulldogs.bulldoglibrary.GearRatio;
+
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.ElevatorConstants;
 import frc.robot.IDConstants;
 import frc.robot.RobotContainer;
+import frc.robot.utilities.ArmTrajectoryHandler;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-  enum Arm {
-    high, middle, low
-  }
+	enum Arm {
+		high, middle, low
+	}
 
-  enum Wrist {
-    cube,cone
-  }
+	enum Wrist {
+		cube, cone
+	}
 
-  enum Sides {
-    front, back
-  }
+	enum Sides {
+		front, back
+	}
 
-  
+	TalonFX elevatorMotor;
+	TalonSRX wrist;
+	TalonFX elevatorRotationMotor;
+	CANCoder elevatorRotationEncoder;
+	Arm armPosition = Arm.low;
+	Sides side = Sides.front;
+	Wrist wristOrrientation = Wrist.cube;
+	ArmTrajectoryHandler trajectoryHandler = new ArmTrajectoryHandler(ElevatorConstants.maxArmVelocity,
+			ElevatorConstants.maxArmAcceleration);
+	ShuffleboardTab elevatorTab = Shuffleboard.getTab("Elevator");
 
-  TalonFX elevatorMotor;
-  TalonSRX wrist;
-  TalonFX elevatorRotationMotor;
-  CANCoder elevatorRotationEncoder;
-  Arm armPosition = Arm.low;
-  Sides side = Sides.front;
-  Wrist wristOrrientation = Wrist.cube;
+	/** Creates a new ElevatorSubsystem. */
+	public ElevatorSubsystem() {
+		elevatorMotor = new TalonFX(IDConstants.ElevatorMotorID, IDConstants.ElevatorMotorCanName);
+		elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
+		elevatorMotor.setNeutralMode(NeutralMode.Coast);
+		elevatorMotor.setSelectedSensorPosition(0);// -235359u
+		elevatorMotor.setInverted(true);
 
-  /** Creates a new ElevatorSubsystem. */
-  public ElevatorSubsystem() {
-    elevatorMotor = new TalonFX(IDConstants.ElevatorMotorID,IDConstants.ElevatorMotorCanName);
-    elevatorRotationMotor =new TalonFX(IDConstants.ElevatorRotationMotorID, IDConstants.ElevatorRotationMotorCanName);
-    elevatorRotationEncoder = new CANCoder(IDConstants.ElevatorRotationEncoderID);
-    elevatorRotationMotor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
-    elevatorRotationMotor.configRemoteFeedbackFilter(IDConstants.ElevatorRotationEncoderID, RemoteSensorSource.CANCoder, 0);
-    elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
-    elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
-    wrist = new TalonSRX(IDConstants.WristMotorID);
+		elevatorRotationEncoder = new CANCoder(IDConstants.ElevatorRotationEncoderID);
+		elevatorRotationEncoder.configMagnetOffset(ElevatorConstants.ElevatorRotationMagnetOffset);
 
-    elevatorMotor.setNeutralMode(NeutralMode.Coast);
-    elevatorMotor.setSelectedSensorPosition(0);//-235359u   
-    elevatorMotor.setInverted(true);
-    wrist.setNeutralMode(NeutralMode.Brake);
-    elevatorRotationMotor.setNeutralMode(NeutralMode.Coast);
+		elevatorRotationMotor = new TalonFX(IDConstants.ElevatorRotationMotorID,
+				IDConstants.ElevatorRotationMotorCanName);
+		elevatorRotationMotor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
+		elevatorRotationMotor.configRemoteFeedbackFilter(IDConstants.ElevatorRotationEncoderID,
+				RemoteSensorSource.CANCoder,
+				0);
+		elevatorRotationMotor.setNeutralMode(NeutralMode.Coast);
+		elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
 
-  }
-  public void setGripperPositon(double x, double z){
+		wrist = new TalonSRX(IDConstants.WristMotorID);
+		wrist.setNeutralMode(NeutralMode.Brake);
 
-  }
+	}
 
- 
- 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+	public void setGripperPositon(Arm arm, Wrist wrist, Sides side) {
+		this.armPosition = arm;
+		this.wristOrrientation = wrist;
+		this.side = side;
+	}
+
+	public double getElevatorLength() {
+		return elevatorMotor.getSelectedSensorPosition() * ElevatorConstants.ElevatorConversionRatio;
+	}
+
+	public double getElevatorRotationAngle() {
+		return elevatorRotationEncoder.getAbsolutePosition();
+	}
+
+	public Point2D getGripperPositon() {
+		return trajectoryHandler.polarToXY(getElevatorRotationAngle(), getElevatorLength());
+
+	}
+
+	public double getGripperX() {
+		return getGripperPositon().getX();
+	}
+
+	public double getGripperY() {
+		return getGripperPositon().getY();
+	}
+
+	@Override
+	public void periodic() {
+		elevatorTab.addNumber("Arm X", () -> {
+			return getGripperX();
+		});
+		elevatorTab.addNumber("Arm Y", () -> {
+			return getGripperY();
+		});
+		SmartDashboard.putBoolean("Cube Mode", (wristOrrientation == Wrist.cube) ? true : false);
+
+	}
 }
-

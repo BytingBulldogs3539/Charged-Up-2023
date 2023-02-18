@@ -132,11 +132,11 @@ public class DriveSubsystem extends SubsystemBase {
 				IDConstants.BRCanCoderID,
 				IDConstants.BREncoderCanName,
 				DriveConstants.BRSteerOffset);
-		
-				m_odometry = new SwerveDriveOdometry(m_kinematics,getGyroscopeRotation(), getModulePositions(),
+
+		m_odometry = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(), getModulePositions(),
 				new Pose2d(0, 0, new Rotation2d()));
 
-				setDefaultCommand(new DriveCommand(this));
+		setDefaultCommand(new DriveCommand(this));
 	}
 
 	/**
@@ -159,44 +159,42 @@ public class DriveSubsystem extends SubsystemBase {
 	public void drive(ChassisSpeeds chassisSpeeds) {
 		m_chassisSpeeds = chassisSpeeds;
 	}
+
 	public Pose2d getPose() {
 		return m_pose;
 	}
+
 	public void resetPose(Pose2d pose) {
 		m_odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), pose);
 	}
 
-	public SwerveModulePosition[] getModulePositions()
-	{
-		SwerveModulePosition[] positions = {m_frontLeftModule.getPosition(),
-			m_frontRightModule.getPosition(),
-			m_backLeftModule.getPosition(), m_backRightModule.getPosition()};
+	public SwerveModulePosition[] getModulePositions() {
+		SwerveModulePosition[] positions = { m_frontLeftModule.getPosition(),
+				m_frontRightModule.getPosition(),
+				m_backLeftModule.getPosition(), m_backRightModule.getPosition() };
 		return positions;
 	}
 
-
 	@Override
-  public void periodic() {
+	public void periodic() {
 
-	SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-	
-	SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-	
-	m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-			states[0].angle.getRadians());
-	m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-			states[1].angle.getRadians());
-	m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-			states[2].angle.getRadians());
-	m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-			states[3].angle.getRadians());
+		SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
-	
+		SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
-	m_pose = m_odometry.update(getGyroscopeRotation(), getModulePositions());
+		m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+				states[0].angle.getRadians());
+		m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+				states[1].angle.getRadians());
+		m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+				states[2].angle.getRadians());
+		m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+				states[3].angle.getRadians());
 
-	SmartDashboard.putNumber("X Pose", m_pose.getX());
-	SmartDashboard.putNumber("Y Pose", m_pose.getY());
-	SmartDashboard.putNumber("Theta Pose", m_pose.getRotation().getDegrees());
-  }
+		m_pose = m_odometry.update(getGyroscopeRotation(), getModulePositions());
+
+		SmartDashboard.putNumber("X Pose", m_pose.getX());
+		SmartDashboard.putNumber("Y Pose", m_pose.getY());
+		SmartDashboard.putNumber("Theta Pose", m_pose.getRotation().getDegrees());
+	}
 }
