@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.SetElevatorCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -66,6 +67,10 @@ public class RobotContainer {
 
     operatorController.rightTrigger().whileTrue(new IntakeCommand(-1));
 
+    operatorController.a().onTrue(new SetElevatorCommand(0));
+
+    operatorController.b().onTrue(new SetElevatorCommand(300));
+    operatorController.y().onTrue(new SetElevatorCommand(750));
   }
 
   /**

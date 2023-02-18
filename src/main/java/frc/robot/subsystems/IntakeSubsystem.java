@@ -36,7 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		groundIntakeRight.setNeutralMode(NeutralMode.Coast);
 		groundIntakeRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 60, 100));
 
-		setDefaultCommand(new RunGroundIntake());
+		setDefaultCommand(new RunGroundIntake(this));
+
+    groundIntakeLeft.setInverted(true);
+    groundIntakeRight.setInverted(true);
 
 	}
 

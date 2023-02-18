@@ -6,31 +6,27 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.IntakeSubsystem;
 
-public class RunGroundIntake extends CommandBase {
-	/** Creates a new RunGroundIntake. */
-	public RunGroundIntake(IntakeSubsystem intake) {
-		addRequirements(intake);
+public class SetArmAngleCommand extends CommandBase {
+	/** Creates a new SetArmAngleCommand. */
+	public SetArmAngleCommand() {
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		RobotContainer.elevatorSubsystem.setArmRotation(0);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		RobotContainer.intakeSubsystem.setGroundIntakeSpeed(RobotContainer.operatorController.getLeftY(),
-				RobotContainer.operatorController.getRightY());
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		RobotContainer.intakeSubsystem.setGroundIntakeSpeed(0, 0);
 	}
 
 	// Returns true when the command should end.

@@ -19,6 +19,20 @@ public class ElevatorConstants extends BBConstants {
 	public static double ElevatorConversionRatio = 0.0;
 	public static double ElevatorRotationMagnetOffset = 0.0;
 
+	public static double ElevatorKp = 0.0;
+
+	public static double ElevatorKi = 0.0;
+
+	public static double ElevatorKd = 0.0;
+
+	public static double ElevatorRotationKp = 0.0;
+
+	public static double ElevatorRotationKi = 0.0;
+
+	public static double ElevatorRotationKd = 0.0;
+
+	public static double ElevatorMinExtension = 0.0;
+
 	public static double WristRotationMagnetOffset = 0.0;
 
 	public static double ElevatorRotationFeedforwardRatio = 0.0;
