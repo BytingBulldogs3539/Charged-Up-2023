@@ -48,8 +48,17 @@ public static String BREncoderCanName ="";
 public static int BRSteeringID = 45;
 public static String BRSteeringCanName ="";
 
+
+
 public static int IntakeMotorID = 46;
 public static String IntakeMotorCanName ="";
+
+public static int groundIntakeRightID = 12;
+public static String groundIntakeRightCanName = "rio";
+
+public static int groundIntakeLeftID = 12;
+public static String groundIntakeLeftCanName = "rio";
+
 
 public static int WristMotorID = 0;
 
