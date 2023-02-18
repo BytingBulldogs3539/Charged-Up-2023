@@ -59,6 +59,8 @@ public class IDConstants extends BBConstants {
 
         public static int WristMotorID = 0;
 
+        public static int WristEncoderID = 0;
+
         public static int ElevatorMotorID = 47;
         public static String ElevatorMotorCanName = "";
 

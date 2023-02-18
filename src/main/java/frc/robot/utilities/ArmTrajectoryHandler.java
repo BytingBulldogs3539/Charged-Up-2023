@@ -18,10 +18,14 @@ import edu.wpi.first.math.trajectory.Trajectory.State;
 /** Add your docs here. */
 public class ArmTrajectoryHandler {
     TrajectoryConfig config;
+    double armLength;
+    Point2D.Double midPoint;
 
-    public ArmTrajectoryHandler(double maximumVelocity, double maximumAcceleration) {
+    public ArmTrajectoryHandler(double maximumVelocity, double maximumAcceleration, double armLength, Point2D.Double midPoint) {
 
         config = new TrajectoryConfig(maximumVelocity, maximumAcceleration);
+        this.armLength = armLength;
+        this.midPoint = midPoint;
     }
 
     public ArrayList<Point2D> generateTrajectories(Point2D.Double startPoint, Point2D.Double endPoint) {
@@ -42,7 +46,7 @@ public class ArmTrajectoryHandler {
             }
         }
 
-        Pose2d startPose = new Pose2d(startPoint.getX(), startPoint.getY(), Rotation2d.fromDegrees(startAngle));
+        Pose2d startPose = new Pose2d(startPoint.getX(), startPoint.getY(), Rotation2d.fromDegrees(90));
 
         if (differenceInX < 0) {
             endAngle = 180;
@@ -52,18 +56,47 @@ public class ArmTrajectoryHandler {
             endAngle = startAngle;
         }
         Pose2d endPose = new Pose2d(endPoint.getX(), endPoint.getY(), Rotation2d.fromDegrees(endAngle));
+
+        if(startPose.getX()>0 && endPose.getX()<0)
+        {
+            startPose = new Pose2d(startPoint.getX(), startPoint.getY(), Rotation2d.fromDegrees(180));
+
+        }
+        if(startPose.getX()<0 && endPose.getX()>0)
+        {
+            startPose = new Pose2d(startPoint.getX(), startPoint.getY(), Rotation2d.fromDegrees(0));
+
+        }
+
+
         List<Pose2d> list = new ArrayList<Pose2d>();
         list.add(startPose);
+        if(startPose.getX()>0 && endPose.getX()<0)
+        {
+            list.add(new Pose2d(midPoint.getX(), midPoint.getY(), Rotation2d.fromDegrees(180)));
+        }
+        if(startPose.getX()<0 && endPose.getX()>0)
+        {
+            list.add(new Pose2d(midPoint.getX(), midPoint.getY(), Rotation2d.fromDegrees(0)));
+        }
         list.add(endPose);
         Trajectory traj = TrajectoryGenerator.generateTrajectory(list, this.config);
 
+
+
         ArrayList<Point2D> output = new ArrayList<Point2D>();
-        System.out.println(startAngle);
-        System.out.println(endAngle);
+        //System.out.println(startAngle);
+        //System.out.println(endAngle);
+        
         for (double i = 0; i < traj.getTotalTimeSeconds(); i += 0.015) {
             State s = traj.sample(i);
-            System.out.println("(" + s.poseMeters.getX() + " ," + s.poseMeters.getY() + ")");
+            //System.out.println("(" + s.poseMeters.getX() + " ," + s.poseMeters.getY() + ")");
             Point2D p = xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
+
+            if (p.getY() < armLength) {
+                p = new Point2D.Double(p.getX(), armLength);
+
+            }
             output.add(p);
         }
         return output;
@@ -90,10 +123,10 @@ public class ArmTrajectoryHandler {
     };
 
     public static void main(String[] args) {
-        ArmTrajectoryHandler h = new ArmTrajectoryHandler(60, 60);
-        ArrayList<Point2D> points = h.generateTrajectories(new Point2D.Double(42, 16), new Point2D.Double(-16, -42));
+        ArmTrajectoryHandler h = new ArmTrajectoryHandler(60, 60, 25, new Point2D.Double(0, 25));
+        ArrayList<Point2D> points = h.generateTrajectories(new Point2D.Double(-50, 0), new Point2D.Double(20, -15));
         for (Point2D point : points) {
-            System.out.println("(" + point.getX() + " ," + point.getY() + ")");
+            System.out.println("("+h.polarToXY(Math.toRadians(point.getX()), point.getY()).getX()+","+h.polarToXY(Math.toRadians(point.getX()), point.getY()).getY()+")");
 
         }
     }
