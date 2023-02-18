@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -32,6 +33,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
     elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
     wrist = new TalonSRX(IDConstants.WristMotorID);
+
+    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    wrist.setNeutralMode(NeutralMode.Brake);
+    elevatorRotationMotor.setNeutralMode(NeutralMode.Brake);
+
   }
   public void setGripperPositon(double x, double z){
 

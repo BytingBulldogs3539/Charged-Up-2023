@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -21,6 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
 
     intakeMotor = new TalonSRX(IDConstants.IntakeMotorID);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
 
     intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 60, 100));
   }
