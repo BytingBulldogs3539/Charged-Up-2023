@@ -25,23 +25,48 @@ public static double frontCubeHighY = 0;
 public static double frontCubeMidX = 0;
 public static double frontCubeMidY = 0;
 
-public static double frontCubeLow = 0;
-public static double frontCubeIntake = 0;
+public static double frontCubeLowX = 0;
+public static double frontCubeLowY = 0;
 
-public static double backCubeHigh = 0;
-public static double backCubeMid = 0;
-public static double backCubeLow = 0;
-public static double backCubeIntake = 0;
+public static double frontCubeIntakeX = 0;
+public static double frontCubeIntakeY = 0;
+
+public static double backCubeHighX = 0;
+public static double backCubeHighY = 0;
+
+public static double backCubeMidX = 0;
+public static double backCubeMidY = 0;
+
+public static double backCubeLowX = 0;
+public static double backCubeLowY = 0;
+
+public static double backCubeIntakeX = 0;
+public static double backCubeIntakeY = 0;
 
 //Cones
-public static double frontConeHigh = 0;
-public static double frontConeMid = 0;
-public static double frontConeLow = 0;
-public static double frontConeIntake = 0;
+public static double frontConeHighX = 0;
+public static double frontConeHighY = 0;
 
-public static double backConeHigh = 0;
-public static double backConeMid = 0;
-public static double backConeLow = 0;
-public static double backConeIntake = 0;
+public static double frontConeMidX = 0;
+public static double frontConeMidY = 0;
+
+public static double frontConeLowX = 0;
+public static double frontConeLowY = 0;
+
+public static double frontConeIntakeX = 0;
+public static double frontConeIntakeY = 0;
+
+public static double backConeHighX = 0;
+public static double backConeHighY = 0;
+
+public static double backConeMidX = 0;
+public static double backConeMidY = 0;
+
+public static double backConeLowX = 0;
+public static double backConeLowY = 0;
+
+public static double backConeIntakeX = 0;
+public static double backConeIntakeY = 0;
+
 
 }

@@ -52,9 +52,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorRotationMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
     wrist = new TalonSRX(IDConstants.WristMotorID);
 
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotor.setNeutralMode(NeutralMode.Coast);
+    elevatorMotor.setSelectedSensorPosition(0);//-235359u   
+    elevatorMotor.setInverted(true);
     wrist.setNeutralMode(NeutralMode.Brake);
-    elevatorRotationMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorRotationMotor.setNeutralMode(NeutralMode.Coast);
 
   }
   public void setGripperPositon(double x, double z){
