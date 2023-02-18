@@ -17,10 +17,28 @@ import frc.robot.IDConstants;
 import frc.robot.RobotContainer;
 
 public class ElevatorSubsystem extends SubsystemBase {
+
+  enum Arm {
+    high, middle, low
+  }
+
+  enum Wrist {
+    cube,cone
+  }
+
+  enum Sides {
+    front, back
+  }
+
+  
+
   TalonFX elevatorMotor;
   TalonSRX wrist;
   TalonFX elevatorRotationMotor;
   CANCoder elevatorRotationEncoder;
+  Arm armPosition = Arm.low;
+  Sides side = Sides.front;
+  Wrist wristOrrientation = Wrist.cube;
 
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
@@ -36,6 +54,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void setGripperPositon(double x, double z){
 
   }
+
+ 
  
   @Override
   public void periodic() {

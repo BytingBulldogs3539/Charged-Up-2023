@@ -17,6 +17,8 @@ import frc.robot.RobotContainer;
 public class IntakeSubsystem extends SubsystemBase {
 
   private TalonSRX intakeMotor;
+  private TalonSRX groundIntakeLeft;
+  private TalonSRX groundIntakeRight;
 
   public IntakeSubsystem() {
 
