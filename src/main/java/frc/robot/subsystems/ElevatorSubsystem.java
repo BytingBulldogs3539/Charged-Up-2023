@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   Wrist wristOrrientation = Wrist.cube;
 
   ArmTrajectoryHandler trajectoryHandler = new ArmTrajectoryHandler(ElevatorConstants.maxArmVelocity,
-      ElevatorConstants.maxArmAcceleration, 25, new Point2D.Double(0, 25));
+      ElevatorConstants.maxArmAcceleration, 25, new Point2D.Double(0, 25), new Point2D.Double(0, 20));
   ShuffleboardTab elevatorTab = Shuffleboard.getTab("Elevator");
 
   // private final TrapezoidProfile.Constraints m_constraints =
