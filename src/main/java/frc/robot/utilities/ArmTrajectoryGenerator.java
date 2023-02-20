@@ -157,18 +157,15 @@ public class ArmTrajectoryGenerator {
         double armLength = 31;
         ArmTrajectoryGenerator h = new ArmTrajectoryGenerator(60, 140, 31, new Point2D.Double(0, 31), new Point2D.Double(0, 31));
         
-        Trajectory traj2 = h.generateTrajectories(new Point2D.Double(-5, 31), new Point2D.Double(-40, 25));
+        Trajectory traj2 = h.generateTrajectories(new Point2D.Double(31,0), new Point2D.Double(0, 31));
 
         ArrayList<ArmPosition> points = new ArrayList<ArmPosition>();
         
         for (double i = 0; i < traj2.getTotalTimeSeconds(); i += 0.015) {
             State s = traj2.sample(i);
-            //System.out.println("(" + s.poseMeters.getX() + " ," + s.poseMeters.getY() + ")");
             ArmPosition p = xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
-
             if (p.getExtension() < armLength) {
                 p = new ArmPosition(p.getRotation(), armLength);
-
             }
             points.add(p);
         }
