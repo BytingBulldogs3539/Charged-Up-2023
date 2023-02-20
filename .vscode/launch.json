@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch ArmTrajectoryGenerator",
+      "request": "launch",
+      "mainClass": "frc.robot.utilities.ArmTrajectoryGenerator",
+      "projectName": "Charged-Up-2023"
+    },
+    {
+      "type": "java",
       "name": "Launch ArmTrajectoryHandler",
       "request": "launch",
       "mainClass": "frc.robot.utilities.ArmTrajectoryHandler",

@@ -7,9 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class SetElevatorCommand extends CommandBase {
+public class SetElevatorLengthCommand extends CommandBase {
   /** Creates a new SetElevatorCommand. */ int length = 0;
-  public SetElevatorCommand(int length ) {
+  public SetElevatorLengthCommand(int length ) {
     this.length = length;
     //"best amazing starts with a g and means motor"-Cameron Coesens
   }

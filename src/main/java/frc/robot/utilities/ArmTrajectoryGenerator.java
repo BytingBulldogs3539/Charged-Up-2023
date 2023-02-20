@@ -17,13 +17,13 @@ import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 
 /** Add your docs here. */
-public class ArmTrajectoryHandler {
+public class ArmTrajectoryGenerator {
     TrajectoryConfig config;
     double armLength;
     Point2D.Double midPoint;
     Point2D.Double fakeMidPoint;
 
-    public ArmTrajectoryHandler(double maximumVelocity, double maximumAcceleration, double armLength, Point2D.Double midPoint, Point2D.Double fakeMidPoint) {
+    public ArmTrajectoryGenerator(double maximumVelocity, double maximumAcceleration, double armLength, Point2D.Double midPoint, Point2D.Double fakeMidPoint) {
 
         config = new TrajectoryConfig(maximumVelocity, maximumAcceleration);
         this.armLength = armLength;
@@ -31,9 +31,9 @@ public class ArmTrajectoryHandler {
         this.fakeMidPoint = fakeMidPoint;
     }
 
-    public ArrayList<Point2D> generateTrajectories(Point2D.Double startPoint, Point2D.Double endPoint) {
-        double differenceInX = endPoint.getX() - startPoint.getX();// -60
-        double differenceInY = endPoint.getY() - startPoint.getY();// -60
+    public Trajectory generateTrajectories(Point2D.Double startPoint, Point2D.Double endPoint) {
+        double differenceInX = endPoint.getX() - startPoint.getX();
+        double differenceInY = endPoint.getY() - startPoint.getY();
         double startAngle = 0;
 
         if (differenceInX == 0 && differenceInY > 0) {
@@ -81,17 +81,17 @@ public class ArmTrajectoryHandler {
         list.add(endPose);
         Trajectory traj = TrajectoryGenerator.generateTrajectory(list, this.config);
 
-        ArrayList<Point2D> output = new ArrayList<Point2D>();
+        ArrayList<ArmPosition> output = new ArrayList<ArmPosition>();
         //System.out.println(startAngle);
         //System.out.println(endAngle);
         
         for (double i = 0; i < traj.getTotalTimeSeconds(); i += 0.015) {
             State s = traj.sample(i);
             //System.out.println("(" + s.poseMeters.getX() + " ," + s.poseMeters.getY() + ")");
-            Point2D p = xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
+            ArmPosition p = xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
 
-            if (p.getY() < armLength) {
-                p = new Point2D.Double(p.getX(), armLength);
+            if (p.getExtension() < armLength) {
+                p = new ArmPosition(p.getRotation(), armLength);
             }
             output.add(p);
         }
@@ -100,32 +100,12 @@ public class ArmTrajectoryHandler {
         {
             Point2D one = polarToXY(output.get(i));
             Point2D two = polarToXY(output.get(i+1));
-            if(one.getY()<endPoint.getY())
-            {
-                //continue;
-            }
             double angle = Math.atan2(two.getY()-one.getY(), two.getX()-one.getX());
             controlPoints.add(new Pose2d(one.getX(), one.getY(), Rotation2d.fromRadians(angle)));
         }
         Trajectory traj2 = TrajectoryGenerator.generateTrajectory(controlPoints, this.config.addConstraint(new CentripetalAccelerationConstraint(1000)));
 
-        ArrayList<Point2D> output2 = new ArrayList<Point2D>();
-        
-        for (double i = 0; i < traj2.getTotalTimeSeconds(); i += 0.015) {
-            State s = traj2.sample(i);
-            //System.out.println("(" + s.poseMeters.getX() + " ," + s.poseMeters.getY() + ")");
-            Point2D p = xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
-
-            if (p.getY() < armLength) {
-                p = new Point2D.Double(p.getX(), armLength);
-
-            }
-            output2.add(p);
-        }
-
-        System.out.println(traj2.getTotalTimeSeconds());
-
-        return output2;
+        return traj2;
     }
     public static boolean sameQuadrant(Point2D p1, Point2D p2) {
         double x1 = p1.getX();
@@ -149,11 +129,11 @@ public class ArmTrajectoryHandler {
             return false;
         }
     }
-    public static Point2D polarToXY(Point2D p)
+    public static Point2D polarToXY(ArmPosition p)
     {
-        return polarToXY(p.getX(), p.getY());
+        return polarToXY(p.getRotation().getRadians(), p.getExtension());
     }
-    public static Point2D xYToPolar(Point2D p)
+    public static ArmPosition xYToPolar(Point2D p)
     {
         return xYToPolar(p.getX(), p.getY());
     }
@@ -164,24 +144,39 @@ public class ArmTrajectoryHandler {
         return new Point2D.Double(x, y);
     };
 
-    public static Point2D xYToPolar(double x, double y) {
+    public static ArmPosition xYToPolar(double x, double y) {
 
-        double angle = Math.atan2(y, x);
+        Rotation2d angle = Rotation2d.fromRadians(Math.atan2(y, x));
         double length = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
-        if (angle < 0) {
-            angle += Math.toRadians(360);
-        }
-
-        return new Point2D.Double(angle, length);
+        return new ArmPosition(angle, length);
 
     };
 
     public static void main(String[] args) {
-        ArmTrajectoryHandler h = new ArmTrajectoryHandler(60, 140, 25, new Point2D.Double(0, 25), new Point2D.Double(0, 24));
-        ArrayList<Point2D> points = h.generateTrajectories(new Point2D.Double(40, 0), new Point2D.Double(-40, 25));
-        for (Point2D point : points) {
-            System.out.println("("+h.polarToXY(point).getX()+","+h.polarToXY(point).getY()+")");
+        double armLength = 31;
+        ArmTrajectoryGenerator h = new ArmTrajectoryGenerator(60, 140, 31, new Point2D.Double(0, 31), new Point2D.Double(0, 31));
+        
+        Trajectory traj2 = h.generateTrajectories(new Point2D.Double(-5, 31), new Point2D.Double(-40, 25));
+
+        ArrayList<ArmPosition> points = new ArrayList<ArmPosition>();
+        
+        for (double i = 0; i < traj2.getTotalTimeSeconds(); i += 0.015) {
+            State s = traj2.sample(i);
+            //System.out.println("(" + s.poseMeters.getX() + " ," + s.poseMeters.getY() + ")");
+            ArmPosition p = xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
+
+            if (p.getExtension() < armLength) {
+                p = new ArmPosition(p.getRotation(), armLength);
+
+            }
+            points.add(p);
+        }
+
+        System.out.println(traj2.getTotalTimeSeconds());
+
+        for (ArmPosition point : points) {
+            System.out.println("("+ArmTrajectoryGenerator.polarToXY(point).getX()+","+ArmTrajectoryGenerator.polarToXY(point).getY()+")");
         }
     }
 }
