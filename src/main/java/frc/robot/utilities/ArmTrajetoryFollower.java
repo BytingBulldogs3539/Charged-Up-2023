@@ -1,5 +1,6 @@
 package frc.robot.utilities;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -12,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import com.swervedrivespecialties.swervelib.control.PidController;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import java.awt.geom.Point2D;
 
@@ -26,8 +26,8 @@ public class ArmTrajetoryFollower extends CommandBase {
 	private final Supplier<Point2D.Double> xyPose;
 	private final Consumer<Double> setExtenionSpeed;
 	private final Consumer<Double> setRotationSpeed;
-	private final PidController m_rController;
-	private final PidController m_eController;
+	private final PIDController m_rController;
+	private final PIDController m_eController;
 	private final double xKf;
 	private double lastTime = 0.0D;
 	private double minArmLength = 0.0;
@@ -37,8 +37,8 @@ public class ArmTrajetoryFollower extends CommandBase {
 
 	public ArmTrajetoryFollower(Point2D.Double endPoint,ArmTrajectoryGenerator generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
 			Consumer<Double> setExtenionSpeed,
-			Consumer<Double> setRotationSpeed, PidController rController, double rKf,
-			PidController eController, double minArmLength, double maxArmLength, Rotation2d minArmRotation, Rotation2d maxArmRotation, Subsystem... requirements) {
+			Consumer<Double> setRotationSpeed, PIDController rController, double rKf,
+			PIDController eController, double minArmLength, double maxArmLength, Rotation2d minArmRotation, Rotation2d maxArmRotation, Subsystem... requirements) {
 		this.endPoint = (Point2D.Double) ErrorMessages.requireNonNullParam(endPoint, "endPoint",
 		"SwerveControllerCommand");
 		this.generator = (ArmTrajectoryGenerator) ErrorMessages.requireNonNullParam(generator, "generator",
@@ -47,11 +47,11 @@ public class ArmTrajetoryFollower extends CommandBase {
 				"SwerveControllerCommand");
 		this.xyPose = (Supplier<Point2D.Double>) ErrorMessages.requireNonNullParam(xyPose, "xyPose",
 				"SwerveControllerCommand");
-		this.m_rController = (PidController) ErrorMessages.requireNonNullParam(rController, "xController",
+		this.m_rController = (PIDController) ErrorMessages.requireNonNullParam(rController, "xController",
 				"SwerveControllerCommand");
 		this.xKf = (double) ErrorMessages.requireNonNullParam(rKf, "xKf",
 				"SwerveControllerCommand");
-		this.m_eController = (PidController) ErrorMessages.requireNonNullParam(eController, "xController",
+		this.m_eController = (PIDController) ErrorMessages.requireNonNullParam(eController, "xController",
 				"SwerveControllerCommand");
 		this.setExtenionSpeed = (Consumer<Double>) ErrorMessages.requireNonNullParam(setExtenionSpeed,
 				"setExtensionSpeed",
@@ -69,8 +69,12 @@ public class ArmTrajetoryFollower extends CommandBase {
 	}
 
 	public void initialize() {
+		this.m_rController.enableContinuousInput(0, 360);
 		this.m_timer.reset();
 		this.m_timer.start();
+
+		System.out.println(xyPose.get());
+		System.out.println(endPoint);
 
 		m_trajectory = generator.generateTrajectories(xyPose.get(), endPoint);
 	}
@@ -109,6 +113,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 		this.m_eController.setSetpoint(p.getExtension());
 
 		double targetE = this.m_eController.calculate(this.m_pose.get().getExtension(), dt);
+		System.out.println(targetE);
 		double targetR = this.m_rController
 				.calculate(this.m_pose.get().getRotation().getDegrees() + xKf * xyPose.get().getX(), dt);
 

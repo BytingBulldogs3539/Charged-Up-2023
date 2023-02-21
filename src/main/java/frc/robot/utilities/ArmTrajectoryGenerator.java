@@ -129,7 +129,7 @@ public class ArmTrajectoryGenerator {
             return false;
         }
     }
-    public static Point2D polarToXY(ArmPosition p)
+    public static Point2D.Double polarToXY(ArmPosition p)
     {
         return polarToXY(p.getRotation().getRadians(), p.getExtension());
     }
@@ -137,7 +137,7 @@ public class ArmTrajectoryGenerator {
     {
         return xYToPolar(p.getX(), p.getY());
     }
-    public static Point2D polarToXY(double angle, double length) {
+    public static Point2D.Double polarToXY(double angle, double length) {
 
         double x = Math.cos(angle) * length;
         double y = Math.sin(angle) * length;
@@ -154,10 +154,10 @@ public class ArmTrajectoryGenerator {
     };
 
     public static void main(String[] args) {
-        double armLength = 31;
-        ArmTrajectoryGenerator h = new ArmTrajectoryGenerator(60, 140, 31, new Point2D.Double(0, 31), new Point2D.Double(0, 31));
+        double armLength = 120;
+        ArmTrajectoryGenerator h = new ArmTrajectoryGenerator(120, 140, 120, new Point2D.Double(0, 120), new Point2D.Double(0, 120));
         
-        Trajectory traj2 = h.generateTrajectories(new Point2D.Double(31,0), new Point2D.Double(0, 31));
+        Trajectory traj2 = h.generateTrajectories(new Point2D.Double(120,0), new Point2D.Double(0, 120));
 
         ArrayList<ArmPosition> points = new ArrayList<ArmPosition>();
         

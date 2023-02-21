@@ -6,20 +6,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ElevatorSubsystem;
 
-public class RotateArm extends CommandBase {
-  /** Creates a new RotateArm. */
-  double angle;
-  public RotateArm(double angle) {
+public class DisableBreakMode extends CommandBase {
+  /** Creates a new DisableBreakMode. */
+  public DisableBreakMode() {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.angle = angle;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.elevatorSubsystem.setArmRotation(angle);
+    RobotContainer.elevatorSubsystem.setBreakMode(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -28,11 +25,14 @@ public class RotateArm extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.elevatorSubsystem.setBreakMode(true);
+  
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.elevatorSubsystem.getArmRotationError()<5.0;
+    return false;
   }
 }

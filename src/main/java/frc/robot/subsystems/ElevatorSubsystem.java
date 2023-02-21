@@ -16,13 +16,20 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import java.awt.geom.Point2D;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElevatorConstants;
 import frc.robot.IDConstants;
+import frc.robot.commands.DisableBreakMode;
+import frc.robot.utilities.ArmPosition;
 import frc.robot.utilities.ArmTrajectoryGenerator;
+import frc.robot.utilities.ArmTrajetoryFollower;
+
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -43,17 +50,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 	CANCoder wristEncoder;
 	TalonFX elevatorRotationMotor;
 	CANCoder elevatorRotationEncoder;
+	PIDController m_rController;
+	PIDController m_eController;
 
 	Arm armPosition = Arm.low;
 	Sides side = Sides.front;
 	Wrist wristOrrientation = Wrist.cube;
 
-	ArmTrajectoryGenerator trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
-			ElevatorConstants.maxArmAcceleration, 25, new Point2D.Double(0, 25), new Point2D.Double(0, 20));
+	ArmTrajectoryGenerator trajectoryHandler;
 
 	ShuffleboardTab elevatorTab = Shuffleboard.getTab("Elevator");
-
-	double requestedArmAngle = -70;
 
 	/** Creates a new ElevatorSubsystem. */
 	public ElevatorSubsystem() {
@@ -62,8 +68,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		elevatorMotor.setNeutralMode(NeutralMode.Brake);
 		elevatorMotor.setSelectedSensorPosition(0);
 		elevatorMotor.setInverted(true);
-		elevatorMotor.configForwardSoftLimitThreshold(ElevatorConstants.elevatorSoftMax);
-		elevatorMotor.configReverseSoftLimitThreshold(ElevatorConstants.elevatorSoftMin);
+		elevatorMotor.configForwardSoftLimitThreshold(ElevatorConstants.elevatorSoftMax*10);
+		elevatorMotor.configReverseSoftLimitThreshold(ElevatorConstants.elevatorSoftMin*10);
 		elevatorMotor.configForwardSoftLimitEnable(true);
 		elevatorMotor.configReverseSoftLimitEnable(true);
 		elevatorMotor.configSelectedFeedbackCoefficient(ElevatorConstants.ElevatorConversionRatio);
@@ -110,22 +116,18 @@ public class ElevatorSubsystem extends SubsystemBase {
 		wrist.configRemoteFeedbackFilter(wristEncoder, 0);
 		wrist.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
 
-		elevatorTab.addNumber("Arm X", () -> {
-			return getGripperX();
-		});
-		elevatorTab.addNumber("Arm Y", () -> {
-			return getGripperY();
-		});
-
+		elevatorTab.addNumber("Arm X", this::getGripperX);
+		elevatorTab.addNumber("Arm Y", this::getGripperY);
+		m_eController = new PIDController(ElevatorConstants.ElevatorKp, ElevatorConstants.ElevatorKi, ElevatorConstants.ElevatorKd);
+		m_rController = new PIDController(ElevatorConstants.ElevatorRotationKp, ElevatorConstants.ElevatorRotationKi, ElevatorConstants.ElevatorRotationKd);
+	
+		trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
+			ElevatorConstants.maxArmAcceleration,ElevatorConstants.ElevatorMinExtension, new Point2D.Double(0,ElevatorConstants.ElevatorMaxExtension), new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension));
 	}
 
-	public void setArmRotation(double angle) {
-		requestedArmAngle = angle;
-	}
-
-	public void setArmExtension(double length) {
+	/*public void setArmExtension(double length) {
 		elevatorMotor.set(ControlMode.MotionMagic, length);
-	}
+	}*/
 
 	public void setWristRotation(double angle) {
 		wrist.set(ControlMode.Position, angle);
@@ -140,15 +142,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public double getElevatorLength() {
-		return elevatorMotor.getSelectedSensorPosition() + ElevatorConstants.ElevatorMinExtension;
+		return (elevatorMotor.getSelectedSensorPosition()/10.0) + ElevatorConstants.ElevatorMinExtension;
 	}
 
-	public double getElevatorRotationAngle() {
-		return elevatorRotationEncoder.getAbsolutePosition();
+	public Rotation2d getElevatorRotationAngle() {
+		return Rotation2d.fromDegrees(elevatorRotationEncoder.getAbsolutePosition());
 	}
 
-	public Point2D getGripperPositon() {
-		return ArmTrajectoryGenerator.polarToXY(getElevatorRotationAngle(), getElevatorLength());
+	public Point2D.Double getGripperPositon() {
+		return ArmTrajectoryGenerator.polarToXY(new ArmPosition(getElevatorRotationAngle(), getElevatorLength()));
 	}
 
 	public double getGripperX() {
@@ -163,9 +165,37 @@ public class ElevatorSubsystem extends SubsystemBase {
 		return getGripperPositon().getX() * ElevatorConstants.ElevatorRotationFeedforwardRatio;
 	}
 
+	public ArmPosition getArmPose() {
+
+		return new ArmPosition(getElevatorRotationAngle(), getElevatorLength());
+	}
+
+	public void setExtensionSpeed(double speed) {
+		elevatorMotor.set(ControlMode.PercentOutput, speed);
+	}
+
+	public void setRotationSpeed(double speed) {
+		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
+	}
+
+	public Command getArmTrajectoryFollower(Point2D.Double endPoint) {
+
+		return new ArmTrajetoryFollower(endPoint, trajectoryHandler, this::getArmPose, this::getGripperPositon,
+				this::setExtensionSpeed, this::setRotationSpeed, m_rController, getElevatorLength(), m_eController, ElevatorConstants.ElevatorMinExtension, ElevatorConstants.ElevatorMaxExtension, Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin/10.0),
+				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax/10.0));
+	}
+	public void setBreakMode(boolean enabled){
+		if (enabled){
+			elevatorRotationMotor.setNeutralMode(NeutralMode.Brake);
+			elevatorMotor.setNeutralMode(NeutralMode.Brake);
+		}
+		else{
+			elevatorRotationMotor.setNeutralMode(NeutralMode.Coast);
+			elevatorMotor.setNeutralMode(NeutralMode.Coast);
+		}
+	}
 	@Override
 	public void periodic() {
-
 		SmartDashboard.putBoolean("Cube Mode", (wristOrrientation == Wrist.cube) ? true : false);
 	}
 }
