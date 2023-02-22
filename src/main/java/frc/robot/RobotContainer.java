@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.DisableBreakMode;
+import frc.robot.commands.FlipWrist;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetElevatorLengthCommand;
 import frc.robot.commands.ZeroGyroCommand;
@@ -76,6 +77,8 @@ public class RobotContainer {
     operatorController.b().onTrue(new SetElevatorLengthCommand(300));
     operatorController.y().onTrue(new SetElevatorLengthCommand(750));*/
     operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(79.0,0)));
+
+    operatorController.rightBumper().onTrue(new FlipWrist());
 
     SmartDashboard.putData(new DisableBreakMode());
   }

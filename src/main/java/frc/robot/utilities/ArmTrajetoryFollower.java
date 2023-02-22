@@ -69,7 +69,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 	}
 
 	public void initialize() {
-		this.m_rController.enableContinuousInput(0, 360);
+		//this.m_rController.enableContinuousInput(0, 360);
 		this.m_timer.reset();
 		this.m_timer.start();
 
@@ -77,28 +77,40 @@ public class ArmTrajetoryFollower extends CommandBase {
 		System.out.println(endPoint);
 
 		m_trajectory = generator.generateTrajectories(xyPose.get(), endPoint);
+
+		////for (double i = 0; i < this.m_trajectory.getTotalTimeSeconds(); i += 0.015) {
+            //State s1 = this.m_trajectory.sample(i);
+			//SmartDashboard.putNumber("Expected Arm X", s1.poseMeters.getX());
+			//SmartDashboard.putNumber("Expected Arm Y", s1.poseMeters.getY());
+        //}
 	}
 
 	public void execute() {
 		double curTime = this.m_timer.get();
+		SmartDashboard.putNumber("CurTime", curTime);
 
-		double dt = curTime - this.lastTime;
 
 		State s = this.m_trajectory.sample(curTime);
+
+		
+
 		ArmPosition p = ArmTrajectoryGenerator.xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
 
-		if (p.getExtension() < minArmLength) {
-			p = new ArmPosition(p.getRotation(), minArmLength);
-		}
-		if (p.getExtension() > maxArmLength) {
-			p = new ArmPosition(p.getRotation(), maxArmLength);
-		}
-		if (p.getRotation().getDegrees() > maxArmRotation.getDegrees()) {
-			p = new ArmPosition(maxArmRotation, p.getExtension());
-		}
-		if (p.getRotation().getDegrees() < minArmRotation.getDegrees()) {
-			p = new ArmPosition(minArmRotation, p.getExtension());
-		}
+		SmartDashboard.putNumber("Expected Arm X", s.poseMeters.getX());
+		SmartDashboard.putNumber("Expected Arm Y", s.poseMeters.getY());
+
+		// if (p.getExtension() < minArmLength) {
+		// 	p = new ArmPosition(p.getRotation(), minArmLength);
+		// }
+		// if (p.getExtension() > maxArmLength) {
+		// 	p = new ArmPosition(p.getRotation(), maxArmLength);
+		// }
+		// if (p.getRotation().getDegrees() > maxArmRotation.getDegrees()) {
+		// 	p = new ArmPosition(maxArmRotation, p.getExtension());
+		// }
+		// if (p.getRotation().getDegrees() < minArmRotation.getDegrees()) {
+		// 	p = new ArmPosition(minArmRotation, p.getExtension());
+		// }
 
 		//TODO: add limiting box.
 
@@ -108,17 +120,18 @@ public class ArmTrajetoryFollower extends CommandBase {
 		SmartDashboard.putNumber("Real Extension", this.m_pose.get().getExtension());
 		SmartDashboard.putNumber("Real Rotation", this.m_pose.get().getRotation().getDegrees());
 
-		this.m_rController.setSetpoint(p.getRotation().getDegrees());
+		SmartDashboard.putNumber("Real Arm x", xyPose.get().getX());
+		SmartDashboard.putNumber("Real Arm y", xyPose.get().getY());
 
-		this.m_eController.setSetpoint(p.getExtension());
-
-		double targetE = this.m_eController.calculate(this.m_pose.get().getExtension(), dt);
-		System.out.println(targetE);
+		double targetE = this.m_eController.calculate(this.m_pose.get().getExtension(), p.getExtension());
 		double targetR = this.m_rController
-				.calculate(this.m_pose.get().getRotation().getDegrees() + xKf * xyPose.get().getX(), dt);
+				.calculate(this.m_pose.get().getRotation().getDegrees() + xKf * xyPose.get().getX(), p.getRotation().getDegrees());
+		SmartDashboard.putNumber("Requested Angle", p.getRotation().getDegrees());
+		SmartDashboard.putNumber("Rotation Speed Follower Output", targetR);
+		SmartDashboard.putNumber("Elevator Speed Follower Output", targetE);
 
-		setExtenionSpeed.accept(targetE);
-		setRotationSpeed.accept(targetR);
+		//setExtenionSpeed.accept(targetE);
+		//setRotationSpeed.accept(targetR);
 
 		this.lastTime = this.m_timer.get();
 	}

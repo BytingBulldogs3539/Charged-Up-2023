@@ -30,7 +30,6 @@ import frc.robot.utilities.ArmPosition;
 import frc.robot.utilities.ArmTrajectoryGenerator;
 import frc.robot.utilities.ArmTrajetoryFollower;
 
-
 public class ElevatorSubsystem extends SubsystemBase {
 
 	public enum Arm {
@@ -55,7 +54,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 	Arm armPosition = Arm.low;
 	Sides side = Sides.front;
-	Wrist wristOrrientation = Wrist.cube;
+	private Wrist wristOrrientation = Wrist.cube;
 
 	ArmTrajectoryGenerator trajectoryHandler;
 
@@ -68,8 +67,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		elevatorMotor.setNeutralMode(NeutralMode.Brake);
 		elevatorMotor.setSelectedSensorPosition(0);
 		elevatorMotor.setInverted(true);
-		elevatorMotor.configForwardSoftLimitThreshold(ElevatorConstants.elevatorSoftMax*10);
-		elevatorMotor.configReverseSoftLimitThreshold(ElevatorConstants.elevatorSoftMin*10);
+		elevatorMotor.configForwardSoftLimitThreshold(ElevatorConstants.elevatorSoftMax * 10);
+		elevatorMotor.configReverseSoftLimitThreshold(ElevatorConstants.elevatorSoftMin * 10);
 		elevatorMotor.configForwardSoftLimitEnable(true);
 		elevatorMotor.configReverseSoftLimitEnable(true);
 		elevatorMotor.configSelectedFeedbackCoefficient(ElevatorConstants.ElevatorConversionRatio);
@@ -115,22 +114,43 @@ public class ElevatorSubsystem extends SubsystemBase {
 		wrist.setNeutralMode(NeutralMode.Brake);
 		wrist.configRemoteFeedbackFilter(wristEncoder, 0);
 		wrist.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
+		wrist.config_kP(0, ElevatorConstants.WristKp);
+		wrist.config_kI(0, ElevatorConstants.WristKi);
+		wrist.config_kD(0, ElevatorConstants.WristKd);
+		wrist.configSelectedFeedbackCoefficient(0.087890625);
+		wristEncoder.setPosition(wristEncoder.getAbsolutePosition());
+
 
 		elevatorTab.addNumber("Arm X", this::getGripperX);
 		elevatorTab.addNumber("Arm Y", this::getGripperY);
-		m_eController = new PIDController(ElevatorConstants.ElevatorKp, ElevatorConstants.ElevatorKi, ElevatorConstants.ElevatorKd);
-		m_rController = new PIDController(ElevatorConstants.ElevatorRotationKp, ElevatorConstants.ElevatorRotationKi, ElevatorConstants.ElevatorRotationKd);
-	
+		elevatorTab.addNumber("Elevator Angle", () -> {
+			return getElevatorRotationAngle().getDegrees();
+		});
+		m_eController = new PIDController(ElevatorConstants.ElevatorKp, ElevatorConstants.ElevatorKi,
+				ElevatorConstants.ElevatorKd);
+		m_rController = new PIDController(ElevatorConstants.ElevatorRotationKp, ElevatorConstants.ElevatorRotationKi,
+				ElevatorConstants.ElevatorRotationKd);
+
 		trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
-			ElevatorConstants.maxArmAcceleration,ElevatorConstants.ElevatorMinExtension, new Point2D.Double(0,ElevatorConstants.ElevatorMaxExtension), new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension));
+				ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension,
+				new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension),
+				new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension));
 	}
 
-	/*public void setArmExtension(double length) {
-		elevatorMotor.set(ControlMode.MotionMagic, length);
-	}*/
+	/*
+	 * public void setArmExtension(double length) {
+	 * elevatorMotor.set(ControlMode.MotionMagic, length);
+	 * }
+	 */
 
-	public void setWristRotation(double angle) {
-		wrist.set(ControlMode.Position, angle);
+	public void setWristOrientation(Wrist orientation) {
+		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
+			this.wristOrrientation = orientation;
+		}
+	}
+	public Wrist getWristOrientation()
+	{
+		return wristOrrientation;
 	}
 
 	public double getArmRotationError() {
@@ -142,7 +162,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public double getElevatorLength() {
-		return (elevatorMotor.getSelectedSensorPosition()/10.0) + ElevatorConstants.ElevatorMinExtension;
+		return (elevatorMotor.getSelectedSensorPosition() / 10.0) + ElevatorConstants.ElevatorMinExtension;
 	}
 
 	public Rotation2d getElevatorRotationAngle() {
@@ -181,21 +201,31 @@ public class ElevatorSubsystem extends SubsystemBase {
 	public Command getArmTrajectoryFollower(Point2D.Double endPoint) {
 
 		return new ArmTrajetoryFollower(endPoint, trajectoryHandler, this::getArmPose, this::getGripperPositon,
-				this::setExtensionSpeed, this::setRotationSpeed, m_rController, getElevatorLength(), m_eController, ElevatorConstants.ElevatorMinExtension, ElevatorConstants.ElevatorMaxExtension, Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin/10.0),
-				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax/10.0));
+				this::setExtensionSpeed, this::setRotationSpeed, m_rController,
+				ElevatorConstants.ElevatorRotationFeedforwardRatio, m_eController,
+				ElevatorConstants.ElevatorMinExtension, ElevatorConstants.ElevatorMaxExtension,
+				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin / 10.0),
+				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax / 10.0), this);
 	}
-	public void setBreakMode(boolean enabled){
-		if (enabled){
+
+	public void setBreakMode(boolean enabled) {
+		if (enabled) {
 			elevatorRotationMotor.setNeutralMode(NeutralMode.Brake);
 			elevatorMotor.setNeutralMode(NeutralMode.Brake);
-		}
-		else{
+		} else {
 			elevatorRotationMotor.setNeutralMode(NeutralMode.Coast);
 			elevatorMotor.setNeutralMode(NeutralMode.Coast);
 		}
 	}
+
 	@Override
 	public void periodic() {
 		SmartDashboard.putBoolean("Cube Mode", (wristOrrientation == Wrist.cube) ? true : false);
+		if(wristOrrientation == Wrist.cube){
+			wrist.set(ControlMode.Position, 0);
+		}
+		if(wristOrrientation == Wrist.cone){
+			wrist.set(ControlMode.Position, 180);
 	}
+}
 }

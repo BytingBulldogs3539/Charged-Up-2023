@@ -35,6 +35,16 @@ public class ElevatorConstants extends BBConstants {
 	public static double ElevatorMaxExtension = 0.0;
 
 	public static double WristRotationMagnetOffset = 0.0;
+	
+	public static double WristKp = 0.0;
+	public static double WristKi = 0.0;
+	public static double WristKd = 0.0;
+
+	public static double IntakeLimitMin = 0.0;
+	public static double IntakeLimitMax = 0.0;
+
+	public static int wristSoftMax = 0;
+	public static int wristSoftMin = 0;
 
 	public static double ElevatorRotationFeedforwardRatio = 0.0;
 
