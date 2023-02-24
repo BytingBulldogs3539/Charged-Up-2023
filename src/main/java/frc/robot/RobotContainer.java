@@ -80,7 +80,7 @@ public class RobotContainer {
 
     operatorController.rightBumper().onTrue(new FlipWrist());
 
-    SmartDashboard.putData(new DisableBreakMode());
+    SmartDashboard.putData(new DisableBreakMode().ignoringDisable(true));
   }
 
   /**

@@ -125,13 +125,12 @@ public class ArmTrajetoryFollower extends CommandBase {
 
 		double targetE = this.m_eController.calculate(this.m_pose.get().getExtension(), p.getExtension());
 		double targetR = this.m_rController
-				.calculate(this.m_pose.get().getRotation().getDegrees() + xKf * xyPose.get().getX(), p.getRotation().getDegrees());
+				.calculate(this.m_pose.get().getRotation().getDegrees(), p.getRotation().getDegrees())+ xKf * s.poseMeters.getX();
 		SmartDashboard.putNumber("Requested Angle", p.getRotation().getDegrees());
-		SmartDashboard.putNumber("Rotation Speed Follower Output", targetR);
-		SmartDashboard.putNumber("Elevator Speed Follower Output", targetE);
 
-		//setExtenionSpeed.accept(targetE);
-		//setRotationSpeed.accept(targetR);
+
+		setExtenionSpeed.accept(targetE);
+		setRotationSpeed.accept(targetR);
 
 		this.lastTime = this.m_timer.get();
 	}

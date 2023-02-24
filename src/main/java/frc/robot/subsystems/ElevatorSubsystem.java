@@ -67,7 +67,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 		elevatorMotor.setNeutralMode(NeutralMode.Brake);
 		elevatorMotor.setSelectedSensorPosition(0);
 		elevatorMotor.setInverted(true);
-		elevatorMotor.configForwardSoftLimitThreshold(ElevatorConstants.elevatorSoftMax * 10);
+		elevatorMotor.configForwardSoftLimitThreshold((int)(ElevatorConstants.elevatorSoftMax * 10));
 		elevatorMotor.configReverseSoftLimitThreshold(ElevatorConstants.elevatorSoftMin * 10);
 		elevatorMotor.configForwardSoftLimitEnable(true);
 		elevatorMotor.configReverseSoftLimitEnable(true);
@@ -109,6 +109,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		wristEncoder = new CANCoder(IDConstants.WristEncoderID);
 		wristEncoder.configMagnetOffset(ElevatorConstants.WristRotationMagnetOffset);
+		wristEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
 		wrist = new TalonSRX(IDConstants.WristMotorID);
 		wrist.setNeutralMode(NeutralMode.Brake);
@@ -136,12 +137,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 				new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension),
 				new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension));
 	}
-
-	/*
-	 * public void setArmExtension(double length) {
-	 * elevatorMotor.set(ControlMode.MotionMagic, length);
-	 * }
-	 */
 
 	public void setWristOrientation(Wrist orientation) {
 		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
@@ -181,25 +176,35 @@ public class ElevatorSubsystem extends SubsystemBase {
 		return getGripperPositon().getY();
 	}
 
-	public double calculateRotationFeedForward() {
-		return getGripperPositon().getX() * ElevatorConstants.ElevatorRotationFeedforwardRatio;
-	}
-
 	public ArmPosition getArmPose() {
 
 		return new ArmPosition(getElevatorRotationAngle(), getElevatorLength());
 	}
 
 	public void setExtensionSpeed(double speed) {
+
 		elevatorMotor.set(ControlMode.PercentOutput, speed);
+		SmartDashboard.putNumber("Elevator Speed Follower Output", speed);
 	}
 
 	public void setRotationSpeed(double speed) {
+		SmartDashboard.putNumber("Rotation Speed Follower Output", speed);
+		if(speed>.25)
+		{
+			speed=.25;
+		}
+		if(speed<-.25)
+		{
+			speed=-.25;
+		}
 		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
+		
+
 	}
 
 	public Command getArmTrajectoryFollower(Point2D.Double endPoint) {
-
+		SmartDashboard.putNumber("Rotation Speed Follower FEEDFORWARD", ElevatorConstants.ElevatorRotationFeedforwardRatio);
+		
 		return new ArmTrajetoryFollower(endPoint, trajectoryHandler, this::getArmPose, this::getGripperPositon,
 				this::setExtensionSpeed, this::setRotationSpeed, m_rController,
 				ElevatorConstants.ElevatorRotationFeedforwardRatio, m_eController,
