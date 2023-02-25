@@ -28,6 +28,7 @@ import frc.robot.IDConstants;
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.utilities.ArmPosition;
 import frc.robot.utilities.ArmTrajectoryGenerator;
+import frc.robot.utilities.ArmTrajectoryGenerator2;
 import frc.robot.utilities.ArmTrajetoryFollower;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -56,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	Sides side = Sides.front;
 	private Wrist wristOrrientation = Wrist.cube;
 
-	ArmTrajectoryGenerator trajectoryHandler;
+	ArmTrajectoryGenerator2 trajectoryHandler;
 
 	ShuffleboardTab elevatorTab = Shuffleboard.getTab("Elevator");
 
@@ -132,10 +133,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		m_rController = new PIDController(ElevatorConstants.ElevatorRotationKp, ElevatorConstants.ElevatorRotationKi,
 				ElevatorConstants.ElevatorRotationKd);
 
-		trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
-				ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension,
-				new Point2D.Double(0, ElevatorConstants.ElevatorMinExtension),
-				new Point2D.Double(0, ElevatorConstants.ElevatorMinExtension));
+		trajectoryHandler = new ArmTrajectoryGenerator2(ElevatorConstants.maxArmVelocity,
+				ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension);
 	}
 
 	public void setWristOrientation(Wrist orientation) {
@@ -198,8 +197,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 			speed=-.25;
 		}
 		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
-		
-
 	}
 
 	public Command getArmTrajectoryFollower(Point2D.Double endPoint) {

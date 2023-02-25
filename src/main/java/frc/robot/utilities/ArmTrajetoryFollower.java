@@ -4,7 +4,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.util.ErrorMessages;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,7 +12,10 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import edu.wpi.first.math.trajectory.Trajectory.State;
+
+import com.swervedrivespecialties.swervelib.control.Trajectory;
+import com.swervedrivespecialties.swervelib.control.Path.State;
+
 import java.awt.geom.Point2D;
 
 public class ArmTrajetoryFollower extends CommandBase {
@@ -21,7 +23,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 
 	private Trajectory m_trajectory;
 	private final Point2D.Double endPoint;
-	private final ArmTrajectoryGenerator generator;
+	private final ArmTrajectoryGenerator2 generator;
 	private final Supplier<ArmPosition> m_pose;
 	private final Supplier<Point2D.Double> xyPose;
 	private final Consumer<Double> setExtenionSpeed;
@@ -36,13 +38,13 @@ public class ArmTrajetoryFollower extends CommandBase {
 	private Rotation2d maxArmRotation = Rotation2d.fromDegrees(0);
 
 	public 
-	ArmTrajetoryFollower(Point2D.Double endPoint,ArmTrajectoryGenerator generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
+	ArmTrajetoryFollower(Point2D.Double endPoint,ArmTrajectoryGenerator2 generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
 			Consumer<Double> setExtenionSpeed,
 			Consumer<Double> setRotationSpeed, PIDController rController, double rKf,
 			PIDController eController, double minArmLength, double maxArmLength, Rotation2d minArmRotation, Rotation2d maxArmRotation, Subsystem... requirements) {
 		this.endPoint = (Point2D.Double) ErrorMessages.requireNonNullParam(endPoint, "endPoint",
 		"SwerveControllerCommand");
-		this.generator = (ArmTrajectoryGenerator) ErrorMessages.requireNonNullParam(generator, "generator",
+		this.generator = (ArmTrajectoryGenerator2) ErrorMessages.requireNonNullParam(generator, "generator",
 		"SwerveControllerCommand");
 		this.m_pose = (Supplier<ArmPosition>) ErrorMessages.requireNonNullParam(pose, "pose",
 				"SwerveControllerCommand");
@@ -91,17 +93,17 @@ public class ArmTrajetoryFollower extends CommandBase {
 		SmartDashboard.putNumber("CurTime", curTime);
 
 
-		State s = this.m_trajectory.sample(curTime);
+		State s = this.m_trajectory.calculate(curTime).getPathState();
 
 		
 
-		ArmPosition p = ArmTrajectoryGenerator.xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
+		ArmPosition p = ArmTrajectoryGenerator.xYToPolar(s.getPosition().x, s.getPosition().y);
 		if(p.getRotation().getDegrees()<-95){
 			p = new ArmPosition(Rotation2d.fromDegrees(p.getRotation().getDegrees()+360), p.getExtension());
 		}
 
-		SmartDashboard.putNumber("Expected Arm X", s.poseMeters.getX());
-		SmartDashboard.putNumber("Expected Arm Y", s.poseMeters.getY());
+		SmartDashboard.putNumber("Expected Arm X", s.getPosition().x);
+		SmartDashboard.putNumber("Expected Arm Y", s.getPosition().y);
 
 		// if (p.getExtension() < minArmLength) {
 		// 	p = new ArmPosition(p.getRotation(), minArmLength);
@@ -129,7 +131,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 
 		double targetE = this.m_eController.calculate(this.m_pose.get().getExtension(), p.getExtension());
 		double targetR = this.m_rController
-				.calculate(this.m_pose.get().getRotation().getDegrees(), p.getRotation().getDegrees())+ xKf * s.poseMeters.getX();
+				.calculate(this.m_pose.get().getRotation().getDegrees(), p.getRotation().getDegrees())+ xKf * s.getPosition().x;
 		SmartDashboard.putNumber("Requested Angle", p.getRotation().getDegrees());
 
 
