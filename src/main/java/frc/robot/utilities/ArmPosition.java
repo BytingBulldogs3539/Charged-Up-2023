@@ -5,6 +5,8 @@
 package frc.robot.utilities;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import java.awt.geom.Point2D;
+
 
 /** Add your docs here. */
 public class ArmPosition {
@@ -22,6 +24,12 @@ public class ArmPosition {
     public Rotation2d getRotation()
     {
         return rotation;
+    }
+    public Point2D.Double polarToXY()
+    {
+        double x = Math.cos(this.getRotation().getRadians()) * this.getExtension();
+        double y = Math.sin(this.getRotation().getRadians()) * this.getExtension();
+        return new Point2D.Double(x, y);
     }
     
 }

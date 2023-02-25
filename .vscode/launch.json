@@ -6,6 +6,41 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch ArmTrajectoryGenerator2",
+      "request": "launch",
+      "mainClass": "frc.robot.utilities.ArmTrajectoryGenerator2",
+      "projectName": "Charged-Up-2023"
+    },
+    {
+      "type": "java",
+      "name": "Launch Interpolation",
+      "request": "launch",
+      "mainClass": "frc.robot.utilities.Interpolation",
+      "projectName": "Charged-Up-2023"
+    },
+    {
+      "type": "java",
+      "name": "Launch ArmMotionProfileGenerator",
+      "request": "launch",
+      "mainClass": "frc.robot.utilities.ArmMotionProfileGenerator",
+      "projectName": "Charged-Up-2023"
+    },
+    {
+      "type": "java",
+      "name": "Launch ArmMotionProfile",
+      "request": "launch",
+      "mainClass": "frc.robot.utilities.ArmMotionProfile",
+      "projectName": "Charged-Up-2023"
+    },
+    {
+      "type": "java",
+      "name": "Launch ArmTrajectoryFollower2",
+      "request": "launch",
+      "mainClass": "frc.robot.utilities.ArmTrajectoryFollower2",
+      "projectName": "Charged-Up-2023"
+    },
+    {
+      "type": "java",
       "name": "Launch ArmTrajectoryGenerator",
       "request": "launch",
       "mainClass": "frc.robot.utilities.ArmTrajectoryGenerator",
