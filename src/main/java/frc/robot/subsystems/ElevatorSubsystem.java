@@ -67,10 +67,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 		elevatorMotor.setNeutralMode(NeutralMode.Brake);
 		elevatorMotor.setSelectedSensorPosition(0);
 		elevatorMotor.setInverted(true);
-		elevatorMotor.configForwardSoftLimitThreshold((int)(ElevatorConstants.elevatorSoftMax * 10));
+		elevatorMotor.configForwardSoftLimitThreshold((ElevatorConstants.elevatorSoftMax * 10));
 		elevatorMotor.configReverseSoftLimitThreshold(ElevatorConstants.elevatorSoftMin * 10);
-		elevatorMotor.configForwardSoftLimitEnable(true);
-		elevatorMotor.configReverseSoftLimitEnable(true);
+		elevatorMotor.configForwardSoftLimitEnable(false);
+		elevatorMotor.configReverseSoftLimitEnable(false);
 		elevatorMotor.configSelectedFeedbackCoefficient(ElevatorConstants.ElevatorConversionRatio);
 		elevatorMotor.config_kP(0, ElevatorConstants.ElevatorKp);
 		elevatorMotor.config_kI(0, ElevatorConstants.ElevatorKi);
@@ -134,8 +134,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
 				ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension,
-				new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension),
-				new Point2D.Double(0, ElevatorConstants.ElevatorMaxExtension));
+				new Point2D.Double(0, ElevatorConstants.ElevatorMinExtension),
+				new Point2D.Double(0, ElevatorConstants.ElevatorMinExtension));
 	}
 
 	public void setWristOrientation(Wrist orientation) {
@@ -161,7 +161,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public Rotation2d getElevatorRotationAngle() {
-		return Rotation2d.fromDegrees(elevatorRotationEncoder.getAbsolutePosition());
+		return Rotation2d.fromDegrees(elevatorRotationEncoder.getPosition());
 	}
 
 	public Point2D.Double getGripperPositon() {

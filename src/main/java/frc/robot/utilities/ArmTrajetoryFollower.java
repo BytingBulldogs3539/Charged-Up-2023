@@ -35,7 +35,8 @@ public class ArmTrajetoryFollower extends CommandBase {
 	private Rotation2d minArmRotation = Rotation2d.fromDegrees(0);
 	private Rotation2d maxArmRotation = Rotation2d.fromDegrees(0);
 
-	public ArmTrajetoryFollower(Point2D.Double endPoint,ArmTrajectoryGenerator generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
+	public 
+	ArmTrajetoryFollower(Point2D.Double endPoint,ArmTrajectoryGenerator generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
 			Consumer<Double> setExtenionSpeed,
 			Consumer<Double> setRotationSpeed, PIDController rController, double rKf,
 			PIDController eController, double minArmLength, double maxArmLength, Rotation2d minArmRotation, Rotation2d maxArmRotation, Subsystem... requirements) {
@@ -95,6 +96,9 @@ public class ArmTrajetoryFollower extends CommandBase {
 		
 
 		ArmPosition p = ArmTrajectoryGenerator.xYToPolar(s.poseMeters.getX(), s.poseMeters.getY());
+		if(p.getRotation().getDegrees()<-95){
+			p = new ArmPosition(Rotation2d.fromDegrees(p.getRotation().getDegrees()+360), p.getExtension());
+		}
 
 		SmartDashboard.putNumber("Expected Arm X", s.poseMeters.getX());
 		SmartDashboard.putNumber("Expected Arm Y", s.poseMeters.getY());
@@ -137,6 +141,8 @@ public class ArmTrajetoryFollower extends CommandBase {
 
 	public void end(boolean interrupted) {
 		this.m_timer.stop();
+		setRotationSpeed.accept(0.0);
+		setExtenionSpeed.accept(0.0);
 	}
 
 	public boolean isFinished() {

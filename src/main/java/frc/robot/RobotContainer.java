@@ -76,7 +76,9 @@ public class RobotContainer {
 
     operatorController.b().onTrue(new SetElevatorLengthCommand(300));
     operatorController.y().onTrue(new SetElevatorLengthCommand(750));*/
-    operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(79.0,0)));
+    operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(38.926915,-70.0)));
+    operatorController.b().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(110.0,-1)));
+    operatorController.x().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(-60.57,-78.12)));
 
     operatorController.rightBumper().onTrue(new FlipWrist());
 
