@@ -6,31 +6,29 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.ElevatorSubsystem.Sides;
 
-public class SetElevatorLengthCommand extends CommandBase {
-  /** Creates a new SetElevatorCommand. */
-  int length = 0;
-
-  public SetElevatorLengthCommand(int length) {
-    this.length = length;
-    // "best amazing starts with a g and means motor"-Cameron Coesens
+public class SetArmSide extends CommandBase {
+  /** Creates a new SetArmHeight. */
+  Sides side;
+  public SetArmSide(Sides side) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.side = side;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   // RobotContainer.elevatorSubsystem.setArmExtension(length);
+    RobotContainer.elevatorSubsystem.setSide(side);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

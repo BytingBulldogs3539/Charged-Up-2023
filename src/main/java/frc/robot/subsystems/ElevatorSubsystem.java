@@ -21,20 +21,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElevatorConstants;
 import frc.robot.IDConstants;
-import frc.robot.commands.DisableBreakMode;
 import frc.robot.utilities.ArmPosition;
 import frc.robot.utilities.ArmTrajectoryGenerator;
-import frc.robot.utilities.ArmTrajectoryGenerator2;
 import frc.robot.utilities.ArmTrajetoryFollower;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
 	public enum Arm {
-		high, middle, low
+		high, middle, low, intake, HumanPlayer
 	}
 
 	public enum Wrist {
@@ -57,7 +54,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	Sides side = Sides.front;
 	private Wrist wristOrrientation = Wrist.cube;
 
-	ArmTrajectoryGenerator2 trajectoryHandler;
+	ArmTrajectoryGenerator trajectoryHandler;
 
 	ShuffleboardTab elevatorTab = Shuffleboard.getTab("Elevator");
 
@@ -122,7 +119,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 		wrist.configSelectedFeedbackCoefficient(0.087890625);
 		wristEncoder.setPosition(wristEncoder.getAbsolutePosition());
 
-
 		elevatorTab.addNumber("Arm X", this::getGripperX);
 		elevatorTab.addNumber("Arm Y", this::getGripperY);
 		elevatorTab.addNumber("Elevator Angle", () -> {
@@ -133,8 +129,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 		m_rController = new PIDController(ElevatorConstants.ElevatorRotationKp, ElevatorConstants.ElevatorRotationKi,
 				ElevatorConstants.ElevatorRotationKd);
 
-		trajectoryHandler = new ArmTrajectoryGenerator2(ElevatorConstants.maxArmVelocity,
+		trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
 				ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension);
+
+		setDefaultCommand(new ArmTrajetoryFollower(this::getTargetPosition, trajectoryHandler, this::getArmPose,
+				this::getGripperPositon,
+				this::setExtensionSpeed, this::setRotationSpeed, m_rController,
+				ElevatorConstants.ElevatorRotationFeedforwardRatio, m_eController,
+				ElevatorConstants.ElevatorMinExtension, ElevatorConstants.ElevatorMaxExtension,
+				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin / 10.0),
+				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax / 10.0), this));
 	}
 
 	public void setWristOrientation(Wrist orientation) {
@@ -142,17 +146,25 @@ public class ElevatorSubsystem extends SubsystemBase {
 			this.wristOrrientation = orientation;
 		}
 	}
-	public Wrist getWristOrientation()
-	{
+
+	public void setSide(Sides side) {
+		this.side = side;
+	}
+
+	public Wrist getWristOrientation() {
 		return wristOrrientation;
 	}
 
-	public double getArmRotationError() {
-		return Math.abs(elevatorRotationMotor.getClosedLoopError());
+	public Sides getSide() {
+		return side;
 	}
 
-	public double getArmExtensionError() {
-		return Math.abs(elevatorRotationMotor.getClosedLoopError());
+	public void setArmLevel(Arm arm) {
+		this.armPosition = arm;
+	}
+
+	public Arm getArmLevel() {
+		return armPosition;
 	}
 
 	public double getElevatorLength() {
@@ -188,26 +200,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 	public void setRotationSpeed(double speed) {
 		SmartDashboard.putNumber("Rotation Speed Follower Output", speed);
-		if(speed>.25)
-		{
-			speed=.25;
+		if (speed > .25) {
+			speed = .25;
 		}
-		if(speed<-.25)
-		{
-			speed=-.25;
+		if (speed < -.25) {
+			speed = -.25;
 		}
 		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
-	}
-
-	public Command getArmTrajectoryFollower(Point2D.Double endPoint) {
-		SmartDashboard.putNumber("Rotation Speed Follower FEEDFORWARD", ElevatorConstants.ElevatorRotationFeedforwardRatio);
-		
-		return new ArmTrajetoryFollower(endPoint, trajectoryHandler, this::getArmPose, this::getGripperPositon,
-				this::setExtensionSpeed, this::setRotationSpeed, m_rController,
-				ElevatorConstants.ElevatorRotationFeedforwardRatio, m_eController,
-				ElevatorConstants.ElevatorMinExtension, ElevatorConstants.ElevatorMaxExtension,
-				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin / 10.0),
-				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax / 10.0), this);
 	}
 
 	public void setBreakMode(boolean enabled) {
@@ -220,14 +219,83 @@ public class ElevatorSubsystem extends SubsystemBase {
 		}
 	}
 
+	public Point2D.Double getTargetPosition() {
+		if (side == Sides.front) {
+			if (wristOrrientation == Wrist.cone) {
+				if (armPosition == Arm.intake) {
+					return new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+				} else if (armPosition == Arm.low) {
+					return new Point2D.Double(ElevatorConstants.frontConeLowX, ElevatorConstants.frontConeLowY);
+				} else if (armPosition == Arm.middle) {
+					return new Point2D.Double(ElevatorConstants.frontConeMidX, ElevatorConstants.frontConeMidY);
+				} else if (armPosition == Arm.high) {
+					return new Point2D.Double(ElevatorConstants.frontConeHighX, ElevatorConstants.frontConeHighY);
+				} else if (armPosition == Arm.HumanPlayer) {
+					return new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
+							ElevatorConstants.frontConeHumanPlayerY);
+				}
+			} else if (wristOrrientation == Wrist.cube) {
+				if (armPosition == Arm.intake) {
+					return new Point2D.Double(ElevatorConstants.frontCubeIntakeX, ElevatorConstants.frontCubeIntakeY);
+				} else if (armPosition == Arm.low) {
+					return new Point2D.Double(ElevatorConstants.frontCubeLowX, ElevatorConstants.frontCubeLowY);
+				} else if (armPosition == Arm.middle) {
+					return new Point2D.Double(ElevatorConstants.frontCubeMidX, ElevatorConstants.frontCubeMidY);
+				} else if (armPosition == Arm.high) {
+					return new Point2D.Double(ElevatorConstants.frontCubeHighX, ElevatorConstants.frontCubeHighY);
+				} else if (armPosition == Arm.HumanPlayer) {
+					return new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
+							ElevatorConstants.frontConeHumanPlayerY);
+				}
+			}
+		} else if (side == Sides.back) {
+			if (wristOrrientation == Wrist.cone) {
+				if (armPosition == Arm.intake) {
+					return new Point2D.Double(ElevatorConstants.backConeIntakeX, ElevatorConstants.backConeIntakeY);
+				} else if (armPosition == Arm.low) {
+					return new Point2D.Double(ElevatorConstants.backConeLowX, ElevatorConstants.backConeLowY);
+				} else if (armPosition == Arm.middle) {
+					return new Point2D.Double(ElevatorConstants.backConeMidX, ElevatorConstants.backConeMidY);
+				} else if (armPosition == Arm.high) {
+					return new Point2D.Double(ElevatorConstants.backConeHighX, ElevatorConstants.backConeHighY);
+				} else if (armPosition == Arm.HumanPlayer) {
+					return new Point2D.Double(ElevatorConstants.backConeHumanPlayerX,
+							ElevatorConstants.backConeHumanPlayerY);
+				}
+			} else if (wristOrrientation == Wrist.cube) {
+				if (armPosition == Arm.intake) {
+					return new Point2D.Double(ElevatorConstants.backCubeIntakeX, ElevatorConstants.backCubeIntakeY);
+				} else if (armPosition == Arm.low) {
+					return new Point2D.Double(ElevatorConstants.backCubeLowX, ElevatorConstants.backCubeLowY);
+				} else if (armPosition == Arm.middle) {
+					return new Point2D.Double(ElevatorConstants.backCubeMidX, ElevatorConstants.backCubeMidY);
+				} else if (armPosition == Arm.high) {
+					return new Point2D.Double(ElevatorConstants.backCubeHighX, ElevatorConstants.backCubeHighY);
+				} else if (armPosition == Arm.HumanPlayer) {
+					return new Point2D.Double(ElevatorConstants.backCubeHumanPlayerX,
+							ElevatorConstants.backCubeHumanPlayerY);
+				}
+			}
+		}
+		return new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+	}
+
 	@Override
 	public void periodic() {
 		SmartDashboard.putBoolean("Cube Mode", (wristOrrientation == Wrist.cube) ? true : false);
-		if(wristOrrientation == Wrist.cube){
-			wrist.set(ControlMode.Position, 0);
+		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
+			if (wristOrrientation == Wrist.cube && side == Sides.front) {
+				wrist.set(ControlMode.Position, 0);
+			}
+			if (wristOrrientation == Wrist.cube && side == Sides.back) {
+				wrist.set(ControlMode.Position, 180);
+			}
+			if (wristOrrientation == Wrist.cone && side == Sides.back) {
+				wrist.set(ControlMode.Position, 0);
+			}
+			if (wristOrrientation == Wrist.cone && side == Sides.front) {
+				wrist.set(ControlMode.Position, 180);
+			}
 		}
-		if(wristOrrientation == Wrist.cone){
-			wrist.set(ControlMode.Position, 180);
 	}
-}
 }

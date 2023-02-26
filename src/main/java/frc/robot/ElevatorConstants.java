@@ -104,4 +104,15 @@ public class ElevatorConstants extends BBConstants {
 	public static double backConeIntakeX = 0;
 	public static double backConeIntakeY = 0;
 
+	public static double backConeHumanPlayerX = 0;
+	public static double backConeHumanPlayerY = 0;
+
+	public static double backCubeHumanPlayerX = 0;
+	public static double backCubeHumanPlayerY = 0;
+
+	public static double frontConeHumanPlayerX = 0;
+	public static double frontConeHumanPlayerY = 0;
+
+	public static double frontCubeHumanPlayerX = 0;
+	public static double frontCubeHumanPlayerY = 0;
 }

@@ -22,8 +22,8 @@ public class ArmTrajetoryFollower extends CommandBase {
 	private final Timer m_timer = new Timer();
 
 	private Trajectory m_trajectory;
-	private final Point2D.Double endPoint;
-	private final ArmTrajectoryGenerator2 generator;
+	private final Supplier<Point2D.Double> endPointSupplier;
+	private final ArmTrajectoryGenerator generator;
 	private final Supplier<ArmPosition> m_pose;
 	private final Supplier<Point2D.Double> xyPose;
 	private final Consumer<Double> setExtenionSpeed;
@@ -36,15 +36,16 @@ public class ArmTrajetoryFollower extends CommandBase {
 	private double maxArmLength = 100.0;
 	private Rotation2d minArmRotation = Rotation2d.fromDegrees(0);
 	private Rotation2d maxArmRotation = Rotation2d.fromDegrees(0);
+	private Point2D.Double lastEndpoint = null;
 
 	public 
-	ArmTrajetoryFollower(Point2D.Double endPoint,ArmTrajectoryGenerator2 generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
+	ArmTrajetoryFollower(Supplier<Point2D.Double> endPoint,ArmTrajectoryGenerator generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
 			Consumer<Double> setExtenionSpeed,
 			Consumer<Double> setRotationSpeed, PIDController rController, double rKf,
 			PIDController eController, double minArmLength, double maxArmLength, Rotation2d minArmRotation, Rotation2d maxArmRotation, Subsystem... requirements) {
-		this.endPoint = (Point2D.Double) ErrorMessages.requireNonNullParam(endPoint, "endPoint",
+		this.endPointSupplier = (Supplier<Point2D.Double>) ErrorMessages.requireNonNullParam(endPoint, "endPoint",
 		"SwerveControllerCommand");
-		this.generator = (ArmTrajectoryGenerator2) ErrorMessages.requireNonNullParam(generator, "generator",
+		this.generator = (ArmTrajectoryGenerator) ErrorMessages.requireNonNullParam(generator, "generator",
 		"SwerveControllerCommand");
 		this.m_pose = (Supplier<ArmPosition>) ErrorMessages.requireNonNullParam(pose, "pose",
 				"SwerveControllerCommand");
@@ -72,23 +73,14 @@ public class ArmTrajetoryFollower extends CommandBase {
 	}
 
 	public void initialize() {
-		//this.m_rController.enableContinuousInput(0, 360);
 		this.m_timer.reset();
 		this.m_timer.start();
-
-		System.out.println(xyPose.get());
-		System.out.println(endPoint);
-
-		m_trajectory = generator.generateTrajectories(xyPose.get(), endPoint);
-
-		////for (double i = 0; i < this.m_trajectory.getTotalTimeSeconds(); i += 0.015) {
-            //State s1 = this.m_trajectory.sample(i);
-			//SmartDashboard.putNumber("Expected Arm X", s1.poseMeters.getX());
-			//SmartDashboard.putNumber("Expected Arm Y", s1.poseMeters.getY());
-        //}
 	}
 
 	public void execute() {
+		if(endPointSupplier.get() != lastEndpoint)
+			m_trajectory = generator.generateTrajectories(xyPose.get(), endPointSupplier.get());
+
 		double curTime = this.m_timer.get();
 		SmartDashboard.putNumber("CurTime", curTime);
 
@@ -102,9 +94,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 			p = new ArmPosition(Rotation2d.fromDegrees(p.getRotation().getDegrees()+360), p.getExtension());
 		}
 
-		SmartDashboard.putNumber("Expected Arm X", s.getPosition().x);
-		SmartDashboard.putNumber("Expected Arm Y", s.getPosition().y);
-
+		
 		// if (p.getExtension() < minArmLength) {
 		// 	p = new ArmPosition(p.getRotation(), minArmLength);
 		// }
@@ -120,6 +110,9 @@ public class ArmTrajetoryFollower extends CommandBase {
 
 		//TODO: add limiting box.
 
+		SmartDashboard.putNumber("Expected Arm X", s.getPosition().x);
+		SmartDashboard.putNumber("Expected Arm Y", s.getPosition().y);
+
 		SmartDashboard.putNumber("Expected Extension", p.getExtension());
 		SmartDashboard.putNumber("Expected Rotation", p.getRotation().getDegrees());
 
@@ -129,16 +122,18 @@ public class ArmTrajetoryFollower extends CommandBase {
 		SmartDashboard.putNumber("Real Arm x", xyPose.get().getX());
 		SmartDashboard.putNumber("Real Arm y", xyPose.get().getY());
 
+		
+
 		double targetE = this.m_eController.calculate(this.m_pose.get().getExtension(), p.getExtension());
 		double targetR = this.m_rController
 				.calculate(this.m_pose.get().getRotation().getDegrees(), p.getRotation().getDegrees())+ xKf * s.getPosition().x;
-		SmartDashboard.putNumber("Requested Angle", p.getRotation().getDegrees());
 
 
 		setExtenionSpeed.accept(targetE);
 		setRotationSpeed.accept(targetR);
 
 		this.lastTime = this.m_timer.get();
+		lastEndpoint = endPointSupplier.get();
 	}
 
 	public void end(boolean interrupted) {

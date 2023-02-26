@@ -5,13 +5,16 @@
 package frc.robot;
 
 import frc.robot.commands.DisableBreakMode;
+import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.SetElevatorLengthCommand;
+import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.Arm;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -43,6 +46,9 @@ public class RobotContainer {
   public static CommandXboxController driverController = new CommandXboxController(1);
   public static CommandXboxController operatorController = new CommandXboxController(0);
 
+  public SendableChooser<Command> chooser;
+
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -72,18 +78,29 @@ public class RobotContainer {
 
     operatorController.rightTrigger().whileTrue(new IntakeCommand(-1));
 
-   /*  operatorController.a().onTrue(new SetElevatorLengthCommand(0));
+    operatorController.leftBumper().onTrue(new FlipArmSideCommand());
 
-    operatorController.b().onTrue(new SetElevatorLengthCommand(300));
-    operatorController.y().onTrue(new SetElevatorLengthCommand(750));*/
-    operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(38.926915,-70.0)));
-    operatorController.b().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(110.0,-1)));
-    operatorController.x().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(-60.57,-78.12)));
+    operatorController.a().onTrue(new SetArmHeight(Arm.intake));
+    operatorController.b().onTrue(new SetArmHeight(Arm.low));
+    operatorController.y().onTrue(new SetArmHeight(Arm.middle));
+    operatorController.x().onTrue(new SetArmHeight(Arm.high));
+    operatorController.povRight().onTrue(new SetArmHeight(Arm.HumanPlayer));
+
+    //operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(38.926915,-70.0)));
+    //operatorController.b().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(110.0,-1)));
+    //operatorController.x().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(-60.57,-78.12)));
 
     operatorController.rightBumper().onTrue(new FlipWrist());
 
-    SmartDashboard.putData(new DisableBreakMode().ignoringDisable(true));
+    SmartDashboard.putData(new DisableBreakMode());
   }
+
+  public void putAuton() {
+		chooser = new SendableChooser<Command>();
+		chooser.addOption("Cube Left", null);
+
+		SmartDashboard.putData("Auto Chooser", chooser);
+	}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
