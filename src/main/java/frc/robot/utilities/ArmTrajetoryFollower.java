@@ -5,10 +5,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.ErrorMessages;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.ElevatorConstants;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -17,6 +19,7 @@ import com.swervedrivespecialties.swervelib.control.Trajectory;
 import com.swervedrivespecialties.swervelib.control.Path.State;
 
 import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 
 public class ArmTrajetoryFollower extends CommandBase {
 	private final Timer m_timer = new Timer();
@@ -31,12 +34,11 @@ public class ArmTrajetoryFollower extends CommandBase {
 	private final PIDController m_rController;
 	private final PIDController m_eController;
 	private final double xKf;
-	private double lastTime = 0.0D;
 	private double minArmLength = 0.0;
 	private double maxArmLength = 100.0;
 	private Rotation2d minArmRotation = Rotation2d.fromDegrees(0);
 	private Rotation2d maxArmRotation = Rotation2d.fromDegrees(0);
-	private Point2D.Double lastEndpoint = null;
+	private Point2D.Double lastEndpoint = new Point2D.Double(0,0);
 
 	public 
 	ArmTrajetoryFollower(Supplier<Point2D.Double> endPoint,ArmTrajectoryGenerator generator,Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
@@ -75,11 +77,28 @@ public class ArmTrajetoryFollower extends CommandBase {
 	public void initialize() {
 		this.m_timer.reset();
 		this.m_timer.start();
+		m_trajectory = generator.generateTrajectories(xyPose.get(), endPointSupplier.get());
+
 	}
 
 	public void execute() {
-		if(endPointSupplier.get() != lastEndpoint)
-			m_trajectory = generator.generateTrajectories(xyPose.get(), endPointSupplier.get());
+		if(endPointSupplier.get().x != lastEndpoint.x && endPointSupplier.get().y != lastEndpoint.y)
+		{
+			System.out.println(xyPose.get().x+" " +xyPose.get().y);
+			System.out.println(endPointSupplier.get().x+" " + endPointSupplier.get().y);
+			double endPointx = Math.floor(endPointSupplier.get().x*100)/100.0;
+			double endPointy = Math.floor(endPointSupplier.get().y*100)/100.0;
+			double startPointx = Math.floor(xyPose.get().x*100)/100.0;
+			double startPointy = Math.floor(xyPose.get().y*100)/100.0;
+			m_trajectory = generator.generateTrajectories(new Point2D.Double(startPointx, startPointy), new Point2D.Double(endPointx, endPointy));
+
+			System.out.println(m_trajectory.getDuration());
+			this.m_timer.stop();
+			this.m_timer.reset();
+			this.m_timer.start();
+			System.out.println("hi");
+			System.out.println(endPointSupplier.get().x +" : "+endPointSupplier.get().y);
+		}
 
 		double curTime = this.m_timer.get();
 		SmartDashboard.putNumber("CurTime", curTime);
@@ -90,9 +109,18 @@ public class ArmTrajetoryFollower extends CommandBase {
 		
 
 		ArmPosition p = ArmTrajectoryGenerator.xYToPolar(s.getPosition().x, s.getPosition().y);
+
+		
 		if(p.getRotation().getDegrees()<-95){
 			p = new ArmPosition(Rotation2d.fromDegrees(p.getRotation().getDegrees()+360), p.getExtension());
 		}
+
+		//if(p.getExtension() < ElevatorConstants.ElevatorMinExtension)
+		//{
+			//p = new ArmPosition(p.getRotation(), minArmLength);
+			//DriverStation.reportError("Arm Min Extension", false);
+		//}
+
 
 		
 		// if (p.getExtension() < minArmLength) {
@@ -132,7 +160,6 @@ public class ArmTrajetoryFollower extends CommandBase {
 		setExtenionSpeed.accept(targetE);
 		setRotationSpeed.accept(targetR);
 
-		this.lastTime = this.m_timer.get();
 		lastEndpoint = endPointSupplier.get();
 	}
 

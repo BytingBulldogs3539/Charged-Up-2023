@@ -50,7 +50,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	PIDController m_rController;
 	PIDController m_eController;
 
-	Arm armPosition = Arm.low;
+	Arm armPosition = Arm.intake;
 	Sides side = Sides.front;
 	private Wrist wristOrrientation = Wrist.cube;
 
@@ -194,7 +194,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 	public void setExtensionSpeed(double speed) {
 
-		elevatorMotor.set(ControlMode.PercentOutput, speed);
+		//elevatorMotor.set(ControlMode.PercentOutput, speed);
 		SmartDashboard.putNumber("Elevator Speed Follower Output", speed);
 	}
 
@@ -206,7 +206,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 		if (speed < -.25) {
 			speed = -.25;
 		}
-		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
+		//elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	public void setBreakMode(boolean enabled) {
@@ -220,64 +220,68 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public Point2D.Double getTargetPosition() {
+		Point2D.Double pos = new Point2D.Double(0,0);
 		if (side == Sides.front) {
 			if (wristOrrientation == Wrist.cone) {
 				if (armPosition == Arm.intake) {
-					return new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+					pos = new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
 				} else if (armPosition == Arm.low) {
-					return new Point2D.Double(ElevatorConstants.frontConeLowX, ElevatorConstants.frontConeLowY);
+					pos = new Point2D.Double(ElevatorConstants.frontConeLowX, ElevatorConstants.frontConeLowY);
 				} else if (armPosition == Arm.middle) {
-					return new Point2D.Double(ElevatorConstants.frontConeMidX, ElevatorConstants.frontConeMidY);
+					pos = new Point2D.Double(ElevatorConstants.frontConeMidX, ElevatorConstants.frontConeMidY);
 				} else if (armPosition == Arm.high) {
-					return new Point2D.Double(ElevatorConstants.frontConeHighX, ElevatorConstants.frontConeHighY);
+					pos = new Point2D.Double(ElevatorConstants.frontConeHighX, ElevatorConstants.frontConeHighY);
 				} else if (armPosition == Arm.HumanPlayer) {
-					return new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
+					pos = new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
 							ElevatorConstants.frontConeHumanPlayerY);
 				}
 			} else if (wristOrrientation == Wrist.cube) {
 				if (armPosition == Arm.intake) {
-					return new Point2D.Double(ElevatorConstants.frontCubeIntakeX, ElevatorConstants.frontCubeIntakeY);
+					pos = new Point2D.Double(ElevatorConstants.frontCubeIntakeX, ElevatorConstants.frontCubeIntakeY);
 				} else if (armPosition == Arm.low) {
-					return new Point2D.Double(ElevatorConstants.frontCubeLowX, ElevatorConstants.frontCubeLowY);
+					pos = new Point2D.Double(ElevatorConstants.frontCubeLowX, ElevatorConstants.frontCubeLowY);
 				} else if (armPosition == Arm.middle) {
-					return new Point2D.Double(ElevatorConstants.frontCubeMidX, ElevatorConstants.frontCubeMidY);
+					pos = new Point2D.Double(ElevatorConstants.frontCubeMidX, ElevatorConstants.frontCubeMidY);
 				} else if (armPosition == Arm.high) {
-					return new Point2D.Double(ElevatorConstants.frontCubeHighX, ElevatorConstants.frontCubeHighY);
+					pos = new Point2D.Double(ElevatorConstants.frontCubeHighX, ElevatorConstants.frontCubeHighY);
 				} else if (armPosition == Arm.HumanPlayer) {
-					return new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
+					pos = new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
 							ElevatorConstants.frontConeHumanPlayerY);
 				}
 			}
 		} else if (side == Sides.back) {
 			if (wristOrrientation == Wrist.cone) {
 				if (armPosition == Arm.intake) {
-					return new Point2D.Double(ElevatorConstants.backConeIntakeX, ElevatorConstants.backConeIntakeY);
+					pos = new Point2D.Double(ElevatorConstants.backConeIntakeX, ElevatorConstants.backConeIntakeY);
 				} else if (armPosition == Arm.low) {
-					return new Point2D.Double(ElevatorConstants.backConeLowX, ElevatorConstants.backConeLowY);
+					pos = new Point2D.Double(ElevatorConstants.backConeLowX, ElevatorConstants.backConeLowY);
 				} else if (armPosition == Arm.middle) {
-					return new Point2D.Double(ElevatorConstants.backConeMidX, ElevatorConstants.backConeMidY);
+					pos = new Point2D.Double(ElevatorConstants.backConeMidX, ElevatorConstants.backConeMidY);
 				} else if (armPosition == Arm.high) {
-					return new Point2D.Double(ElevatorConstants.backConeHighX, ElevatorConstants.backConeHighY);
+					pos = new Point2D.Double(ElevatorConstants.backConeHighX, ElevatorConstants.backConeHighY);
 				} else if (armPosition == Arm.HumanPlayer) {
-					return new Point2D.Double(ElevatorConstants.backConeHumanPlayerX,
+					pos = new Point2D.Double(ElevatorConstants.backConeHumanPlayerX,
 							ElevatorConstants.backConeHumanPlayerY);
 				}
 			} else if (wristOrrientation == Wrist.cube) {
 				if (armPosition == Arm.intake) {
-					return new Point2D.Double(ElevatorConstants.backCubeIntakeX, ElevatorConstants.backCubeIntakeY);
+					pos = new Point2D.Double(ElevatorConstants.backCubeIntakeX, ElevatorConstants.backCubeIntakeY);
 				} else if (armPosition == Arm.low) {
-					return new Point2D.Double(ElevatorConstants.backCubeLowX, ElevatorConstants.backCubeLowY);
+					pos = new Point2D.Double(ElevatorConstants.backCubeLowX, ElevatorConstants.backCubeLowY);
 				} else if (armPosition == Arm.middle) {
-					return new Point2D.Double(ElevatorConstants.backCubeMidX, ElevatorConstants.backCubeMidY);
+					pos = new Point2D.Double(ElevatorConstants.backCubeMidX, ElevatorConstants.backCubeMidY);
 				} else if (armPosition == Arm.high) {
-					return new Point2D.Double(ElevatorConstants.backCubeHighX, ElevatorConstants.backCubeHighY);
+					pos = new Point2D.Double(ElevatorConstants.backCubeHighX, ElevatorConstants.backCubeHighY);
 				} else if (armPosition == Arm.HumanPlayer) {
-					return new Point2D.Double(ElevatorConstants.backCubeHumanPlayerX,
+					pos = new Point2D.Double(ElevatorConstants.backCubeHumanPlayerX,
 							ElevatorConstants.backCubeHumanPlayerY);
 				}
 			}
 		}
-		return new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+		if(pos.x == 0 && pos.y == 0){
+		pos = new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+		}
+		return pos;
 	}
 
 	@Override

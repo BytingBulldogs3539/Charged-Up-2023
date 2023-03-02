@@ -55,17 +55,17 @@ public class ElevatorConstants extends BBConstants {
 	public static int elevatorRotationSoftMin = 0;
 
 	// Cubes
-	public static double frontCubeHighX = 0;
-	public static double frontCubeHighY = 0;
+	public static double frontCubeHighX = 128.8;
+	public static double frontCubeHighY = 28.02;
 
-	public static double frontCubeMidX = 0;
-	public static double frontCubeMidY = 0;
+	public static double frontCubeMidX = 80.0;
+	public static double frontCubeMidY = -3.0;
 
-	public static double frontCubeLowX = 0;
-	public static double frontCubeLowY = 0;
+	public static double frontCubeLowX = 63.5;
+	public static double frontCubeLowY = -54.5;
 
-	public static double frontCubeIntakeX = 0;
-	public static double frontCubeIntakeY = 0;
+	public static double frontCubeIntakeX = 27.8;
+	public static double frontCubeIntakeY = -73.7;
 
 	public static double backCubeHighX = 0;
 	public static double backCubeHighY = 0;
@@ -80,17 +80,17 @@ public class ElevatorConstants extends BBConstants {
 	public static double backCubeIntakeY = 0;
 
 	// Cones
-	public static double frontConeHighX = 0;
-	public static double frontConeHighY = 0;
+	public static double frontConeHighX = 142.820453;
+	public static double frontConeHighY = 38.581881;
 
-	public static double frontConeMidX = 0;
-	public static double frontConeMidY = 0;
+	public static double frontConeMidX = 99.422856;
+	public static double frontConeMidY = 7.6424639;
 
-	public static double frontConeLowX = 0;
-	public static double frontConeLowY = 0;
+	public static double frontConeLowX = 72.864637;
+	public static double frontConeLowY = -50.203040;
 
-	public static double frontConeIntakeX = 0;
-	public static double frontConeIntakeY = 0;
+	public static double frontConeIntakeX = 69.62155243;
+	public static double frontConeIntakeY = -55.0238769;
 
 	public static double backConeHighX = 0;
 	public static double backConeHighY = 0;
