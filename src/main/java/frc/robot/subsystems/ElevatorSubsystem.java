@@ -132,6 +132,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
 				ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension);
 
+		wrist.set(ControlMode.Position, wrist.getSelectedSensorPosition());
+
 		setDefaultCommand(new ArmTrajetoryFollower(this::getTargetPosition, trajectoryHandler, this::getArmPose,
 				this::getGripperPositon,
 				this::setExtensionSpeed, this::setRotationSpeed, m_rController,
