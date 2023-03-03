@@ -19,7 +19,7 @@ public class FlipArmSideCommand extends CommandBase {
   public void initialize() {
     if(RobotContainer.elevatorSubsystem.getSide() == ElevatorSubsystem.Sides.front)
       RobotContainer.elevatorSubsystem.setSide(ElevatorSubsystem.Sides.back);
-    if(RobotContainer.elevatorSubsystem.getSide() == ElevatorSubsystem.Sides.back)
+    else if(RobotContainer.elevatorSubsystem.getSide() == ElevatorSubsystem.Sides.back)
       RobotContainer.elevatorSubsystem.setSide(ElevatorSubsystem.Sides.front);
   }
 

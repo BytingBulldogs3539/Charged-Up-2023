@@ -84,7 +84,7 @@ public class RobotContainer {
     operatorController.b().onTrue(new SetArmHeight(Arm.low));
     operatorController.y().onTrue(new SetArmHeight(Arm.middle));
     operatorController.x().onTrue(new SetArmHeight(Arm.high));
-    operatorController.povRight().onTrue(new SetArmHeight(Arm.HumanPlayer));
+    //operatorController.povRight().onTrue(new SetArmHeight(Arm.HumanPlayer));
 
     //operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(38.926915,-70.0)));
     //operatorController.b().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(110.0,-1)));

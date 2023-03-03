@@ -67,8 +67,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		elevatorMotor.setInverted(true);
 		elevatorMotor.configForwardSoftLimitThreshold((ElevatorConstants.elevatorSoftMax * 10));
 		elevatorMotor.configReverseSoftLimitThreshold(ElevatorConstants.elevatorSoftMin * 10);
-		elevatorMotor.configForwardSoftLimitEnable(false);
-		elevatorMotor.configReverseSoftLimitEnable(false);
+		elevatorMotor.configForwardSoftLimitEnable(true);
+		elevatorMotor.configReverseSoftLimitEnable(true);
 		elevatorMotor.configSelectedFeedbackCoefficient(ElevatorConstants.ElevatorConversionRatio);
 		elevatorMotor.config_kP(0, ElevatorConstants.ElevatorKp);
 		elevatorMotor.config_kI(0, ElevatorConstants.ElevatorKi);
@@ -194,19 +194,19 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 	public void setExtensionSpeed(double speed) {
 
-		//elevatorMotor.set(ControlMode.PercentOutput, speed);
+		elevatorMotor.set(ControlMode.PercentOutput, speed);
 		SmartDashboard.putNumber("Elevator Speed Follower Output", speed);
 	}
 
 	public void setRotationSpeed(double speed) {
 		SmartDashboard.putNumber("Rotation Speed Follower Output", speed);
-		if (speed > .25) {
-			speed = .25;
+		if (speed > .35) {
+			speed = .35;
 		}
-		if (speed < -.25) {
-			speed = -.25;
+		if (speed < -.35) {
+			speed = -.35;
 		}
-		//elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
+		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	public void setBreakMode(boolean enabled) {

@@ -58,7 +58,7 @@ public class ElevatorConstants extends BBConstants {
 	public static double frontCubeHighX = 128.8;
 	public static double frontCubeHighY = 28.02;
 
-	public static double frontCubeMidX = 80.0;
+	public static double frontCubeMidX = 83.0;
 	public static double frontCubeMidY = -3.0;
 
 	public static double frontCubeLowX = 63.5;

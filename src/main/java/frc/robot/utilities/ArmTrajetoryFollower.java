@@ -82,9 +82,10 @@ public class ArmTrajetoryFollower extends CommandBase {
 	}
 
 	public void execute() {
-		if(endPointSupplier.get().x != lastEndpoint.x && endPointSupplier.get().y != lastEndpoint.y)
+		//System.out.println(endPointSupplier.get().x+" " + endPointSupplier.get().y);
+		if(endPointSupplier.get().x != lastEndpoint.x || endPointSupplier.get().y != lastEndpoint.y)
 		{
-			System.out.println(xyPose.get().x+" " +xyPose.get().y);
+			//System.out.println(xyPose.get().x+" " +xyPose.get().y);
 			System.out.println(endPointSupplier.get().x+" " + endPointSupplier.get().y);
 			double endPointx = Math.floor(endPointSupplier.get().x*100)/100.0;
 			double endPointy = Math.floor(endPointSupplier.get().y*100)/100.0;
@@ -96,7 +97,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 			this.m_timer.stop();
 			this.m_timer.reset();
 			this.m_timer.start();
-			System.out.println("hi");
+			System.out.println("yolo");
 			System.out.println(endPointSupplier.get().x +" : "+endPointSupplier.get().y);
 		}
 
@@ -115,11 +116,11 @@ public class ArmTrajetoryFollower extends CommandBase {
 			p = new ArmPosition(Rotation2d.fromDegrees(p.getRotation().getDegrees()+360), p.getExtension());
 		}
 
-		//if(p.getExtension() < ElevatorConstants.ElevatorMinExtension)
-		//{
-			//p = new ArmPosition(p.getRotation(), minArmLength);
-			//DriverStation.reportError("Arm Min Extension", false);
-		//}
+		if(p.getExtension() < ElevatorConstants.ElevatorMinExtension)
+		{
+			p = new ArmPosition(p.getRotation(), minArmLength);
+			DriverStation.reportError("Arm Min Extension", false);
+		}
 
 
 		
