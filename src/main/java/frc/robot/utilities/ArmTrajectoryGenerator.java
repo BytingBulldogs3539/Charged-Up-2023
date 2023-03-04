@@ -6,8 +6,6 @@ package frc.robot.utilities;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import com.swervedrivespecialties.swervelib.control.CentripetalAccelerationConstraint;
 import com.swervedrivespecialties.swervelib.control.MaxAccelerationConstraint;
@@ -15,6 +13,7 @@ import com.swervedrivespecialties.swervelib.control.MaxVelocityConstraint;
 import com.swervedrivespecialties.swervelib.control.Path;
 import com.swervedrivespecialties.swervelib.control.SimplePathBuilder;
 import com.swervedrivespecialties.swervelib.control.Trajectory;
+import com.swervedrivespecialties.swervelib.control.Trajectory2;
 import com.swervedrivespecialties.swervelib.control.TrajectoryConstraint;
 import com.swervedrivespecialties.swervelib.control.Path.State;
 import com.swervedrivespecialties.swervelib.math.Rotation2;
@@ -34,7 +33,7 @@ public class ArmTrajectoryGenerator {
         this.armLength = armLength;
     }
 
-    public Trajectory generateTrajectories(Point2D.Double startPoint, Point2D.Double endPoint) {
+    public Trajectory2 generateTrajectories(Point2D.Double startPoint, Point2D.Double endPoint) {
         ArmPosition startPointPolar = xYToPolar(startPoint);
         ArmPosition retractPointPolar = new ArmPosition(startPointPolar.getRotation(), armLength);
         Point2D retractPoint2d = retractPointPolar.polarToXY();
@@ -73,8 +72,9 @@ public class ArmTrajectoryGenerator {
 
         TrajectoryConstraint[] constraints = {
                 (TrajectoryConstraint) new MaxAccelerationConstraint(maximumAcceleration),
-                (TrajectoryConstraint) new MaxVelocityConstraint(maximumVelocity) };
-        return new Trajectory(path, constraints, 3);
+                (TrajectoryConstraint) new MaxVelocityConstraint(maximumVelocity),
+                (TrajectoryConstraint) new CentripetalAccelerationConstraint(100) };
+        return new Trajectory2(path, constraints, 3);
     }
 
     public static boolean sameQuadrant(Point2D p1, Point2D p2) {
@@ -128,8 +128,7 @@ public class ArmTrajectoryGenerator {
         //trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
         //ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension);
         ArmTrajectoryGenerator h = new ArmTrajectoryGenerator(150, 150, 78.74);
-        Trajectory traj2 = h.generateTrajectories(new Point2D.Double(25.386381, -74.535356), new Point2D.Double(128.800000 , 28.020000 ));
-        traj2 = h.generateTrajectories(new Point2D.Double(25.386381, -74.535356), new Point2D.Double(128.800000 , 28.020000 ));
+        Trajectory2 traj2 = h.generateTrajectories(new Point2D.Double(25.386381, -74.535356), new Point2D.Double(128.800000 , 28.020000 ));
 
 
         ArrayList<ArmPosition> points = new ArrayList<ArmPosition>();

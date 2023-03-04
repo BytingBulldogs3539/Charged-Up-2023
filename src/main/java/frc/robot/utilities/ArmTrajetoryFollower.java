@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.swervedrivespecialties.swervelib.control.Trajectory;
+import com.swervedrivespecialties.swervelib.control.Trajectory2;
 import com.swervedrivespecialties.swervelib.control.Path.State;
 
 import java.awt.geom.Point2D;
@@ -24,7 +25,7 @@ import java.text.DecimalFormat;
 public class ArmTrajetoryFollower extends CommandBase {
 	private final Timer m_timer = new Timer();
 
-	private Trajectory m_trajectory;
+	private Trajectory2 m_trajectory;
 	private final Supplier<Point2D.Double> endPointSupplier;
 	private final ArmTrajectoryGenerator generator;
 	private final Supplier<ArmPosition> m_pose;
