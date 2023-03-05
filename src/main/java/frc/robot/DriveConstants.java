@@ -20,19 +20,19 @@ public class DriveConstants extends BBConstants {
     public static double BLSteerOffset = 0.0;
     public static double BRSteerOffset = 0.0;
 
-    public static double TranslationXkP = 0.0;
-    public static double TranslationXkI = 0.0;
+    public static double TranslationXkP = 20;
+    public static double TranslationXkI = 3;
     public static double TranslationXkD = 0.0;
-    public static double TranslationXkF = 0.0;
+    public static double TranslationXkF = 1.7;
 
-    public static double TranslationYkP = 0.0;
-    public static double TranslationYkI = 0.0;
+    public static double TranslationYkP = 20;
+    public static double TranslationYkI = 3;
     public static double TranslationYkD = 0.0;
-    public static double TranslationYkF = 0.0;
+    public static double TranslationYkF = 1.7;
 
-    public static double RotationkP = 0.0;
+    public static double RotationkP = 1;
     public static double RotationkI = 0.0;
-    public static double RotationkD = 0.0;
+    public static double RotationkD = 0.07;
     public static double RotationkF = 0.0;
     
     public static double driveSpeedMultiplier = 0.5;

@@ -110,6 +110,8 @@ public class SwerveController extends CommandBase {
                 dt)
                 + yvel * yKf;
 
+        System.out.println(yKf);
+
 
         this.m_thetaController.setSetpoint(desiredPose.getRotation().inverse().toRadians());
 

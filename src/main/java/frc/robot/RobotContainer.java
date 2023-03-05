@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.auton.DriveTest;
 import frc.robot.auton.PlaceHighCone;
 import frc.robot.auton.PlaceHighConeAndBalance;
 import frc.robot.auton.PlaceHighCube;
@@ -104,6 +105,7 @@ public class RobotContainer {
 		chooser.setDefaultOption("Place Cone High", new PlaceHighCone());    
     chooser.addOption("Place Cube High", new PlaceHighCube());
     chooser.addOption( "Place Cone High and Balance", new PlaceHighConeAndBalance());
+    chooser.addOption("TestDrive", new DriveTest());
 
 		SmartDashboard.putData("Auto Chooser", chooser);
 
