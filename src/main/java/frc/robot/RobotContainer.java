@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.auton.PlaceHighCone;
+import frc.robot.auton.PlaceHighConeAndBalance;
 import frc.robot.auton.PlaceHighCube;
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
@@ -75,7 +76,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driverController.start().onTrue(new ZeroGyroCommand());
+    driverController.start().onTrue(new ZeroGyroCommand(0));
 
     operatorController.leftTrigger().whileTrue(new IntakeCommand(1));
 
@@ -100,9 +101,9 @@ public class RobotContainer {
 
   public void putAuton() {
 		chooser = new SendableChooser<Command>();
-		chooser.setDefaultOption("Place Cone High", new PlaceHighCone());
-    
+		chooser.setDefaultOption("Place Cone High", new PlaceHighCone());    
     chooser.addOption("Place Cube High", new PlaceHighCube());
+    chooser.addOption( "Place Cone High and Balance", new PlaceHighConeAndBalance());
 
 		SmartDashboard.putData("Auto Chooser", chooser);
 
