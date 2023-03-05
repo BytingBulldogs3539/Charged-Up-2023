@@ -39,11 +39,9 @@ public class ArmTrajectoryGenerator {
         Point2D retractPoint2d = retractPointPolar.polarToXY();
         Vector2 retractPoint = new Vector2(retractPoint2d.getX(), retractPoint2d.getY());
 
-        boolean useMidPoint = false;
-        if (startPoint.x > 0 && endPoint.x < 0) {
-            useMidPoint = true;
-        } else if (startPoint.x < 0 && endPoint.x > 0) {
-            useMidPoint = true;
+        boolean clockwise = false;
+        if (startPoint.x < 0 && endPoint.x > 0) {
+            clockwise = true;
         }
 
         ArmPosition endPointPolar = xYToPolar(endPoint);
@@ -57,14 +55,9 @@ public class ArmTrajectoryGenerator {
             p.lineTo(new Vector2(endPoint.x, endPoint.y));
         } else {
             p.lineTo(retractPoint);
-            if (useMidPoint) {
-                p.arcTo(new Vector2(0, armLength+.1), new Vector2(0, 0));
-                p.arcTo(extensionPoint, new Vector2(0, 0));
-            }
-            else
-            {
-                p.arcTo(extensionPoint, new Vector2(0, 0));
-            }
+
+            p.arcTo(extensionPoint, new Vector2(0, 0), clockwise);
+
             p.lineTo(new Vector2(endPoint.x, endPoint.y));
         }
 
@@ -128,7 +121,7 @@ public class ArmTrajectoryGenerator {
         //trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
         //ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension);
         ArmTrajectoryGenerator h = new ArmTrajectoryGenerator(150, 150, 78.74);
-        Trajectory2 traj2 = h.generateTrajectories(new Point2D.Double(25.386381, -74.535356), new Point2D.Double(128.800000 , 28.020000 ));
+        Trajectory2 traj2 = h.generateTrajectories(new Point2D.Double(25.386381, -74.535356), new Point2D.Double(-128.800000 , 28.020000 ));
 
 
         ArrayList<ArmPosition> points = new ArrayList<ArmPosition>();
@@ -151,7 +144,7 @@ public class ArmTrajectoryGenerator {
 
         for (ArmPosition point : points) {
             System.out.printf("(%.3f,%.3f)\n", ArmTrajectoryGenerator.polarToXY(point).getX(),ArmTrajectoryGenerator.polarToXY(point).getY());
-
+            
         }
 
     }}
