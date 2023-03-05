@@ -20,6 +20,7 @@ import com.swervedrivespecialties.swervelib.math.Rotation2;
 import com.swervedrivespecialties.swervelib.math.Vector2;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.ElevatorConstants;
 
 /** Add your docs here. */
 public class ArmTrajectoryGenerator {
@@ -42,7 +43,41 @@ public class ArmTrajectoryGenerator {
         boolean clockwise = false;
         if (startPoint.x < 0 && endPoint.x > 0) {
             clockwise = true;
+            System.out.println(1);
         }
+        else if((startPoint.x < 0 && endPoint.x < 0) &&(startPoint.y > endPoint.y))
+        {
+            clockwise = false;
+            System.out.println(2);
+        }
+        else if((startPoint.x < 0 && endPoint.x < 0) &&(startPoint.y < endPoint.y))
+        {
+            clockwise = true;
+            System.out.println(3);
+        }
+        else if((startPoint.x > 0 && endPoint.x > 0) &&(startPoint.y < endPoint.y))
+        {
+            clockwise = false;
+            System.out.println(4);
+        }
+        else if((startPoint.x > 0 && endPoint.x > 0) &&(startPoint.y > endPoint.y))
+        {
+            clockwise = true;
+            System.out.println(5);
+        }
+        else if((startPoint.x == 0 && endPoint.x > 0))
+        {
+            clockwise = true;
+            System.out.println(6);
+        }
+        else if((startPoint.x == 0 && endPoint.x < 0))
+        {
+            clockwise = true;
+            System.out.println(7);
+        }
+
+
+
 
         ArmPosition endPointPolar = xYToPolar(endPoint);
         ArmPosition extensionPointPolar = new ArmPosition(endPointPolar.getRotation(), armLength+.1);
@@ -121,7 +156,7 @@ public class ArmTrajectoryGenerator {
         //trajectoryHandler = new ArmTrajectoryGenerator(ElevatorConstants.maxArmVelocity,
         //ElevatorConstants.maxArmAcceleration, ElevatorConstants.ElevatorMinExtension);
         ArmTrajectoryGenerator h = new ArmTrajectoryGenerator(150, 150, 78.74);
-        Trajectory2 traj2 = h.generateTrajectories(new Point2D.Double(25.386381, -74.535356), new Point2D.Double(-128.800000 , 28.020000 ));
+        Trajectory2 traj2 = h.generateTrajectories(new Point2D.Double(ElevatorConstants.backCubeHighX,ElevatorConstants.backConeHighY), new Point2D.Double(ElevatorConstants.backCubeIntakeX,ElevatorConstants.backConeIntakeY));
 
 
         ArrayList<ArmPosition> points = new ArrayList<ArmPosition>();

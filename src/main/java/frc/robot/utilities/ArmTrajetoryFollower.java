@@ -129,10 +129,10 @@ public class ArmTrajetoryFollower extends CommandBase {
 			lastP = new ArmPosition(lastP.getRotation(), minArmLength);
 		}
 
-		double rotationVelocity = (((p.getRotation().getDegrees() - lastP.getRotation().getDegrees())
-				/ (curTime - lastTime)) / 360.0) * 60.0;// rotations per min.
+		//double rotationVelocity = (((p.getRotation().getDegrees() - lastP.getRotation().getDegrees())
+		//		/ (curTime - lastTime)) / 360.0) * 60.0;// rotations per min.
 
-		double velocityFeedForward = (rotationVelocity/ElevatorConstants.ElevatorRotationGearRatio)*ElevatorConstants.ElevatorRotationVelocityFeedforwardRatio;
+		//double velocityFeedForward = (rotationVelocity/ElevatorConstants.ElevatorRotationGearRatio)*ElevatorConstants.ElevatorRotationVelocityFeedforwardRatio;
 
 
 		// if (p.getExtension() < minArmLength) {
@@ -165,7 +165,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 		double targetE = this.m_eController.calculate(this.m_pose.get().getExtension(), p.getExtension());
 		double targetR = this.m_rController
 				.calculate(this.m_pose.get().getRotation().getDegrees(), p.getRotation().getDegrees())
-				+ (xKf * s.getPosition().x)+velocityFeedForward;
+				+ (xKf * s.getPosition().x);//+velocityFeedForward;
 
 		setExtenionSpeed.accept(targetE);
 		setRotationSpeed.accept(targetR);

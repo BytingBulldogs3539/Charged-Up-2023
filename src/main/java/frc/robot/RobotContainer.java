@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.auton.PlaceHighCone;
+import frc.robot.auton.PlaceHighCube;
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
@@ -55,6 +57,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    putAuton();
   }
 
   /**
@@ -97,9 +100,13 @@ public class RobotContainer {
 
   public void putAuton() {
 		chooser = new SendableChooser<Command>();
-		chooser.addOption("Cube Left", null);
+		chooser.setDefaultOption("Place Cone High", new PlaceHighCone());
+    
+    chooser.addOption("Place Cube High", new PlaceHighCube());
 
 		SmartDashboard.putData("Auto Chooser", chooser);
+
+    
 	}
 
   /**
@@ -109,6 +116,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return this.chooser.getSelected();
   }
 }

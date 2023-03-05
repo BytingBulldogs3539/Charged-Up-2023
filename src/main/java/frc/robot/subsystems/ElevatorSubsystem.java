@@ -149,6 +149,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 		}
 	}
 
+	public void setWristOrientationOverride(Wrist orientation) {
+		this.wristOrrientation = orientation;
+	}
+	
+
 	public void setSide(Sides side) {
 		this.side = side;
 	}

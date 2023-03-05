@@ -48,9 +48,9 @@ public class ElevatorConstants extends BBConstants {
 
 	public static double ElevatorRotationFeedforwardRatio = 0.001;
 
-	public static double ElevatorRotationVelocityFeedforwardRatio = 1.0/6380.0;
+	//public static double ElevatorRotationVelocityFeedforwardRatio = 1.0/6380.0; // 
 
-	public static double ElevatorRotationGearRatio = (8.0/60.0)*(16.0/60.0)*(64.0/60.0);//0.03792592592
+	//public static double ElevatorRotationGearRatio = (8.0/60.0)*(16.0/60.0)*(64.0/60.0);//0.03792592592
 
 	public static int elevatorSoftMax = 78;
 	public static int elevatorSoftMin = 0;
