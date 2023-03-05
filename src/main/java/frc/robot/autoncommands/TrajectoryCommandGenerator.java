@@ -33,7 +33,7 @@ public class TrajectoryCommandGenerator {
 				new PidController(new PidConstants(
 						DriveConstants.RotationkP,
 						DriveConstants.RotationkI,
-						DriveConstants.RotationkD)),driveSub);
+						DriveConstants.RotationkD)),driveSub,driveSub);
 
 		return (Command) swerveControllerCommand.andThen(() -> driveSub.drive(new ChassisSpeeds(0, 0, 0)),
 				new Subsystem[0]);
