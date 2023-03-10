@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -76,6 +78,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		elevatorMotor.configMotionCruiseVelocity(70);
 		elevatorMotor.configMotionAcceleration(140);
+		//elevatorMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+		//elevatorMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 
 		elevatorRotationEncoder = new CANCoder(IDConstants.ElevatorRotationEncoderID);
 		elevatorRotationEncoder.configMagnetOffset(ElevatorConstants.ElevatorRotationMagnetOffset);
@@ -280,8 +284,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 				} else if (armPosition == Arm.high) {
 					pos = new Point2D.Double(ElevatorConstants.backCubeHighX, ElevatorConstants.backCubeHighY);
 				} else if (armPosition == Arm.HumanPlayer) {
-					pos = new Point2D.Double(ElevatorConstants.backCubeHumanPlayerX,
-							ElevatorConstants.backCubeHumanPlayerY);
+					pos = new Point2D.Double(ElevatorConstants.backConeHumanPlayerX,
+							ElevatorConstants.backConeHumanPlayerY);
 				}
 			}
 		}
@@ -293,6 +297,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+
+
+
 		SmartDashboard.putBoolean("Cube Mode", (wristOrrientation == Wrist.cube) ? true : false);
 		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
 			if (wristOrrientation == Wrist.cube && side == Sides.front) {

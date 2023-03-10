@@ -7,7 +7,16 @@ package frc.robot;
 import frc.robot.auton.DriveTest;
 import frc.robot.auton.PlaceHighCone;
 import frc.robot.auton.PlaceHighConeAndBalance;
+import frc.robot.auton.PlaceHighConeBackDrive;
 import frc.robot.auton.PlaceHighCube;
+import frc.robot.auton.PlaceHighCubeAndBalance;
+import frc.robot.auton.PlaceHighCubeBackDrive;
+import frc.robot.auton.PlaceMidCone;
+import frc.robot.auton.PlaceMidConeAndBalance;
+import frc.robot.auton.PlaceMidConeBackDrive;
+import frc.robot.auton.PlaceMidCube;
+import frc.robot.auton.PlaceMidCubeAndBalance;
+import frc.robot.auton.PlaceMidCubeBackDrive;
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
@@ -89,7 +98,7 @@ public class RobotContainer {
     operatorController.b().onTrue(new SetArmHeight(Arm.low));
     operatorController.y().onTrue(new SetArmHeight(Arm.middle));
     operatorController.x().onTrue(new SetArmHeight(Arm.high));
-    //operatorController.povRight().onTrue(new SetArmHeight(Arm.HumanPlayer));
+    operatorController.povRight().onTrue(new SetArmHeight(Arm.HumanPlayer));
 
     //operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(38.926915,-70.0)));
     //operatorController.b().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(110.0,-1)));
@@ -102,10 +111,20 @@ public class RobotContainer {
 
   public void putAuton() {
 		chooser = new SendableChooser<Command>();
-		chooser.setDefaultOption("Place Cone High", new PlaceHighCone());    
-    chooser.addOption("Place Cube High", new PlaceHighCube());
-    chooser.addOption( "Place Cone High and Balance", new PlaceHighConeAndBalance());
     chooser.addOption("TestDrive", new DriveTest());
+		chooser.setDefaultOption("Place Cone High", new PlaceHighCone()); 
+    chooser.addOption("Place Cone High and Balance", new PlaceHighConeAndBalance());
+    chooser.addOption("Place Cone High Back", new PlaceHighConeBackDrive());   
+    chooser.addOption("Place Cube High", new PlaceHighCube());
+    chooser.addOption("Place Cube High Balance", new PlaceHighCubeAndBalance());
+    chooser.addOption("Place Cube High Back", new PlaceHighCubeBackDrive());
+    chooser.addOption("Place Cone Mid", new PlaceMidCone());
+    chooser.addOption("Place Cone Mid Balance", new PlaceMidConeAndBalance());
+    chooser.addOption("Place Cone Mid Back", new PlaceMidConeBackDrive());
+    chooser.addOption("Place Cube Mid", new PlaceMidCube());
+    chooser.addOption("Place Cube Mid Balance", new PlaceMidCubeAndBalance());
+    chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
+
 
 		SmartDashboard.putData("Auto Chooser", chooser);
 

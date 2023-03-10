@@ -14,6 +14,7 @@ import com.swervedrivespecialties.swervelib.math.Vector2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autoncommands.SetPoseCommand;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
@@ -28,11 +29,12 @@ public class DriveTest extends SequentialCommandGroup {
   public DriveTest() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ZeroGyroCommand(180), new SetPoseCommand(new Pose2d(0,0, Rotation2d.fromDegrees(180)))
+    addCommands(new ZeroGyroCommand(180),new WaitCommand(.25), new SetPoseCommand(new Pose2d(0,0, Rotation2d.fromDegrees(180)))
         ,TrajectoryCommandGenerator.getMotionCommand(
           new SimplePathBuilder(
             new Vector2(0, 0), Rotation2.fromDegrees(180))
-            .lineTo(new Vector2(1,0)).build()
+            .lineTo(new Vector2(1,0),Rotation2.fromDegrees(135)).build()
+            //.lineTo(new Vector2(2.5, 0), Rotation2.fromDegrees(225)).build()
             , getConstraints(), RobotContainer.driveSubsystem));
   }
   public TrajectoryConstraint[] getConstraints() {

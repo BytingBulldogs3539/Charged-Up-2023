@@ -10,6 +10,7 @@ import frc.robot.RobotContainer;
 public class DisableBreakMode extends CommandBase {
   /** Creates a new DisableBreakMode. */
   public DisableBreakMode() {
+    addRequirements(RobotContainer.elevatorSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
