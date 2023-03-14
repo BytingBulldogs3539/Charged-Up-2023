@@ -40,7 +40,7 @@ public class PlaceMidConeBackDrive extends SequentialCommandGroup {
         ,TrajectoryCommandGenerator.getMotionCommand(
           new SimplePathBuilder(
             new Vector2(0, 0), Rotation2.fromDegrees(180))
-            .lineTo(new Vector2(3.5,0),Rotation2.fromDegrees(180)).build()
+            .lineTo(new Vector2(3.9,0),Rotation2.fromDegrees(180)).build()
             , getConstraints(), RobotContainer.driveSubsystem));
   }
   public TrajectoryConstraint[] getConstraints() {

@@ -60,6 +60,11 @@ public class DriveCommand extends CommandBase {
     if (RobotContainer.driverController.getRightTriggerAxis() > .1) {
       driveSpeedMultiplier = 1.0;
     }
+    else if (RobotContainer.driverController.getLeftTriggerAxis() > .1) {
+      driveSpeedMultiplier = 0.15;
+      rotationSpeedMultiplier = 0.1;
+
+    }
 
     if (RobotContainer.driverController.rightBumper().getAsBoolean()) {
 
