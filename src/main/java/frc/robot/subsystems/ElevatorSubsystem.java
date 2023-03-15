@@ -256,8 +256,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 				} else if (armPosition == Arm.high) {
 					pos = new Point2D.Double(ElevatorConstants.frontCubeHighX, ElevatorConstants.frontCubeHighY);
 				} else if (armPosition == Arm.HumanPlayer) {
-					pos = new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
-							ElevatorConstants.frontConeHumanPlayerY);
+					pos = new Point2D.Double(ElevatorConstants.frontCubeHumanPlayerX,
+							ElevatorConstants.frontCubeHumanPlayerY);
 				}
 			}
 		} else if (side == Sides.back) {
@@ -284,8 +284,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 				} else if (armPosition == Arm.high) {
 					pos = new Point2D.Double(ElevatorConstants.backCubeHighX, ElevatorConstants.backCubeHighY);
 				} else if (armPosition == Arm.HumanPlayer) {
-					pos = new Point2D.Double(ElevatorConstants.backConeHumanPlayerX,
-							ElevatorConstants.backConeHumanPlayerY);
+					pos = new Point2D.Double(ElevatorConstants.backCubeHumanPlayerX,
+							ElevatorConstants.backCubeHumanPlayerY);
 				}
 			}
 		}

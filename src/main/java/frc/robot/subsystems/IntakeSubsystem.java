@@ -26,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		intakeMotor = new TalonSRX(IDConstants.IntakeMotorID);
 		intakeMotor.setNeutralMode(NeutralMode.Brake);
-		intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 60, 100));
+		intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 60, 100));
 
 		groundIntakeLeft = new TalonSRX(IDConstants.groundIntakeLeftID);
 		groundIntakeLeft.setNeutralMode(NeutralMode.Coast);
