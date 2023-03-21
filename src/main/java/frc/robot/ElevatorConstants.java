@@ -13,6 +13,8 @@ public class ElevatorConstants extends BBConstants {
 		super("/home/lvuser/ElevatorConstants.ini", false);
 	}
 
+	public static int ledCount = 10;
+
 	public static double maxArmVelocity = 150;
 	public static double maxArmAcceleration = 150;
 
