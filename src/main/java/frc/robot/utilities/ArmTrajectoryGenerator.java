@@ -43,37 +43,30 @@ public class ArmTrajectoryGenerator {
         boolean clockwise = false;
         if (startPoint.x < 0 && endPoint.x > 0) {
             clockwise = true;
-            System.out.println(1);
         }
         else if((startPoint.x < 0 && endPoint.x < 0) &&(startPoint.y > endPoint.y))
         {
             clockwise = false;
-            System.out.println(2);
         }
         else if((startPoint.x < 0 && endPoint.x < 0) &&(startPoint.y < endPoint.y))
         {
             clockwise = true;
-            System.out.println(3);
         }
         else if((startPoint.x > 0 && endPoint.x > 0) &&(startPoint.y < endPoint.y))
         {
             clockwise = false;
-            System.out.println(4);
         }
         else if((startPoint.x > 0 && endPoint.x > 0) &&(startPoint.y > endPoint.y))
         {
             clockwise = true;
-            System.out.println(5);
         }
         else if((startPoint.x == 0 && endPoint.x > 0))
         {
             clockwise = true;
-            System.out.println(6);
         }
         else if((startPoint.x == 0 && endPoint.x < 0))
         {
             clockwise = true;
-            System.out.println(7);
         }
 
 

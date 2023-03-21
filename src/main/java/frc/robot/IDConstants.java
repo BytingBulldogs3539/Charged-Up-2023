@@ -79,4 +79,7 @@ public class IDConstants extends BBConstants {
         public static int PigeonID = 48;
         public static String PigeonCanName = "";
 
+        public static int CandleID = 49;
+        public static String CandleCanName = "";
+
 }

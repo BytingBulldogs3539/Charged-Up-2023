@@ -3,8 +3,8 @@ package frc.robot.utilities;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.ErrorMessages;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -39,8 +39,9 @@ public class ArmTrajetoryFollower extends CommandBase {
 	private Rotation2d minArmRotation = Rotation2d.fromDegrees(0);
 	private Rotation2d maxArmRotation = Rotation2d.fromDegrees(0);
 	private Point2D.Double lastEndpoint = new Point2D.Double(0, 0);
+	ShuffleboardTab tab;
 
-	public ArmTrajetoryFollower(Supplier<Point2D.Double> endPoint, ArmTrajectoryGenerator generator,
+	public ArmTrajetoryFollower(ShuffleboardTab tab, Supplier<Point2D.Double> endPoint, ArmTrajectoryGenerator generator,
 			Supplier<ArmPosition> pose, Supplier<Point2D.Double> xyPose,
 			Consumer<Double> setExtenionSpeed,
 			Consumer<Double> setRotationSpeed, PIDController rController, double rKf,
@@ -65,6 +66,10 @@ public class ArmTrajetoryFollower extends CommandBase {
 				"SwerveControllerCommand");
 		this.setRotationSpeed = (Consumer<Double>) ErrorMessages.requireNonNullParam(setRotationSpeed,
 				"setRotationSpeed",
+				"SwerveControllerCommand");
+
+		this.tab = (ShuffleboardTab) ErrorMessages.requireNonNullParam(tab,
+				"tab",
 				"SwerveControllerCommand");
 
 		this.minArmLength = minArmLength;

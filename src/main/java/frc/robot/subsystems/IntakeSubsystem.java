@@ -38,8 +38,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		setDefaultCommand(new RunGroundIntake(this));
 
-    groundIntakeLeft.setInverted(true);
-    groundIntakeRight.setInverted(true);
+		groundIntakeLeft.setInverted(true);
+		groundIntakeRight.setInverted(true);
 
 	}
 

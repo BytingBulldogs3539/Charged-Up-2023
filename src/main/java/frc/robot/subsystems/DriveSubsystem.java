@@ -8,7 +8,6 @@ import com.ctre.phoenix.sensors.Pigeon2;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.SdsSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
-import com.swervedrivespecialties.swervelib.math.Rotation2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DriveConstants;
 import frc.robot.IDConstants;
-import frc.robot.RobotContainer;
 import frc.robot.commands.DriveCommand;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -70,15 +68,16 @@ public class DriveSubsystem extends SubsystemBase {
 
 	private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
+	ShuffleboardTab driveTrainTab = Shuffleboard.getTab("Drivetrain");
+
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
 		setGyroscope(0);
-		ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
 		m_frontLeftModule = SdsSwerveModuleHelper.createFalcon500(
 				// This parameter is optional, but will allow you to see the current state of
 				// the module on the dashboard.
-				tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0,
+				driveTrainTab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0,
 						0),
 				// This can either be STANDARD or FAST depending on your gear configuration
 				moduleGearRatio,
@@ -98,7 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 		// We will do the same for the other modules
 		m_frontRightModule = SdsSwerveModuleHelper.createFalcon500(
-				tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,
+				driveTrainTab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,
 						0),
 				moduleGearRatio,
 				IDConstants.FRDriveID,
@@ -110,7 +109,7 @@ public class DriveSubsystem extends SubsystemBase {
 				DriveConstants.FRSteerOffset);
 
 		m_backLeftModule = SdsSwerveModuleHelper.createFalcon500(
-				tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,
+				driveTrainTab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,
 						0),
 				moduleGearRatio,
 				IDConstants.BLDriveID,
@@ -122,7 +121,7 @@ public class DriveSubsystem extends SubsystemBase {
 				DriveConstants.BLSteerOffset);
 
 		m_backRightModule = SdsSwerveModuleHelper.createFalcon500(
-				tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,
+				driveTrainTab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,
 						0),
 				moduleGearRatio,
 				IDConstants.BRDriveID,
@@ -154,6 +153,10 @@ public class DriveSubsystem extends SubsystemBase {
 	 */
 	public Rotation2d getGyroscopeRotation() {
 		return Rotation2d.fromDegrees(m_pigeon.getYaw());
+	}
+
+	public double getPitch() {
+		return m_pigeon.getPitch();
 	}
 
 	public void drive(ChassisSpeeds chassisSpeeds) {
@@ -193,8 +196,8 @@ public class DriveSubsystem extends SubsystemBase {
 
 		m_pose = m_odometry.update(getGyroscopeRotation(), getModulePositions());
 
-		SmartDashboard.putNumber("X Pose", m_pose.getX());
-		SmartDashboard.putNumber("Y Pose", m_pose.getY());
-		SmartDashboard.putNumber("Theta Pose", m_pose.getRotation().getDegrees());
+		driveTrainTab.addNumber("X Pose", m_pose::getX);
+		driveTrainTab.addNumber("Y Pose", m_pose::getY);
+		driveTrainTab.addNumber("Theta Pose", () -> (m_pose.getRotation().getDegrees()));
 	}
 }
