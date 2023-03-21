@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -51,6 +53,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	CANCoder elevatorRotationEncoder;
 	PIDController m_rController;
 	PIDController m_eController;
+	CANdle candle;
 
 	Arm armPosition = Arm.intake;
 	Sides side = Sides.front;
@@ -78,8 +81,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		elevatorMotor.configMotionCruiseVelocity(70);
 		elevatorMotor.configMotionAcceleration(140);
-		//elevatorMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-		//elevatorMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+		// elevatorMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
+		// LimitSwitchNormal.NormallyOpen);
+		// elevatorMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
+		// LimitSwitchNormal.NormallyOpen);
 
 		elevatorRotationEncoder = new CANCoder(IDConstants.ElevatorRotationEncoderID);
 		elevatorRotationEncoder.configMagnetOffset(ElevatorConstants.ElevatorRotationMagnetOffset);
@@ -128,6 +133,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 		elevatorTab.addNumber("Elevator Angle", () -> {
 			return getElevatorRotationAngle().getDegrees();
 		});
+
+		elevatorTab.add("Extension Motor Speed Output", elevatorMotor.getMotorOutputPercent());
+		elevatorTab.add("Arm Rotation Motor Speed Output", elevatorRotationMotor.getMotorOutputPercent());
+
 		m_eController = new PIDController(ElevatorConstants.ElevatorKp, ElevatorConstants.ElevatorKi,
 				ElevatorConstants.ElevatorKd);
 		m_rController = new PIDController(ElevatorConstants.ElevatorRotationKp, ElevatorConstants.ElevatorRotationKi,
@@ -138,7 +147,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		wrist.set(ControlMode.Position, wrist.getSelectedSensorPosition());
 
-		setDefaultCommand(new ArmTrajetoryFollower(this::getTargetPosition, trajectoryHandler, this::getArmPose,
+		candle = new CANdle(IDConstants.CandleID, IDConstants.CandleCanName);
+
+		candle.setLEDs(0, 255, 0, 0, 9, ElevatorConstants.ledCount);
+
+		setDefaultCommand(new ArmTrajetoryFollower(elevatorTab, this::getTargetPosition, trajectoryHandler, this::getArmPose,
 				this::getGripperPositon,
 				this::setExtensionSpeed, this::setRotationSpeed, m_rController,
 				ElevatorConstants.ElevatorRotationFeedforwardRatio, m_eController,
@@ -146,6 +159,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin / 10.0),
 				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax / 10.0), this));
 	}
+
+	public void setCubeColor()
+	{
+		candle.setLEDs(188, 0, 255, 0, 9, ElevatorConstants.ledCount);
+	}
+	public void setConeColor()
+	{
+		candle.setLEDs(255, 205, 0, 0, 9, ElevatorConstants.ledCount);
+	}
+
 
 	public void setWristOrientation(Wrist orientation) {
 		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
@@ -156,7 +179,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 	public void setWristOrientationOverride(Wrist orientation) {
 		this.wristOrrientation = orientation;
 	}
-	
 
 	public void setSide(Sides side) {
 		this.side = side;
@@ -206,11 +228,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 	public void setExtensionSpeed(double speed) {
 
 		elevatorMotor.set(ControlMode.PercentOutput, speed);
-		SmartDashboard.putNumber("Elevator Speed Follower Output", speed);
 	}
 
 	public void setRotationSpeed(double speed) {
-		SmartDashboard.putNumber("Rotation Speed Follower Output", speed);
 		if (speed > .35) {
 			speed = .35;
 		}
@@ -231,7 +251,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public Point2D.Double getTargetPosition() {
-		Point2D.Double pos = new Point2D.Double(0,0);
+		Point2D.Double pos = new Point2D.Double(0, 0);
 		if (side == Sides.front) {
 			if (wristOrrientation == Wrist.cone) {
 				if (armPosition == Arm.intake) {
@@ -289,17 +309,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 				}
 			}
 		}
-		if(pos.x == 0 && pos.y == 0){
-		pos = new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+		if (pos.x == 0 && pos.y == 0) {
+			pos = new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
 		}
 		return pos;
 	}
 
 	@Override
 	public void periodic() {
-
-
-
 		SmartDashboard.putBoolean("Cube Mode", (wristOrrientation == Wrist.cube) ? true : false);
 		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
 			if (wristOrrientation == Wrist.cube && side == Sides.front) {
