@@ -22,6 +22,8 @@ import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
+import frc.robot.commands.SetConeLights;
+import frc.robot.commands.SetCubeLights;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -98,6 +100,10 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(new IntakeCommand(-1));
 
     operatorController.leftBumper().onTrue(new FlipArmSideCommand());
+
+    driverController.y().onTrue(new SetConeLights());
+
+    driverController.x().onTrue(new SetCubeLights());
 
     operatorController.a().onTrue(new SetArmHeight(Arm.intake));
     operatorController.b().onTrue(new SetArmHeight(Arm.low));
