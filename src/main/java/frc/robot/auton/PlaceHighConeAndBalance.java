@@ -41,9 +41,9 @@ public class PlaceHighConeAndBalance extends SequentialCommandGroup {
           new SimplePathBuilder(
             new Vector2(0, 0), Rotation2.fromDegrees(180))
             .lineTo(new Vector2(1,0),Rotation2.fromDegrees(135))
-            .lineTo(new Vector2(2.7,0),Rotation2.fromDegrees(135))
-            .lineTo(new Vector2(2.7,0.1),Rotation2.fromDegrees(135))
-            .lineTo(new Vector2(2.7,0.1),Rotation2.fromDegrees(135)).build()
+            .lineTo(new Vector2(2.6,0),Rotation2.fromDegrees(135))
+            .lineTo(new Vector2(2.6,0.1),Rotation2.fromDegrees(135))
+            .lineTo(new Vector2(2.6,0.1),Rotation2.fromDegrees(135)).build()
             , getConstraints(), RobotContainer.driveSubsystem));
   }
   public TrajectoryConstraint[] getConstraints() {
