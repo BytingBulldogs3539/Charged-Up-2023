@@ -4,6 +4,10 @@
 
 package frc.robot.commands;
 
+import com.swervedrivespecialties.swervelib.control.PidConstants;
+import com.swervedrivespecialties.swervelib.control.PidController;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,8 +17,15 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
   /** Creates a new DriveCommand. */
+  private PidController rotationController;
+
   public DriveCommand(DriveSubsystem subsystem) {
     addRequirements(subsystem);
+    rotationController = new PidController(
+        new PidConstants(DriveConstants.RotationkP, DriveConstants.RotationkI, DriveConstants.RotationkD));
+    rotationController.setInputRange(-Math.PI, Math.PI);
+    rotationController.setOutputRange(-1, 1);
+    rotationController.setContinuous(true);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -48,24 +59,32 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Rotation2d gyroAngle = RobotContainer.driveSubsystem.getGyroscopeRotation();
-    double translationXPercent = -modifyAxis(RobotContainer.driverController.getLeftY());
-    double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftX());
-    double rotationPercent = -modifyAxis(RobotContainer.driverController.getRightX());
-
     double driveSpeedMultiplier = DriveConstants.driveSpeedMultiplier;
     double rotationSpeedMultiplier = DriveConstants.rotationSpeedMultiplier;
 
     // If the driver is pressing the right trigger then FULL SPEED.
     if (RobotContainer.driverController.getRightTriggerAxis() > .1) {
       driveSpeedMultiplier = 1.0;
-    }
-    else if (RobotContainer.driverController.getLeftTriggerAxis() > .1) {
+    } else if (RobotContainer.driverController.getLeftTriggerAxis() > .1) {
       driveSpeedMultiplier = 0.15;
       rotationSpeedMultiplier = 0.1;
 
     }
- 
+
+    Rotation2d gyroAngle = RobotContainer.driveSubsystem.getGyroscopeRotation();
+    double translationXPercent = -modifyAxis(RobotContainer.driverController.getLeftY());
+    double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftX());
+    double rotationPercent = rotationSpeedMultiplier * -modifyAxis(RobotContainer.driverController.getRightX());
+
+    if (RobotContainer.driverController.a().getAsBoolean()) {
+      Double setPoint = 0.0;
+      if (Math.abs(gyroAngle.getRadians()) > Math.PI / 2.0) {
+        setPoint = Math.PI;
+      }
+      rotationController.setSetpoint(setPoint);
+      rotationPercent = rotationController.calculate(gyroAngle.getRadians(), .02)/2.0;
+    }
+
     if (RobotContainer.driverController.rightBumper().getAsBoolean()) {
 
       gyroAngle = Rotation2d.fromDegrees(0);
@@ -75,7 +94,7 @@ public class DriveCommand extends CommandBase {
         ChassisSpeeds.fromFieldRelativeSpeeds(
             driveSpeedMultiplier * translationXPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             driveSpeedMultiplier * translationYPercent * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            rotationSpeedMultiplier * rotationPercent * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            rotationPercent * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
             gyroAngle));
   }
 

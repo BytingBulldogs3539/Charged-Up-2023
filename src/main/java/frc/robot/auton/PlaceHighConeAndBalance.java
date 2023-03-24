@@ -13,6 +13,7 @@ import com.swervedrivespecialties.swervelib.math.Vector2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
@@ -35,17 +36,24 @@ public class PlaceHighConeAndBalance extends SequentialCommandGroup {
   public PlaceHighConeAndBalance() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ZeroGyroCommand(180),new WaitCommand(.25), new SetPoseCommand(new Pose2d(0,0, Rotation2d.fromDegrees(180))), new SetArmSide(Sides.front), new SetArmHeight(Arm.high), new SetWristOrientationOverride(Wrist.cone),
-        new WaitCommand(4), new IntakeCommand(1).withTimeout(1.5),new SetArmSide(Sides.front), new SetArmHeight(Arm.intake), new WaitCommand(.5),new SetWristOrientationOverride(Wrist.cube),  new WaitCommand(1.5)
-        ,TrajectoryCommandGenerator.getMotionCommand(
-          new SimplePathBuilder(
-            new Vector2(0, 0), Rotation2.fromDegrees(180))
-            .lineTo(new Vector2(1,0),Rotation2.fromDegrees(135))
-            .lineTo(new Vector2(2.6,0),Rotation2.fromDegrees(135))
-            .lineTo(new Vector2(2.6,0.1),Rotation2.fromDegrees(135))
-            .lineTo(new Vector2(2.6,0.1),Rotation2.fromDegrees(135)).build()
-            , getConstraints(), RobotContainer.driveSubsystem));
+    addCommands(new ZeroGyroCommand(180), new WaitCommand(.25),
+        new SetPoseCommand(new Pose2d(0, 0, Rotation2d.fromDegrees(180))), new SetArmSide(Sides.front),
+        new SetArmHeight(Arm.high), new SetWristOrientationOverride(Wrist.cone),
+        new WaitCommand(3), new IntakeCommand(1).withTimeout(0.8), new SetArmSide(Sides.front),
+        new SetArmHeight(Arm.intake),
+        new ParallelCommandGroup(
+          new SequentialCommandGroup(new WaitCommand(.5), new SetWristOrientationOverride(Wrist.cube)),
+            new SequentialCommandGroup(new WaitCommand(.01), TrajectoryCommandGenerator.getMotionCommand(
+              new SimplePathBuilder(
+                  new Vector2(0, 0), Rotation2.fromDegrees(180))
+                  .lineTo(new Vector2(1, 0), Rotation2.fromDegrees(135))
+                  .lineTo(new Vector2(2.6, 0), Rotation2.fromDegrees(135))
+                  .lineTo(new Vector2(2.6, 0.1), Rotation2.fromDegrees(135))
+                  .lineTo(new Vector2(2.6, 0.1), Rotation2.fromDegrees(135)).build(),
+              getConstraints(), RobotContainer.driveSubsystem)))
+           );
   }
+
   public TrajectoryConstraint[] getConstraints() {
     TrajectoryConstraint[] constraints = { (TrajectoryConstraint) new MaxAccelerationConstraint(1),
         (TrajectoryConstraint) new MaxVelocityConstraint(2) };

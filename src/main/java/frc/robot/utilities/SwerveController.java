@@ -1,6 +1,7 @@
 package frc.robot.utilities;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.ErrorMessages;
 import edu.wpi.first.wpilibj.Timer;
@@ -56,7 +57,7 @@ public class SwerveController extends CommandBase {
         this.m_timer.start();
 
         this.m_thetaController.setInputRange(0.0D, 2 * Math.PI);
-        this.m_thetaController.setOutputRange(-1.0D, 1.0D);
+        this.m_thetaController.setOutputRange(-Math.PI, Math.PI);
         this.m_thetaController.setContinuous(true);
     }
 
@@ -110,10 +111,7 @@ public class SwerveController extends CommandBase {
                 dt)
                 + yvel * yKf;
 
-        System.out.println(yKf);
-
-
-        this.m_thetaController.setSetpoint(desiredPose.getRotation().inverse().toRadians());
+        this.m_thetaController.setSetpoint(Rotation2d.fromRadians(desiredPose.getRotation().inverse().toRadians()).getRadians());
 
         double targetAngularVel = this.m_thetaController
                 .calculate(((Pose2d) this.m_pose.get()).getRotation().getRadians(), dt);

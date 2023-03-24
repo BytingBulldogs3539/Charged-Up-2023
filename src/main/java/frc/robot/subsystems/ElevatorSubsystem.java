@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -35,7 +36,7 @@ import frc.robot.utilities.ArmTrajetoryFollower;
 public class ElevatorSubsystem extends SubsystemBase {
 
 	public enum Arm {
-		high, middle, low, intake, HumanPlayer
+		high, middle, low, intake, HumanPlayer, groundIntake
 	}
 
 	public enum Wrist {
@@ -149,26 +150,28 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		candle = new CANdle(IDConstants.CandleID, IDConstants.CandleCanName);
 
-		candle.setLEDs(0, 255, 0, 0, 9, ElevatorConstants.ledCount);
+		candle.setLEDs(0, 255, 0, 0, 0, ElevatorConstants.ledCount);
 
-		setDefaultCommand(new ArmTrajetoryFollower(elevatorTab, this::getTargetPosition, trajectoryHandler, this::getArmPose,
-				this::getGripperPositon,
-				this::setExtensionSpeed, this::setRotationSpeed, m_rController,
-				ElevatorConstants.ElevatorRotationFeedforwardRatio, m_eController,
-				ElevatorConstants.ElevatorMinExtension, ElevatorConstants.ElevatorMaxExtension,
-				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin / 10.0),
-				Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax / 10.0), this));
+		candle.configLEDType(LEDStripType.GRB);
+		candle.configBrightnessScalar(1.0);
+
+		setDefaultCommand(
+				new ArmTrajetoryFollower(elevatorTab, this::getTargetPosition, trajectoryHandler, this::getArmPose,
+						this::getGripperPositon,
+						this::setExtensionSpeed, this::setRotationSpeed, m_rController,
+						ElevatorConstants.ElevatorRotationFeedforwardRatio, m_eController,
+						ElevatorConstants.ElevatorMinExtension, ElevatorConstants.ElevatorMaxExtension,
+						Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMin / 10.0),
+						Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax / 10.0), this));
 	}
 
-	public void setCubeColor()
-	{
-		candle.setLEDs(188, 0, 255, 0, 9, ElevatorConstants.ledCount);
-	}
-	public void setConeColor()
-	{
-		candle.setLEDs(255, 205, 0, 0, 9, ElevatorConstants.ledCount);
+	public void setCubeColor() {
+		candle.setLEDs(188, 0, 255, 0, 0, ElevatorConstants.ledCount);
 	}
 
+	public void setConeColor() {
+		candle.setLEDs(255, 205, 0, 0, 0, ElevatorConstants.ledCount);
+	}
 
 	public void setWristOrientation(Wrist orientation) {
 		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
@@ -278,6 +281,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 				} else if (armPosition == Arm.HumanPlayer) {
 					pos = new Point2D.Double(ElevatorConstants.frontCubeHumanPlayerX,
 							ElevatorConstants.frontCubeHumanPlayerY);
+				}
+				 else if (armPosition == Arm.HumanPlayer) {
+					pos = new Point2D.Double(ElevatorConstants.frontCubeHumanPlayerX,
+							ElevatorConstants.frontCubeHumanPlayerY);
+				}
+				else if (armPosition == Arm.groundIntake) {
+					pos = new Point2D.Double(ElevatorConstants.frontConeGroundX,
+							ElevatorConstants.frontConeGroundY);
 				}
 			}
 		} else if (side == Sides.back) {

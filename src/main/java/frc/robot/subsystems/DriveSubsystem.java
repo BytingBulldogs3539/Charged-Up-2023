@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DriveConstants;
 import frc.robot.IDConstants;
@@ -132,8 +131,15 @@ public class DriveSubsystem extends SubsystemBase {
 				IDConstants.BREncoderCanName,
 				DriveConstants.BRSteerOffset);
 
+
+
 		m_odometry = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(), getModulePositions(),
 				new Pose2d(0, 0, new Rotation2d()));
+
+		m_pose = m_odometry.update(getGyroscopeRotation(), getModulePositions());
+		driveTrainTab.addNumber("X Pose", m_pose::getX);
+		driveTrainTab.addNumber("Y Pose", m_pose::getY);
+		driveTrainTab.addNumber("Theta Pose", () -> (m_pose.getRotation().getDegrees()));
 
 		setDefaultCommand(new DriveCommand(this));
 	}
@@ -196,8 +202,5 @@ public class DriveSubsystem extends SubsystemBase {
 
 		m_pose = m_odometry.update(getGyroscopeRotation(), getModulePositions());
 
-		driveTrainTab.addNumber("X Pose", m_pose::getX);
-		driveTrainTab.addNumber("Y Pose", m_pose::getY);
-		driveTrainTab.addNumber("Theta Pose", () -> (m_pose.getRotation().getDegrees()));
 	}
 }
