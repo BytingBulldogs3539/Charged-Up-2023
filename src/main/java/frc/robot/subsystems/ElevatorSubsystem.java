@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+
+import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.CANifier.GeneralPin;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -47,6 +50,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 		front, back
 	}
 
+	CANifier canifier;
 	TalonFX elevatorMotor;
 	TalonSRX wrist;
 	CANCoder wristEncoder;
@@ -155,6 +159,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		candle.configLEDType(LEDStripType.GRB);
 		candle.configBrightnessScalar(1.0);
 
+		canifier = new CANifier(IDConstants.CanifierID);
+
 		setDefaultCommand(
 				new ArmTrajetoryFollower(elevatorTab, this::getTargetPosition, trajectoryHandler, this::getArmPose,
 						this::getGripperPositon,
@@ -165,6 +171,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 						Rotation2d.fromDegrees(ElevatorConstants.elevatorRotationSoftMax / 10.0), this));
 	}
 
+	public boolean getIntakeSensor() {
+		return canifier.getGeneralInput(GeneralPin.LIMF);
+	}
 	public void setCubeColor() {
 		candle.setLEDs(188, 0, 255, 0, 0, ElevatorConstants.ledCount);
 	}

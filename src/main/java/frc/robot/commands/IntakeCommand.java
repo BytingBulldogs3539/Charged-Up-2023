@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.ElevatorSubsystem.Arm;
 
 public class IntakeCommand extends CommandBase {
   /** Creates a new IntakeCommand. */
@@ -20,11 +21,22 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.intakeSubsystem.setIntakeSpeed(speed);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(speed < 0)
+    {
+      if(RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake)
+      {
+        if(RobotContainer.elevatorSubsystem.getIntakeSensor()) {
+          RobotContainer.elevatorSubsystem.setArmLevel(Arm.intake);
+        }
+      }
+
+    }
   }
 
   // Called once the command ends or is interrupted.
