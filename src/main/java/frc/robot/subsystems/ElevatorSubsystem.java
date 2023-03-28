@@ -60,6 +60,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 	PIDController m_eController;
 	CANdle candle;
 
+	int ledR = 0;
+	int ledG = 255;
+	int ledB = 0;
+
+
+
 	Arm armPosition = Arm.intake;
 	Sides side = Sides.front;
 	private Wrist wristOrrientation = Wrist.cube;
@@ -154,10 +160,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		candle = new CANdle(IDConstants.CandleID, IDConstants.CandleCanName);
 
-		candle.setLEDs(0, 255, 0, 0, 0, ElevatorConstants.ledCount);
+		setLEDs(0, 255, 0);
 
 		candle.configLEDType(LEDStripType.GRB);
-		candle.configBrightnessScalar(1.0);
+		candle.configBrightnessScalar(.4);
 
 		canifier = new CANifier(IDConstants.CanifierID);
 
@@ -175,13 +181,28 @@ public class ElevatorSubsystem extends SubsystemBase {
 		return canifier.getGeneralInput(GeneralPin.LIMF);
 	}
 	public void setCubeColor() {
-		candle.setLEDs(188, 0, 255, 0, 0, ElevatorConstants.ledCount);
+		setLEDs(188, 0, 255);
 	}
 
 	public void setConeColor() {
-		candle.setLEDs(255, 205, 0, 0, 0, ElevatorConstants.ledCount);
+		setLEDs(255, 140, 0);
 	}
 
+	public void ledOff()
+	{
+		candle.setLEDs(0, 0, 0, 0, 0, ElevatorConstants.ledCount);
+	}
+
+	public void setLEDs(int ledR, int ledG, int ledB){
+		this.ledR = ledR;
+		this.ledG = ledG;
+		this.ledB = ledB;
+		candle.setLEDs(ledR, ledG, ledB, 0, 0, ElevatorConstants.ledCount);
+
+	}
+	public void ledRestore(){
+	candle.setLEDs(ledR, ledG, ledB, 0, 0, ElevatorConstants.ledCount);
+	}
 	public void setWristOrientation(Wrist orientation) {
 		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
 			this.wristOrrientation = orientation;

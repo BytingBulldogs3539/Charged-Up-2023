@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
@@ -11,6 +13,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Arm;
 public class IntakeCommand extends CommandBase {
   /** Creates a new IntakeCommand. */
   double speed;
+  Debouncer debouncer = new Debouncer(0.1,DebounceType.kBoth);
 
   public IntakeCommand(double speed) {
     this.speed = speed;
@@ -27,14 +30,21 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+   boolean sensor = debouncer.calculate(RobotContainer.elevatorSubsystem.getIntakeSensor());
+      if(sensor) {
+        RobotContainer.elevatorSubsystem.ledOff();
+      }
+    
     if(speed < 0)
     {
       if(RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake)
       {
-        if(RobotContainer.elevatorSubsystem.getIntakeSensor()) {
+        if(sensor) {
           RobotContainer.elevatorSubsystem.setArmLevel(Arm.intake);
+          RobotContainer.elevatorSubsystem.ledOff();
         }
       }
+      
 
     }
   }
@@ -43,7 +53,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.intakeSubsystem.setIntakeSpeed(0);
-
+    RobotContainer.elevatorSubsystem.ledRestore();
   }
 
   // Returns true when the command should end.
