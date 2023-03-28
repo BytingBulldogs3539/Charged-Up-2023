@@ -61,6 +61,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    RobotContainer.elevatorSubsystem.animateLights();
   }
 
   @Override
@@ -73,6 +74,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    RobotContainer.elevatorSubsystem.ledRestore();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -92,6 +94,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    RobotContainer.elevatorSubsystem.ledRestore();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -104,6 +107,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    RobotContainer.elevatorSubsystem.ledRestore();
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
@@ -116,6 +120,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
+    RobotContainer.elevatorSubsystem.ledRestore();
   }
 
   /** This function is called periodically whilst in simulation. */

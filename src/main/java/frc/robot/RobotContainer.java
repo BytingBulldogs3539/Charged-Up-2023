@@ -141,11 +141,11 @@ public class RobotContainer {
     chooser.addOption("Place Cube Mid", new PlaceMidCube());
     chooser.addOption("Place Cube Mid Balance", new PlaceMidCubeAndBalance());
     chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
-    chooser.addOption("MP Test ", new MPTest());
-    chooser.addOption("MP Forward ", new ForwardTest());
-    chooser.addOption("MP Forward Back ", new ForwardBackTest());
-    chooser.addOption("MP Curve Right ", new CurveRightTest());
-    chooser.addOption("MP 1m Square ", new Square1M());
+    //chooser.addOption("MP Test ", new MPTest());
+    //chooser.addOption("MP Forward ", new ForwardTest());
+    //chooser.addOption("MP Forward Back ", new ForwardBackTest());
+    //chooser.addOption("MP Curve Right ", new CurveRightTest());
+    //chooser.addOption("MP 1m Square ", new Square1M());
 
 
 		SmartDashboard.putData("Auto Chooser", chooser);
