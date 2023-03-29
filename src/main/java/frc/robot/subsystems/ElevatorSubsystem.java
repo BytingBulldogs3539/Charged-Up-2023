@@ -270,7 +270,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public void setExtensionSpeed(double speed) {
-
+		//elevatorMotor.set(ControlMode.PercentOutput, 0);
 		elevatorMotor.set(ControlMode.PercentOutput, speed);
 	}
 

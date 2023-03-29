@@ -140,6 +140,7 @@ public class DriveSubsystem extends SubsystemBase {
 		driveTrainTab.addNumber("X Pose", m_pose::getX);
 		driveTrainTab.addNumber("Y Pose", m_pose::getY);
 		driveTrainTab.addNumber("Theta Pose", () -> (m_pose.getRotation().getDegrees()));
+		driveTrainTab.addNumber("Pitch", this::getPitch);
 
 		setDefaultCommand(new DriveCommand(this));
 	}
@@ -162,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
 	}
 
 	public double getPitch() {
-		return m_pigeon.getPitch();
+		return m_pigeon.getRoll();
 	}
 
 	public void drive(ChassisSpeeds chassisSpeeds) {

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autoncommands.SetPoseCommand;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
@@ -47,11 +48,23 @@ public class PlaceHighConeAndBalance extends SequentialCommandGroup {
               new SimplePathBuilder(
                   new Vector2(0, 0), Rotation2.fromDegrees(180))
                   .lineTo(new Vector2(1, 0), Rotation2.fromDegrees(135))
-                  .lineTo(new Vector2(2.6, 0), Rotation2.fromDegrees(135))
-                  .lineTo(new Vector2(2.6, 0.1), Rotation2.fromDegrees(135))
-                  .lineTo(new Vector2(2.6, 0.1), Rotation2.fromDegrees(135)).build(),
-              getConstraints(), RobotContainer.driveSubsystem)))
-           );
+                  .lineTo(new Vector2(5.5, 0), Rotation2.fromDegrees(135)).build(),
+              getSlowConstraints(), RobotContainer.driveSubsystem),
+
+              TrajectoryCommandGenerator.getMotionCommand(
+              new SimplePathBuilder(
+                  new Vector2(5.5, 0), Rotation2.fromDegrees(135))
+                  .lineTo(new Vector2(2.8, 0), Rotation2.fromDegrees(135))
+                  .lineTo(new Vector2(2.6, 0), Rotation2.fromDegrees(180)).build(),
+              getSlowConstraints(), RobotContainer.driveSubsystem),
+              
+              new AutoBalance(RobotContainer.driveSubsystem,-1.5).withTimeout(5))));
+  }
+
+  public TrajectoryConstraint[] getSlowConstraints() {
+    TrajectoryConstraint[] constraints = { (TrajectoryConstraint) new MaxAccelerationConstraint(1),
+        (TrajectoryConstraint) new MaxVelocityConstraint(1) };
+    return constraints;
   }
 
   public TrajectoryConstraint[] getConstraints() {

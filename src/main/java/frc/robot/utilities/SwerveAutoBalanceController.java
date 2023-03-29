@@ -63,7 +63,7 @@ public class SwerveAutoBalanceController extends CommandBase {
         this.m_thetaController.setOutputRange(-1.0D, 1.0D);
         this.m_thetaController.setContinuous(true);
     }
-
+    boolean isBalance = false;
     public void execute() {
         double curTime = this.m_timer.get();
 
@@ -119,6 +119,7 @@ public class SwerveAutoBalanceController extends CommandBase {
         double targetAngularVel = this.m_thetaController
                 .calculate(((Pose2d) this.m_pose.get()).getRotation().getRadians(), dt);
         if((m_pitch.get()<=-2.5) && (m_pitch.get() <= 2.5)){
+                isBalance = true;
                 m_driveSub.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         0,
@@ -126,7 +127,7 @@ public class SwerveAutoBalanceController extends CommandBase {
                         0,
                         m_driveSub.getGyroscopeRotation()));
         }
-        else{
+        else if(!isBalance){
                 m_driveSub.drive(
                         ChassisSpeeds.fromFieldRelativeSpeeds(
                                 targetXVel,
