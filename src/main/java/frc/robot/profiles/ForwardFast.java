@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
+import frc.robot.autoncommands.SetPoseCommand;
+
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.IntakeCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -20,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.utilities.MPLoader;
 
-public class ForwardBackTest extends SequentialCommandGroup {
+public class ForwardFast extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -30,19 +32,17 @@ public class ForwardBackTest extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "forward_back.txt";
+    private final String filename = "forward_fast.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         new ZeroGyroCommand(0),
         new WaitCommand(.25),
         paths[0],
-        paths[1],
-        new IntakeCommand(1).withTimeout(2),
-        paths[2]
+        paths[1]
     };
     /*
      * No changes necessary below
      */
 
-    public ForwardBackTest() { for (Command command : sequence) addCommands(command); }
+    public ForwardFast() { for (Command command : sequence) addCommands(command); }
 }

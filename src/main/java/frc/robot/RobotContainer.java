@@ -22,6 +22,7 @@ import frc.robot.profiles.Square1M;
 import frc.robot.profiles.ForwardTest;
 import frc.robot.profiles.ForwardBackTest;
 import frc.robot.profiles.CurveRightTest;
+import frc.robot.profiles.TwoPieceLeft;
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
@@ -141,16 +142,16 @@ public class RobotContainer {
     chooser.addOption("Place Cube Mid", new PlaceMidCube());
     chooser.addOption("Place Cube Mid Balance", new PlaceMidCubeAndBalance());
     chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
-    //chooser.addOption("MP Test ", new MPTest());
-    //chooser.addOption("MP Forward ", new ForwardTest());
-    //chooser.addOption("MP Forward Back ", new ForwardBackTest());
-    //chooser.addOption("MP Curve Right ", new CurveRightTest());
-    //chooser.addOption("MP 1m Square ", new Square1M());
 
+    // Autons
+    //try { chooser.addOption("MP Test ", new MPTest()); } finally { }
+    try { chooser.addOption("MP Forward ", new ForwardTest()); } finally { }
+    //try { chooser.addOption("MP Forward Back ", new ForwardBackTest()); } finally { }
+    //try { chooser.addOption("MP Curve Right ", new CurveRightTest()); } finally { }
+    //try { chooser.addOption("MP 1m Square ", new Square1M()); } finally { }
+    try { chooser.addOption("MP Two Piece Left ", new TwoPieceLeft()); } finally { }
 
 		SmartDashboard.putData("Auto Chooser", chooser);
-
-    
 	}
 
   /**

@@ -13,10 +13,17 @@ import frc.robot.subsystems.ElevatorSubsystem.Arm;
 public class IntakeCommand extends CommandBase {
   /** Creates a new IntakeCommand. */
   double speed;
+  boolean useSensor = true;
   Debouncer debouncer = new Debouncer(0.1,DebounceType.kBoth);
 
   public IntakeCommand(double speed) {
     this.speed = speed;
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
+  
+  public IntakeCommand(double speed,boolean useSensor) {
+    this.speed = speed;
+    this.useSensor = useSensor;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,7 +37,9 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   boolean sensor = debouncer.calculate(RobotContainer.elevatorSubsystem.getIntakeSensor());
+    if(useSensor)
+    {
+      boolean sensor = debouncer.calculate(RobotContainer.elevatorSubsystem.getIntakeSensor());
       if(sensor) {
         RobotContainer.elevatorSubsystem.ledOff();
       }
@@ -47,6 +56,8 @@ public class IntakeCommand extends CommandBase {
       
 
     }
+    }
+   
   }
 
   // Called once the command ends or is interrupted.

@@ -22,26 +22,28 @@ import frc.robot.utilities.MPLoader;
 
 public class Square1M extends SequentialCommandGroup {
 
+    /*
+     * DIRECTIONS: To load from a motion profile file, specify the name
+     * of the file, use MPLoader to get the path data, and fill the
+     * command sequence with the path data. The returned path data is
+     * indexed as:
+     *  [0]:     the pose command (must be used first)
+     *  [1-n]:   each individual path in order
+     */
     private final String filename = "1m_square.txt";
-
+    private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         new ZeroGyroCommand(0),
         new WaitCommand(.25),
-        null,
-        null,
-        null,
-        null,
-        null
+        paths[0],
+        paths[1],
+        paths[2],
+        paths[3],
+        paths[4]
     };
+    /*
+     * No changes necessary below
+     */
 
-    public Square1M() {
-        try {
-            for (Command command : MPLoader.getCommandSequence(sequence, filename)) {
-                addCommands(command);
-            }
-        }
-        catch (java.io.IOException e) {
-
-        }
-    }
+    public Square1M() { for (Command command : sequence) addCommands(command); }
 }

@@ -24,23 +24,25 @@ import frc.robot.utilities.MPLoader;
 
 public class MPTest extends SequentialCommandGroup {
 
+    /*
+     * DIRECTIONS: To load from a motion profile file, specify the name
+     * of the file, use MPLoader to get the path data, and fill the
+     * command sequence with the path data. The returned path data is
+     * indexed as:
+     *  [0]:     the pose command (must be used first)
+     *  [1-n]:   each individual path in order
+     */
     private final String filename = "_test.txt";
-
+    private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         new ZeroGyroCommand(0),
         new WaitCommand(.25),
-        null,
-        null
+        paths[0],
+        paths[1]
     };
+    /*
+     * No changes necessary below
+     */
 
-    public MPTest() {
-        try {
-            for (Command command : MPLoader.getCommandSequence(sequence, filename)) {
-                addCommands(command);
-            }
-        }
-        catch (java.io.IOException e) {
-
-        }
-    }
+    public MPTest() { for (Command command : sequence) addCommands(command); }
 }
