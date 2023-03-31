@@ -8,6 +8,7 @@ import frc.robot.auton.DriveTest;
 import frc.robot.auton.PlaceHighCone;
 import frc.robot.auton.PlaceHighConeAndBalance;
 import frc.robot.auton.PlaceHighConeBackDrive;
+import frc.robot.auton.PlaceHighConeBalanceOld;
 import frc.robot.auton.PlaceHighCube;
 import frc.robot.auton.PlaceHighCubeAndBalance;
 import frc.robot.auton.PlaceHighCubeBackDrive;
@@ -101,9 +102,9 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.start().onTrue(new ZeroGyroCommand(0));
 
-    operatorController.leftTrigger().whileTrue(new IntakeCommand(1));
+    operatorController.leftTrigger().whileTrue(new IntakeCommand(1,false));
 
-    operatorController.rightTrigger().whileTrue(new IntakeCommand(-1));
+    operatorController.rightTrigger().whileTrue(new IntakeCommand(-1,false));
 
     operatorController.leftBumper().onTrue(new FlipArmSideCommand());
 
@@ -132,6 +133,7 @@ public class RobotContainer {
     chooser.addOption("TestDrive", new DriveTest());
 		chooser.setDefaultOption("Place Cone High", new PlaceHighCone()); 
     chooser.addOption("Place Cone High and Balance", new PlaceHighConeAndBalance());
+    chooser.addOption("Place Cone High Balance Old", new PlaceHighConeBalanceOld());
     chooser.addOption("Place Cone High Back", new PlaceHighConeBackDrive());   
     chooser.addOption("Place Cube High", new PlaceHighCube());
     chooser.addOption("Place Cube High Balance", new PlaceHighCubeAndBalance());
@@ -144,12 +146,12 @@ public class RobotContainer {
     chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
 
     // Autons
-    //try { chooser.addOption("MP Test ", new MPTest()); } finally { }
-    try { chooser.addOption("MP Forward ", new ForwardTest()); } finally { }
-    //try { chooser.addOption("MP Forward Back ", new ForwardBackTest()); } finally { }
-    //try { chooser.addOption("MP Curve Right ", new CurveRightTest()); } finally { }
-    //try { chooser.addOption("MP 1m Square ", new Square1M()); } finally { }
-    try { chooser.addOption("MP Two Piece Left ", new TwoPieceLeft()); } finally { }
+    //try { chooser.addOption("MP Test ", new MPTest()); } catch (Exception e) { }
+    try { chooser.addOption("MP Forward ", new ForwardTest()); } catch (Exception e) { }
+    //try { chooser.addOption("MP Forward Back ", new ForwardBackTest()); } catch (Exception e) { }
+    //try { chooser.addOption("MP Curve Right ", new CurveRightTest()); } catch (Exception e) { }
+    //try { chooser.addOption("MP 1m Square ", new Square1M()); } catch (Exception e) { }
+    try { chooser.addOption("MP Two Piece Left ", new TwoPieceLeft()); } catch (Exception e) { }
 
 		SmartDashboard.putData("Auto Chooser", chooser);
 	}
