@@ -31,7 +31,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class TwoPieceLeft extends SequentialCommandGroup {
+public class TwoConeBlue extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -41,7 +41,7 @@ public class TwoPieceLeft extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "two_piece_left.txt";
+    private final String filename = "two_cone_blue.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
@@ -87,5 +87,5 @@ public class TwoPieceLeft extends SequentialCommandGroup {
      * No changes necessary below
      */
 
-    public TwoPieceLeft() { for (Command command : sequence) addCommands(command); }
+    public TwoConeBlue() { for (Command command : sequence) addCommands(command); }
 }

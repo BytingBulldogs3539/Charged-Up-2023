@@ -23,7 +23,10 @@ import frc.robot.profiles.Square1M;
 import frc.robot.profiles.ForwardTest;
 import frc.robot.profiles.ForwardBackTest;
 import frc.robot.profiles.CurveRightTest;
-import frc.robot.profiles.TwoPieceLeft;
+import frc.robot.profiles.TwoConeBlue;
+import frc.robot.profiles.TwoConeBlueTest;
+import frc.robot.profiles.TwoConeRed;
+import frc.robot.profiles.TwoConeRedTest;
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
@@ -145,13 +148,16 @@ public class RobotContainer {
     chooser.addOption("Place Cube Mid Balance", new PlaceMidCubeAndBalance());
     chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
 
-    // Autons
+    // Motion Profiles
     //try { chooser.addOption("MP Test ", new MPTest()); } catch (Exception e) { }
     try { chooser.addOption("MP Forward ", new ForwardTest()); } catch (Exception e) { }
     //try { chooser.addOption("MP Forward Back ", new ForwardBackTest()); } catch (Exception e) { }
     //try { chooser.addOption("MP Curve Right ", new CurveRightTest()); } catch (Exception e) { }
     //try { chooser.addOption("MP 1m Square ", new Square1M()); } catch (Exception e) { }
-    try { chooser.addOption("MP Two Piece Left ", new TwoPieceLeft()); } catch (Exception e) { }
+    try { chooser.addOption("Two Cone Blue", new TwoConeBlue()); } catch (Exception e) { }
+    try { chooser.addOption("Two Cone Blue Test", new TwoConeBlueTest()); } catch (Exception e) { }
+    try { chooser.addOption("Two Cone Red", new TwoConeRed()); } catch (Exception e) { }
+    try { chooser.addOption("Two Cone Red Test", new TwoConeRedTest()); } catch (Exception e) { }
 
 		SmartDashboard.putData("Auto Chooser", chooser);
 	}
