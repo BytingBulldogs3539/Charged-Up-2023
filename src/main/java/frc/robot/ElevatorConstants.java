@@ -18,6 +18,9 @@ public class ElevatorConstants extends BBConstants {
 	public static double maxArmVelocity = 150;
 	public static double maxArmAcceleration = 150;
 
+	public static double maxArmRotationVelocity = 500;
+	public static double maxArmRotationAcceleration = 500;
+
 	public static double ElevatorConversionRatio = 0.0035390672755;
 	public static double ElevatorRotationMagnetOffset = 72.158;
 

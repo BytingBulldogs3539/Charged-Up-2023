@@ -23,7 +23,7 @@ public class ArmTrajetoryFollower extends CommandBase {
 
 	State lastState = null;
 
-	private Trajectory2 m_trajectory;
+	private MultiTrajectory m_trajectory;
 	private final Supplier<Point2D.Double> endPointSupplier;
 	private final ArmTrajectoryGenerator generator;
 	private final Supplier<ArmPosition> m_pose;
