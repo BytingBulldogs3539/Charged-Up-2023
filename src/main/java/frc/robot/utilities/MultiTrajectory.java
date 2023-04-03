@@ -23,10 +23,6 @@ public class MultiTrajectory {
             i++;
         }
         this.trajectories = trajectories;
-        for(double time : times)
-        {
-            System.out.println(time);
-        }
     }
 
     public Trajectory2 getTrajectory(double time) {
@@ -50,10 +46,8 @@ public class MultiTrajectory {
     public State calculate(double time) {
         Trajectory2 traj = getTrajectory(time);
         if (getIndex(time) != 0) {
-            System.out.println(time-times[getIndex(time)-1]);
             return traj.calculate(time-times[getIndex(time)-1]);
         }
-
         else {
             return traj.calculate(time);
         }
