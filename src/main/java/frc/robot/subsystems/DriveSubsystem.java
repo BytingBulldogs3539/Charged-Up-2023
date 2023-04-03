@@ -4,19 +4,33 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.SdsSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -50,7 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
 			new Translation2d(-DriveConstants.wheelTrackWidth / 2.0,
 					-DriveConstants.wheelTrackWidth / 2.0));
 
-	SwerveDriveOdometry m_odometry;
+	private final SwerveDrivePoseEstimator m_poseEstimator;
 
 	private final Pigeon2 m_pigeon = new Pigeon2(IDConstants.PigeonID, IDConstants.PigeonCanName);
 
@@ -69,8 +83,30 @@ public class DriveSubsystem extends SubsystemBase {
 
 	ShuffleboardTab driveTrainTab = Shuffleboard.getTab("Drivetrain");
 
+	AprilTagFieldLayout aprilTagFieldLayout;
+
+
+
+	// Forward Camera
+	PhotonCamera cam;
+	Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+
+	// Construct PhotonPoseEstimator
+	PhotonPoseEstimator photonPoseEstimator;
+
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
+		try {
+			aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+			
+		} catch (Exception e) {
+			System.out.println("ERROR Loading April Tag DATA");
+			aprilTagFieldLayout = null;
+		}
+
+		photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam,
+					robotToCam);
+
 		setGyroscope(0);
 
 		m_frontLeftModule = SdsSwerveModuleHelper.createFalcon500(
@@ -131,12 +167,14 @@ public class DriveSubsystem extends SubsystemBase {
 				IDConstants.BREncoderCanName,
 				DriveConstants.BRSteerOffset);
 
+		m_poseEstimator = new SwerveDrivePoseEstimator(
+				m_kinematics,
+				getGyroscopeRotation(), getModulePositions(),
+				new Pose2d(0, 0, new Rotation2d()),
+				VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(3)),
+				VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
-
-		m_odometry = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(), getModulePositions(),
-				new Pose2d(0, 0, new Rotation2d()));
-
-		m_pose = m_odometry.update(getGyroscopeRotation(), getModulePositions());
+		m_pose = m_poseEstimator.update(getGyroscopeRotation(), getModulePositions());
 		driveTrainTab.addNumber("X Pose", m_pose::getX);
 		driveTrainTab.addNumber("Y Pose", m_pose::getY);
 		driveTrainTab.addNumber("Theta Pose", () -> (m_pose.getRotation().getDegrees()));
@@ -175,7 +213,7 @@ public class DriveSubsystem extends SubsystemBase {
 	}
 
 	public void resetPose(Pose2d pose) {
-		m_odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), pose);
+		m_poseEstimator.resetPosition(getGyroscopeRotation(), getModulePositions(), pose);
 	}
 
 	public SwerveModulePosition[] getModulePositions() {
@@ -185,8 +223,20 @@ public class DriveSubsystem extends SubsystemBase {
 		return positions;
 	}
 
+	public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+		photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+		return photonPoseEstimator.update();
+	}
+
 	@Override
 	public void periodic() {
+
+		Optional<EstimatedRobotPose> result = getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
+		if (result.isPresent()) {
+			EstimatedRobotPose camPose = result.get();
+			m_poseEstimator.addVisionMeasurement(
+					camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+		}
 
 		SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
@@ -201,7 +251,7 @@ public class DriveSubsystem extends SubsystemBase {
 		m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
 				states[3].angle.getRadians());
 
-		m_pose = m_odometry.update(getGyroscopeRotation(), getModulePositions());
+		m_pose = m_poseEstimator.update(getGyroscopeRotation(), getModulePositions());
 
 	}
 }
