@@ -26,6 +26,10 @@ public class MultiTrajectory {
     }
 
     public Trajectory2 getTrajectory(double time) {
+        if(time>duration)
+        {
+            return trajectories[trajectories.length-1];
+        }
         for (int i = 0; i < times.length; i++) {
             if (times[i] > time) {
                 return trajectories[i];
@@ -35,11 +39,16 @@ public class MultiTrajectory {
     }
 
     public int getIndex(double time) {
+        if(time>duration)
+        {
+            return times.length-1;
+        }
         for (int i = 0; i < times.length; i++) {
             if (times[i] > time) {
                 return i;
             }
         }
+
         return -1;
     }
 

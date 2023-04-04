@@ -270,8 +270,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public void setExtensionSpeed(double speed) {
-		//elevatorMotor.set(ControlMode.PercentOutput, 0);
-		elevatorMotor.set(ControlMode.PercentOutput, speed);
+		elevatorMotor.set(ControlMode.PercentOutput, 0);
+		//elevatorMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	public void setRotationSpeed(double speed) {
@@ -281,7 +281,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		if (speed < -.35) {
 			speed = -.35;
 		}
-		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
+		elevatorRotationMotor.set(ControlMode.PercentOutput, 0);
+		//elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	public void setBreakMode(boolean enabled) {

@@ -83,20 +83,20 @@ public class DriveSubsystem extends SubsystemBase {
 
 	ShuffleboardTab driveTrainTab = Shuffleboard.getTab("Drivetrain");
 
-	AprilTagFieldLayout aprilTagFieldLayout;
+	//AprilTagFieldLayout aprilTagFieldLayout;
 
 
 
 	// Forward Camera
-	PhotonCamera cam;
-	Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+	//PhotonCamera cam;
+	//Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
 
 	// Construct PhotonPoseEstimator
 	PhotonPoseEstimator photonPoseEstimator;
 
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
-		try {
+		/*try {
 			aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
 			
 		} catch (Exception e) {
@@ -105,7 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
 		}
 
 		photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam,
-					robotToCam);
+					robotToCam);*/
 
 		setGyroscope(0);
 
@@ -223,20 +223,20 @@ public class DriveSubsystem extends SubsystemBase {
 		return positions;
 	}
 
-	public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+	/*public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
 		photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
 		return photonPoseEstimator.update();
-	}
+	}*/
 
 	@Override
 	public void periodic() {
 
-		Optional<EstimatedRobotPose> result = getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
+		/*Optional<EstimatedRobotPose> result = getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
 		if (result.isPresent()) {
 			EstimatedRobotPose camPose = result.get();
 			m_poseEstimator.addVisionMeasurement(
 					camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-		}
+		}*/
 
 		SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
