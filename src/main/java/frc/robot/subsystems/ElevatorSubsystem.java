@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -94,6 +95,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 		elevatorMotor.configMotionCruiseVelocity(70);
 		elevatorMotor.configMotionAcceleration(140);
+		elevatorMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 80, 120, .5));
+
 		// elevatorMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
 		// LimitSwitchNormal.NormallyOpen);
 		// elevatorMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
@@ -124,6 +127,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 																				// the cancoder then multiplies by 10
 		elevatorRotationMotor.configMotionCruiseVelocity(10);
 		elevatorRotationMotor.configMotionAcceleration(100);
+		elevatorRotationMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 80, 120, .5));
 
 		elevatorRotationEncoder.setPosition(elevatorRotationEncoder.getAbsolutePosition());
 
@@ -270,19 +274,19 @@ public class ElevatorSubsystem extends SubsystemBase {
 	}
 
 	public void setExtensionSpeed(double speed) {
-		elevatorMotor.set(ControlMode.PercentOutput, 0);
-		//elevatorMotor.set(ControlMode.PercentOutput, speed);
+		//elevatorMotor.set(ControlMode.PercentOutput, 0);
+		elevatorMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	public void setRotationSpeed(double speed) {
-		if (speed > .35) {
-			speed = .35;
+		if (speed > .55) {
+			speed = .55;
 		}
-		if (speed < -.35) {
-			speed = -.35;
+		if (speed < -.55) {
+			speed = -.55;
 		}
-		elevatorRotationMotor.set(ControlMode.PercentOutput, 0);
-		//elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
+		//elevatorRotationMotor.set(ControlMode.PercentOutput, 0);
+		elevatorRotationMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	public void setBreakMode(boolean enabled) {

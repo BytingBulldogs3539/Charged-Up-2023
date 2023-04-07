@@ -31,15 +31,23 @@ public class AutoBalance extends CommandBase {
   public void execute() {
 
     Rotation2d gyroAngle = sub.getGyroscopeRotation();
-    if (sub.getPitch() > 2.5 || sub.getPitch() < -2.5) {
+    if (sub.getPitch() > 9.0) {
       sub.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
-            speed,
+            -speed,
             0,
             0,
             gyroAngle));
 
-    } else {
+    } else if(sub.getPitch() < -9.0) {
+      sub.drive(
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+              speed,
+              0,
+              0,
+              gyroAngle));
+    }
+    else {
       sub.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
               0,

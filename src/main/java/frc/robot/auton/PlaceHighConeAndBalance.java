@@ -40,7 +40,7 @@ public class PlaceHighConeAndBalance extends SequentialCommandGroup {
     addCommands(new ZeroGyroCommand(180), new WaitCommand(.25),
         new SetPoseCommand(new Pose2d(0, 0, Rotation2d.fromDegrees(180))), new SetArmSide(Sides.front),
         new SetArmHeight(Arm.high), new SetWristOrientationOverride(Wrist.cone),
-        new WaitCommand(3), new IntakeCommand(1).withTimeout(0.8), new SetArmSide(Sides.front),
+        new WaitCommand(2), new IntakeCommand(1).withTimeout(0.5), new SetArmSide(Sides.front),
         new SetArmHeight(Arm.intake),
         new ParallelCommandGroup(
           new SequentialCommandGroup(new WaitCommand(.5), new SetWristOrientationOverride(Wrist.cube)),
@@ -48,17 +48,17 @@ public class PlaceHighConeAndBalance extends SequentialCommandGroup {
               new SimplePathBuilder(
                   new Vector2(0, 0), Rotation2.fromDegrees(180))
                   .lineTo(new Vector2(1, 0), Rotation2.fromDegrees(135))
-                  .lineTo(new Vector2(5.5, 0), Rotation2.fromDegrees(135)).build(),
+                  .lineTo(new Vector2(4.25, 0), Rotation2.fromDegrees(135)).build(),
               getSlowConstraints(), RobotContainer.driveSubsystem),
 
               TrajectoryCommandGenerator.getMotionCommand(
               new SimplePathBuilder(
-                  new Vector2(5.5, 0), Rotation2.fromDegrees(135))
+                  new Vector2(4.25, 0), Rotation2.fromDegrees(135))
                   .lineTo(new Vector2(2.8, 0), Rotation2.fromDegrees(135))
-                  .lineTo(new Vector2(2.6, 0), Rotation2.fromDegrees(180)).build(),
+                  .lineTo(new Vector2(2.1, 0), Rotation2.fromDegrees(180)).build(),
               getSlowConstraints(), RobotContainer.driveSubsystem),
               
-              new AutoBalance(RobotContainer.driveSubsystem,-1.5).withTimeout(5))));
+              new AutoBalance(RobotContainer.driveSubsystem,1.5).withTimeout(5))));
   }
 
   public TrajectoryConstraint[] getSlowConstraints() {

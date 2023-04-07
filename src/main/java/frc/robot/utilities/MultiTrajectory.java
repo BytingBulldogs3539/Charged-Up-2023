@@ -53,6 +53,10 @@ public class MultiTrajectory {
     }
 
     public State calculate(double time) {
+        if(trajectories.length==1)
+        {
+            return trajectories[0].calculate(time);
+        }
         Trajectory2 traj = getTrajectory(time);
         if (getIndex(time) != 0) {
             return traj.calculate(time-times[getIndex(time)-1]);
