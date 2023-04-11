@@ -53,18 +53,20 @@ public class ConeCubeRed extends SequentialCommandGroup {
         new SetWristOrientationOverride(Wrist.cone),
         new WaitCommand(2),
         new IntakeCommand(1).withTimeout(0.5),
-        // Drive to second piece
         new ParallelCommandGroup(
+            // Flip arm
             new SequentialCommandGroup(
                 new WaitCommand(.7),
                 new SetWristOrientationOverride(Wrist.cube),
                 new SetArmSide(Sides.back),
                 new SetArmHeight(Arm.intake)
             ),
+            // Pick up second cube
             new SequentialCommandGroup(
                 new WaitCommand(2.2),
                 new IntakeCommand(1).withTimeout(1.6)
             ),
+            // Pose and drive to second piece
             new SequentialCommandGroup(
                 new WaitCommand(.01),
                 paths[0],
@@ -73,11 +75,12 @@ public class ConeCubeRed extends SequentialCommandGroup {
         ),
         new SetArmSide(Sides.front),
         new SetArmHeight(Arm.high),
+        // Drive back to station
         new ParallelCommandGroup(
             paths[2],
             new SequentialCommandGroup(
                 new WaitCommand(2.7),
-             new IntakeCommand(-1).withTimeout(0.5)
+                new IntakeCommand(-1).withTimeout(0.5)
             )
         ),
         new ParallelCommandGroup(

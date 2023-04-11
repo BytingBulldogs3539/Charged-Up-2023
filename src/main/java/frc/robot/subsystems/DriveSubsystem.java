@@ -252,6 +252,5 @@ public class DriveSubsystem extends SubsystemBase {
 				states[3].angle.getRadians());
 
 		m_pose = m_poseEstimator.update(getGyroscopeRotation(), getModulePositions());
-
 	}
 }
