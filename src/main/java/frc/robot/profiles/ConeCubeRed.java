@@ -63,7 +63,7 @@ public class ConeCubeRed extends SequentialCommandGroup {
             ),
             new SequentialCommandGroup(
                 new WaitCommand(2.2),
-                new IntakeCommand(1).withTimeout(1.5)
+                new IntakeCommand(1).withTimeout(1.6)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(.01),

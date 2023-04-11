@@ -63,7 +63,7 @@ public class ConeCubeBlue extends SequentialCommandGroup {
             ),
             new SequentialCommandGroup(
                 new WaitCommand(2),
-                new IntakeCommand(1).withTimeout(1.5)
+                new IntakeCommand(1).withTimeout(1.8)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(.01),
@@ -89,7 +89,7 @@ public class ConeCubeBlue extends SequentialCommandGroup {
                 new SetArmSide(Sides.back),
                 new SetArmHeight(Arm.intake),
                 new WaitCommand(1),
-                new IntakeCommand(1).withTimeout(2)
+                new IntakeCommand(1).withTimeout(2.1)
             )
         ),
         new SetArmSide(Sides.front)
