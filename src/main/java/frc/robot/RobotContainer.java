@@ -29,10 +29,13 @@ import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetConeLights;
 import frc.robot.commands.SetCubeLights;
 import frc.robot.commands.ZeroGyroCommand;
+
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
+import frc.robot.subsystems.LEDSubsystem;
+
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,6 +63,7 @@ public class RobotContainer {
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
   public static IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   public static ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  public static LEDSubsystem ledSubsystem = new LEDSubsystem(true);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static CommandXboxController driverController = new CommandXboxController(1);

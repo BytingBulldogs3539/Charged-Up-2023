@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.LEDSubsystem.LEDState;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -61,7 +62,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    RobotContainer.elevatorSubsystem.animateLights();
+    RobotContainer.ledSubsystem.setLEDs(LEDState.READY);
   }
 
   @Override
@@ -74,7 +75,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    RobotContainer.elevatorSubsystem.ledRestore();
+    RobotContainer.ledSubsystem.setLEDs(LEDState.CONE);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -94,7 +95,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    RobotContainer.elevatorSubsystem.ledRestore();
+    RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -107,7 +108,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    RobotContainer.elevatorSubsystem.ledRestore();
+    RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
@@ -120,7 +121,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
-    RobotContainer.elevatorSubsystem.ledRestore();
+    RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
   }
 
   /** This function is called periodically whilst in simulation. */
