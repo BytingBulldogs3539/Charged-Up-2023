@@ -42,7 +42,7 @@ import frc.robot.utilities.ArmTrajetoryFollower;
 public class ElevatorSubsystem extends SubsystemBase {
 
 	public enum Arm {
-		high, middle, low, intake, HumanPlayer, groundIntake
+		high, middle, low, intake, HumanPlayer, groundIntake, cubeLowIntake
 	}
 
 	public enum Wrist {
@@ -335,6 +335,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 				else if (armPosition == Arm.groundIntake) {
 					pos = new Point2D.Double(ElevatorConstants.frontConeGroundX,
 							ElevatorConstants.frontConeGroundY);
+				}
+				else if(armPosition == Arm.cubeLowIntake){
+					pos = new Point2D.Double(ElevatorConstants.frontCubeLowIntakeX, ElevatorConstants.frontCubeLowIntakeY);
 				}
 			}
 		} else if (side == Sides.back) {

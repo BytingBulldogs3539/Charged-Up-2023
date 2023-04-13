@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autoncommands.SetPoseCommand;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
@@ -31,7 +32,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class ConeCubeBlue extends SequentialCommandGroup {
+public class TwoPieceBalanceBlue extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -41,29 +42,29 @@ public class ConeCubeBlue extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "cone_cube_blue.txt";
+    private final String filename = "two_piece_bal_blue.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
-        new WaitCommand(.25),
+        new WaitCommand(.1),
         // Place cone
         new SetArmSide(Sides.front),
         new SetArmHeight(Arm.high),
         new SetWristOrientationOverride(Wrist.cone),
-        new WaitCommand(2),
-        new IntakeCommand(1).withTimeout(0.5),
+        new WaitCommand(1.75),
+        new IntakeCommand(1).withTimeout(0.6),
         // Drive to second piece
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new WaitCommand(.3),
+                //new WaitCommand(.3),
                 new SetWristOrientationOverride(Wrist.cube),
                 new SetArmSide(Sides.back),
                 new SetArmHeight(Arm.intake)
             ),
             new SequentialCommandGroup(
-                new WaitCommand(2),
-                new IntakeCommand(1).withTimeout(1.8)
+                new WaitCommand(0.9),
+                new IntakeCommand(1).withTimeout(2.4)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(.01),
@@ -76,23 +77,16 @@ public class ConeCubeBlue extends SequentialCommandGroup {
         new ParallelCommandGroup(
             paths[2],
             new SequentialCommandGroup(
-                new WaitCommand(2.7),
+                new WaitCommand(2.2),
                 new IntakeCommand(-1).withTimeout(0.5)
             )
         ),
-        new ParallelCommandGroup(
-            new SequentialCommandGroup(
-                paths[3]
-            ),
-            new SequentialCommandGroup(
-                new WaitCommand(1), 
-                new SetArmSide(Sides.back),
-                new SetArmHeight(Arm.intake),
-                new WaitCommand(1),
-                new IntakeCommand(1).withTimeout(2.1)
-            )
-        ),
-        new SetArmSide(Sides.front)
+        new SetArmHeight(Arm.intake),
+        new WaitCommand(1),
+        paths[3],
+        new AutoBalance(RobotContainer.driveSubsystem,2.5).withTimeout(5)
+
+        
         
 
     };
@@ -100,5 +94,5 @@ public class ConeCubeBlue extends SequentialCommandGroup {
      * No changes necessary below
      */
 
-    public ConeCubeBlue() { for (Command command : sequence) addCommands(command); }
+    public TwoPieceBalanceBlue() { for (Command command : sequence) addCommands(command); }
 }

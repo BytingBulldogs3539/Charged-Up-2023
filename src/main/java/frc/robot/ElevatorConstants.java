@@ -104,6 +104,9 @@ public class ElevatorConstants extends BBConstants {
 	public static double frontConeGroundX = 34.99;
 	public static double frontConeGroundY = -91.03;
 
+	public static double frontCubeLowIntakeX = 0;
+	public static double frontCubeLowIntakeY = 0;
+
 	public static double backConeHighX = -128.8;
 	public static double backConeHighY = 28.02;
 

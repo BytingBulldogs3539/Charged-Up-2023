@@ -42,6 +42,12 @@ public class DriveCommand extends CommandBase {
             return 0.0;
         }
     }
+    private static double modifyTurnAxis(double value) {
+      // Deadband
+      value = deadband(value, 0.05);
+
+      return value;
+  }
 
     private static double modifyAxis(double value) {
         // Deadband
@@ -81,7 +87,7 @@ public class DriveCommand extends CommandBase {
         Rotation2d gyroAngle = RobotContainer.driveSubsystem.getGyroscopeRotation();
         double translationXPercent = -modifyAxis(RobotContainer.driverController.getLeftY());
         double translationYPercent = -modifyAxis(RobotContainer.driverController.getLeftX());
-        double rotationPercent = rotationSpeedMultiplier * -modifyAxis(RobotContainer.driverController.getRightX());
+        double rotationPercent = rotationSpeedMultiplier * -modifyTurnAxis(RobotContainer.driverController.getRightX());
 
         if (RobotContainer.driverController.a().getAsBoolean()) {
             Double setPoint = 0.0;

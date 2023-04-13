@@ -31,7 +31,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class ConeCubeBlue extends SequentialCommandGroup {
+public class ConeCubeBlueTest extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -46,24 +46,24 @@ public class ConeCubeBlue extends SequentialCommandGroup {
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
-        new WaitCommand(.25),
+        new WaitCommand(.1),
         // Place cone
         new SetArmSide(Sides.front),
         new SetArmHeight(Arm.high),
         new SetWristOrientationOverride(Wrist.cone),
-        new WaitCommand(2),
-        new IntakeCommand(1).withTimeout(0.5),
+        new WaitCommand(1.75),
+        new IntakeCommand(1).withTimeout(0.6),
         // Drive to second piece
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new WaitCommand(.3),
+                //new WaitCommand(.3),
                 new SetWristOrientationOverride(Wrist.cube),
                 new SetArmSide(Sides.back),
                 new SetArmHeight(Arm.intake)
             ),
             new SequentialCommandGroup(
-                new WaitCommand(2),
-                new IntakeCommand(1).withTimeout(1.8)
+                new WaitCommand(0.9),
+                new IntakeCommand(1).withTimeout(2.4)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(.01),
@@ -76,7 +76,7 @@ public class ConeCubeBlue extends SequentialCommandGroup {
         new ParallelCommandGroup(
             paths[2],
             new SequentialCommandGroup(
-                new WaitCommand(2.7),
+                new WaitCommand(2.2),
                 new IntakeCommand(-1).withTimeout(0.5)
             )
         ),
@@ -85,14 +85,23 @@ public class ConeCubeBlue extends SequentialCommandGroup {
                 paths[3]
             ),
             new SequentialCommandGroup(
-                new WaitCommand(1), 
+                //new WaitCommand(0.5), 
                 new SetArmSide(Sides.back),
                 new SetArmHeight(Arm.intake),
                 new WaitCommand(1),
-                new IntakeCommand(1).withTimeout(2.1)
+                new IntakeCommand(1).withTimeout(2)
             )
         ),
-        new SetArmSide(Sides.front)
+        new ParallelCommandGroup(
+            paths[4],
+        new SequentialCommandGroup(
+            new SetArmSide(Sides.front),
+            new SetArmHeight(Arm.middle),
+            new WaitCommand(2.25),
+            new SetArmHeight(Arm.intake),
+            new IntakeCommand(-1).withTimeout(1)
+        )
+        )
         
 
     };
@@ -100,5 +109,5 @@ public class ConeCubeBlue extends SequentialCommandGroup {
      * No changes necessary below
      */
 
-    public ConeCubeBlue() { for (Command command : sequence) addCommands(command); }
+    public ConeCubeBlueTest() { for (Command command : sequence) addCommands(command); }
 }

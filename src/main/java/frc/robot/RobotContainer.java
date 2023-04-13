@@ -25,6 +25,7 @@ import frc.robot.profiles.ForwardTest;
 import frc.robot.profiles.ForwardBackTest;
 import frc.robot.profiles.ConeCubeBlue;
 import frc.robot.profiles.ConeCubeBlueCable;
+import frc.robot.profiles.ConeCubeBlueTest;
 import frc.robot.profiles.ConeCubeRed;
 import frc.robot.profiles.CurveRightTest;
 import frc.robot.profiles.Diagonal;
@@ -33,6 +34,7 @@ import frc.robot.profiles.TwoConeBlue;
 import frc.robot.profiles.TwoConeBlueTest;
 import frc.robot.profiles.TwoConeRed;
 import frc.robot.profiles.TwoConeRedTest;
+import frc.robot.profiles.TwoPieceBalanceBlue;
 import frc.robot.profiles.L;
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
@@ -128,6 +130,7 @@ public class RobotContainer {
     operatorController.x().onTrue(new SetArmHeight(Arm.high));
     operatorController.povRight().onTrue(new SetArmHeight(Arm.HumanPlayer));
     operatorController.povDown().onTrue(new SetArmHeight(Arm.groundIntake));
+    operatorController.povUp().onTrue(new SetArmHeight(Arm.cubeLowIntake));
 
     //operatorController.a().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(38.926915,-70.0)));
     //operatorController.b().onTrue(elevatorSubsystem.getArmTrajectoryFollower(new Point2D.Double(110.0,-1)));
@@ -172,6 +175,9 @@ public class RobotContainer {
     try { chooser.addOption("Cone Cube Blue Cable", new ConeCubeBlueCable()); } catch (Exception e) { }
     try { chooser.addOption("Cone Cube Red", new ConeCubeRed()); } catch (Exception e) { }
     try { chooser.addOption("Pick Up Balance", new PickUpBalance()); } catch (Exception e) { }
+    try { chooser.addOption("Test Cone Cube Blue", new ConeCubeBlueTest()); } catch (Exception e) { }
+    try { chooser.addOption("Blue Two Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) { }
+
 
 
 
