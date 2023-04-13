@@ -31,7 +31,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class TwoConeBlueTest extends SequentialCommandGroup {
+public class TwoPieceRed extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -41,51 +41,67 @@ public class TwoConeBlueTest extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "two_cone_blue_test.txt";
+    private final String filename = "cone_cube_red.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
         new WaitCommand(.25),
         // Place cone
-        //new SetArmSide(Sides.front),
-        //new SetArmHeight(Arm.high),
-        //new SetWristOrientationOverride(Wrist.cone),
-        new WaitCommand(3),
-        new IntakeCommand(1).withTimeout(0.8),
-        //new SetArmSide(Sides.front),
-        //new SetArmHeight(Arm.intake),
-        // Drive to second piece
+        new SetArmSide(Sides.front),
+        new SetArmHeight(Arm.high),
+        new SetWristOrientationOverride(Wrist.cone),
+        new WaitCommand(2),
+        new IntakeCommand(1).withTimeout(0.5),
         new ParallelCommandGroup(
+            // Flip arm
             new SequentialCommandGroup(
-                new WaitCommand(.5)
-                //new SetWristOrientationOverride(Wrist.cube)
+                new WaitCommand(.7),
+                new SetWristOrientationOverride(Wrist.cube),
+                new SetArmSide(Sides.back),
+                new SetArmHeight(Arm.intake)
             ),
+            // Pick up second cube
+            new SequentialCommandGroup(
+                new WaitCommand(2.2),
+                new IntakeCommand(1).withTimeout(1.6)
+            ),
+            // Pose and drive to second piece
             new SequentialCommandGroup(
                 new WaitCommand(.01),
                 paths[0],
                 paths[1]
             )
         ),
+        new SetArmSide(Sides.front),
+        new SetArmHeight(Arm.high),
+        // Drive back to station
         new ParallelCommandGroup(
-            //new SetArmHeight(Arm.groundIntake),
             paths[2],
-            new IntakeCommand(-1,false).withTimeout(1.5)
-        ),
-        //new SetArmHeight(Arm.intake),
-        new ParallelCommandGroup(
-            paths[3],
             new SequentialCommandGroup(
-                new IntakeCommand(-1,false).withTimeout(1)
-                //new SetArmHeight(Arm.middle),
-                //new SetWristOrientationOverride(Wrist.cone)
+                new WaitCommand(2.7),
+                new IntakeCommand(-1).withTimeout(0.5)
             )
         ),
-        new IntakeCommand(1).withTimeout(0.8)
+        new ParallelCommandGroup(
+            new SequentialCommandGroup(
+                paths[3]
+            ),
+            new SequentialCommandGroup(
+                new WaitCommand(1), 
+                new SetArmSide(Sides.back),
+                new SetArmHeight(Arm.intake),
+                new WaitCommand(1),
+                new IntakeCommand(1).withTimeout(2)
+            )
+        ),
+        new SetArmSide(Sides.front)
+        
+
     };
     /*
      * No changes necessary below
      */
 
-    public TwoConeBlueTest() { for (Command command : sequence) addCommands(command); }
+    public TwoPieceRed() { for (Command command : sequence) addCommands(command); }
 }

@@ -31,7 +31,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class TwoConeRedTest extends SequentialCommandGroup {
+public class ThreePieceBlue extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -41,25 +41,28 @@ public class TwoConeRedTest extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "two_cone_red_test.txt";
+    private final String filename = "cone_cube_blue.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
-        new WaitCommand(.25),
+        new WaitCommand(.1),
         // Place cone
-        //new SetArmSide(Sides.front),
-        //new SetArmHeight(Arm.high),
-        //new SetWristOrientationOverride(Wrist.cone),
-        new WaitCommand(3),
-        new IntakeCommand(1).withTimeout(0.8),
-        //new SetArmSide(Sides.front),
-        //new SetArmHeight(Arm.intake),
-        // Drive to second piece
+        new SetArmSide(Sides.front),
+        new SetArmHeight(Arm.high),
+        new SetWristOrientationOverride(Wrist.cone),
+        new WaitCommand(1.75),
+        new IntakeCommand(1).withTimeout(0.6),
+        // Drive to first cube
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new WaitCommand(.5)
-                //new SetWristOrientationOverride(Wrist.cube)
+                new SetWristOrientationOverride(Wrist.cube),
+                new SetArmSide(Sides.back),
+                new SetArmHeight(Arm.intake)
+            ),
+            new SequentialCommandGroup(
+                new WaitCommand(0.9),
+                new IntakeCommand(1).withTimeout(2.4)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(.01),
@@ -67,25 +70,43 @@ public class TwoConeRedTest extends SequentialCommandGroup {
                 paths[1]
             )
         ),
+        // Place first cube
+        new SetArmSide(Sides.front),
+        new SetArmHeight(Arm.high),
         new ParallelCommandGroup(
-            //new SetArmHeight(Arm.groundIntake),
             paths[2],
-            new IntakeCommand(-1,false).withTimeout(1.5)
-        ),
-        //new SetArmHeight(Arm.intake),
-        new ParallelCommandGroup(
-            paths[3],
             new SequentialCommandGroup(
-                new IntakeCommand(-1,false).withTimeout(1)
-                //new SetArmHeight(Arm.middle),
-                //new SetWristOrientationOverride(Wrist.cone)
+                new WaitCommand(2.2),
+                new IntakeCommand(-1).withTimeout(0.5)
             )
         ),
-        new IntakeCommand(1).withTimeout(0.8)
+        // Drive to second cube
+        new ParallelCommandGroup(
+            new SequentialCommandGroup(
+                paths[3]
+            ),
+            new SequentialCommandGroup(
+                new SetArmSide(Sides.back),
+                new SetArmHeight(Arm.intake),
+                new WaitCommand(1),
+                new IntakeCommand(1).withTimeout(2)
+            )
+        ),
+        // Place second cube
+        new ParallelCommandGroup(
+            paths[4],
+            new SequentialCommandGroup(
+                new SetArmSide(Sides.front),
+                new SetArmHeight(Arm.middle),
+                new WaitCommand(2.25),
+                new SetArmHeight(Arm.intake),
+                new IntakeCommand(-1).withTimeout(1)
+            )
+        )
     };
     /*
      * No changes necessary below
      */
 
-    public TwoConeRedTest() { for (Command command : sequence) addCommands(command); }
+    public ThreePieceBlue() { for (Command command : sequence) addCommands(command); }
 }

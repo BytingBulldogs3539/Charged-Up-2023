@@ -31,7 +31,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class TwoConeBlue extends SequentialCommandGroup {
+public class TwoPieceBlue extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -41,7 +41,7 @@ public class TwoConeBlue extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "two_cone_blue.txt";
+    private final String filename = "cone_cube_blue.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
@@ -51,15 +51,19 @@ public class TwoConeBlue extends SequentialCommandGroup {
         new SetArmSide(Sides.front),
         new SetArmHeight(Arm.high),
         new SetWristOrientationOverride(Wrist.cone),
-        new WaitCommand(3),
-        new IntakeCommand(1).withTimeout(0.8),
-        new SetArmSide(Sides.front),
-        new SetArmHeight(Arm.intake),
+        new WaitCommand(2),
+        new IntakeCommand(1).withTimeout(0.5),
         // Drive to second piece
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new WaitCommand(.5),
-                new SetWristOrientationOverride(Wrist.cube)
+                new WaitCommand(.3),
+                new SetWristOrientationOverride(Wrist.cube),
+                new SetArmSide(Sides.back),
+                new SetArmHeight(Arm.intake)
+            ),
+            new SequentialCommandGroup(
+                new WaitCommand(2),
+                new IntakeCommand(1).withTimeout(1.8)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(.01),
@@ -67,25 +71,34 @@ public class TwoConeBlue extends SequentialCommandGroup {
                 paths[1]
             )
         ),
+        new SetArmSide(Sides.front),
+        new SetArmHeight(Arm.high),
         new ParallelCommandGroup(
-            new SetArmHeight(Arm.groundIntake),
             paths[2],
-            new IntakeCommand(-1,false).withTimeout(1.5)
-        ),
-        new SetArmHeight(Arm.intake),
-        new ParallelCommandGroup(
-            paths[3],
             new SequentialCommandGroup(
-                new IntakeCommand(-1,false).withTimeout(1),
-                new SetArmHeight(Arm.middle),
-                new SetWristOrientationOverride(Wrist.cone)
+                new WaitCommand(2.7),
+                new IntakeCommand(-1).withTimeout(0.5)
             )
         ),
-        new IntakeCommand(1).withTimeout(0.8)
+        new ParallelCommandGroup(
+            new SequentialCommandGroup(
+                paths[3]
+            ),
+            new SequentialCommandGroup(
+                new WaitCommand(1), 
+                new SetArmSide(Sides.back),
+                new SetArmHeight(Arm.intake),
+                new WaitCommand(1),
+                new IntakeCommand(1).withTimeout(2.1)
+            )
+        ),
+        new SetArmSide(Sides.front)
+        
+
     };
     /*
      * No changes necessary below
      */
 
-    public TwoConeBlue() { for (Command command : sequence) addCommands(command); }
+    public TwoPieceBlue() { for (Command command : sequence) addCommands(command); }
 }

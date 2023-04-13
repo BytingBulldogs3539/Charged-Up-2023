@@ -18,24 +18,9 @@ import frc.robot.auton.PlaceMidConeBackDrive;
 import frc.robot.auton.PlaceMidCube;
 import frc.robot.auton.PlaceMidCubeAndBalance;
 import frc.robot.auton.PlaceMidCubeBackDrive;
-import frc.robot.profiles.MPTest;
-import frc.robot.profiles.PickUpBalance;
-import frc.robot.profiles.Square1M;
-import frc.robot.profiles.ForwardTest;
-import frc.robot.profiles.ForwardBackTest;
-import frc.robot.profiles.ConeCubeBlue;
-import frc.robot.profiles.ConeCubeBlueCable;
-import frc.robot.profiles.ConeCubeBlueTest;
-import frc.robot.profiles.ConeCubeRed;
-import frc.robot.profiles.CurveRightTest;
-import frc.robot.profiles.Diagonal;
-import frc.robot.profiles.DiagonalTwist;
-import frc.robot.profiles.TwoConeBlue;
-import frc.robot.profiles.TwoConeBlueTest;
-import frc.robot.profiles.TwoConeRed;
-import frc.robot.profiles.TwoConeRedTest;
-import frc.robot.profiles.TwoPieceBalanceBlue;
-import frc.robot.profiles.L;
+
+import frc.robot.profiles.*;
+
 import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
@@ -159,28 +144,15 @@ public class RobotContainer {
     chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
 
     // Motion Profiles
-    //try { chooser.addOption("MP Test ", new MPTest()); } catch (Exception e) { }
     //try { chooser.addOption("MP Forward ", new ForwardTest()); } catch (Exception e) { }
     //try { chooser.addOption("MP Forward Back ", new ForwardBackTest()); } catch (Exception e) { }
-    //try { chooser.addOption("MP Curve Right ", new CurveRightTest()); } catch (Exception e) { }
-    //try { chooser.addOption("MP 1m Square ", new Square1M()); } catch (Exception e) { }
-    //try { chooser.addOption("Two Cone Blue", new TwoConeBlue()); } catch (Exception e) { }
-    //try { chooser.addOption("Two Cone Blue Test", new TwoConeBlueTest()); } catch (Exception e) { }
-    //try { chooser.addOption("Two Cone Red", new TwoConeRed()); } catch (Exception e) { }
-    //try { chooser.addOption("Two Cone Red Test", new TwoConeRedTest()); } catch (Exception e) { }
     //try { chooser.addOption("Diagonal", new Diagonal()); } catch (Exception e) { }
-    //try { chooser.addOption("Diagonal Twist", new DiagonalTwist()); } catch (Exception e) { }
-    //try { chooser.addOption("L", new L()); } catch (Exception e) { }
-    try { chooser.addOption("Cone Cube Blue", new ConeCubeBlue()); } catch (Exception e) { }
-    try { chooser.addOption("Cone Cube Blue Cable", new ConeCubeBlueCable()); } catch (Exception e) { }
-    try { chooser.addOption("Cone Cube Red", new ConeCubeRed()); } catch (Exception e) { }
-    try { chooser.addOption("Pick Up Balance", new PickUpBalance()); } catch (Exception e) { }
-    try { chooser.addOption("Test Cone Cube Blue", new ConeCubeBlueTest()); } catch (Exception e) { }
-    try { chooser.addOption("Blue Two Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) { }
-
-
-
-
+    //try { chooser.addOption("Cone Cube Blue", new TwoPieceBlue()); } catch (Exception e) { }
+    //try { chooser.addOption("Cone Cube Red", new TwoPieceRed()); } catch (Exception e) { }
+    //try { chooser.addOption("Pick Up Balance", new PickUpBalance()); } catch (Exception e) { }
+    try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) { }
+    try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) { }
+    try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) { }
 
 
 		SmartDashboard.putData("Auto Chooser", chooser);
