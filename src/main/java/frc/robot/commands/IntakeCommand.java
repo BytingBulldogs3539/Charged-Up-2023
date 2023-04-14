@@ -17,9 +17,11 @@ public class IntakeCommand extends CommandBase {
   double intakeSpeed;
   boolean useSensor = true;
   Debouncer debouncer = new Debouncer(0.1,DebounceType.kBoth);
+  Arm initialArmPos;
 
   public IntakeCommand(double speed) {
     this.intakeSpeed = speed;
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
   
@@ -33,6 +35,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.intakeSubsystem.setIntakeSpeed(intakeSpeed);
+    this.initialArmPos = RobotContainer.elevatorSubsystem.getArmLevel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -72,11 +75,13 @@ public class IntakeCommand extends CommandBase {
     RobotContainer.intakeSubsystem.setIntakeSpeed(0);
     
     // If we were intaking a piece, set color to that piece
-    if (intakeSpeed < 0) {
+    if (intakeSpeed < 0 && RobotContainer.elevatorSubsystem.getWristOrientation() == Wrist.cone
+        || intakeSpeed > 0 && RobotContainer.elevatorSubsystem.getWristOrientation() == Wrist.cube
+        || intakeSpeed < 0 && RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake) {
       RobotContainer.ledSubsystem.solid();
     }
     // If we were placing a piece, set back to default lights
-    if (intakeSpeed > 0) {
+    else {
       RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
     }
   }

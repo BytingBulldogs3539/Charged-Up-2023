@@ -20,6 +20,7 @@ import frc.robot.RobotContainer;
 import frc.robot.autoncommands.SetPoseCommand;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.ConfigureArm;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
@@ -49,18 +50,14 @@ public class TwoPieceBalanceBlue extends SequentialCommandGroup {
         new ZeroGyroCommand(180),
         new WaitCommand(.1),
         // Place cone
-        new SetArmSide(Sides.front),
-        new SetArmHeight(Arm.high),
-        new SetWristOrientationOverride(Wrist.cone),
+        new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
         new WaitCommand(1.75),
         new IntakeCommand(1).withTimeout(0.6),
         // Drive to second piece
         new ParallelCommandGroup(
             new SequentialCommandGroup(
                 //new WaitCommand(.3),
-                new SetWristOrientationOverride(Wrist.cube),
-                new SetArmSide(Sides.back),
-                new SetArmHeight(Arm.intake)
+                new ConfigureArm(Sides.back, Arm.intake, Wrist.cube)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(0.9),
@@ -72,8 +69,7 @@ public class TwoPieceBalanceBlue extends SequentialCommandGroup {
                 paths[1]
             )
         ),
-        new SetArmSide(Sides.front),
-        new SetArmHeight(Arm.high),
+        new ConfigureArm(Sides.front, Arm.high, Wrist.cube),
         new ParallelCommandGroup(
             paths[2],
             new SequentialCommandGroup(

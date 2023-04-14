@@ -131,6 +131,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		wrist.config_kI(0, ElevatorConstants.WristKi);
 		wrist.config_kD(0, ElevatorConstants.WristKd);
 		wrist.configSelectedFeedbackCoefficient(0.087890625);
+		wrist.configMotionAcceleration(60);
+		wrist.configMotionCruiseVelocity(36);
 		wristEncoder.setPosition(wristEncoder.getAbsolutePosition());
 
 		elevatorTab.addNumber("Arm X", this::getGripperX);
@@ -265,6 +267,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 					pos = new Point2D.Double(ElevatorConstants.frontConeHumanPlayerX,
 							ElevatorConstants.frontConeHumanPlayerY);
 				}
+				else if( armPosition == Arm.cubeLowIntake){
+					pos = new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+				}
+				else if( armPosition == Arm.groundIntake){
+					pos = new Point2D.Double(ElevatorConstants.frontConeIntakeX, ElevatorConstants.frontConeIntakeY);
+				}
 			} else if (wristOrrientation == Wrist.cube) {
 				if (armPosition == Arm.intake) {
 					pos = new Point2D.Double(ElevatorConstants.frontCubeIntakeX, ElevatorConstants.frontCubeIntakeY);
@@ -298,6 +306,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 					pos = new Point2D.Double(ElevatorConstants.backConeHumanPlayerX,
 							ElevatorConstants.backConeHumanPlayerY);
 				}
+				else if(armPosition == Arm.groundIntake){
+					pos = new Point2D.Double(ElevatorConstants.backConeIntakeX, ElevatorConstants.backConeIntakeY);
+
+				}
+				else if(armPosition == Arm.cubeLowIntake){
+					pos = new Point2D.Double(ElevatorConstants.backConeIntakeX, ElevatorConstants.backConeIntakeY);
+
+				}
 			} else if (wristOrrientation == Wrist.cube) {
 				if (armPosition == Arm.intake) {
 					pos = new Point2D.Double(ElevatorConstants.backCubeIntakeX, ElevatorConstants.backCubeIntakeY);
@@ -310,6 +326,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 				} else if (armPosition == Arm.HumanPlayer) {
 					pos = new Point2D.Double(ElevatorConstants.backCubeHumanPlayerX,
 							ElevatorConstants.backCubeHumanPlayerY);
+				}
+				else if(armPosition == Arm.cubeLowIntake){
+					pos = new Point2D.Double(ElevatorConstants.backCubeIntakeX, ElevatorConstants.backCubeIntakeY);
+				}
+				else if (armPosition == Arm.groundIntake){
+					pos = new Point2D.Double(ElevatorConstants.backCubeIntakeX, ElevatorConstants.backCubeIntakeY);
 				}
 			}
 		}
@@ -324,16 +346,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 		SmartDashboard.putBoolean("Cube Mode", (wristOrrientation == Wrist.cube) ? true : false);
 		if (getElevatorRotationAngle().getDegrees() > ElevatorConstants.IntakeLimitMax) {
 			if (wristOrrientation == Wrist.cube && side == Sides.front) {
-				wrist.set(ControlMode.Position, 0);
+				wrist.set(ControlMode.MotionMagic, 0);
 			}
 			if (wristOrrientation == Wrist.cube && side == Sides.back) {
-				wrist.set(ControlMode.Position, 180);
+				wrist.set(ControlMode.MotionMagic, 180);
 			}
 			if (wristOrrientation == Wrist.cone && side == Sides.back) {
-				wrist.set(ControlMode.Position, 0);
+				wrist.set(ControlMode.MotionMagic, 0);
 			}
 			if (wristOrrientation == Wrist.cone && side == Sides.front) {
-				wrist.set(ControlMode.Position, 180);
+				wrist.set(ControlMode.MotionMagic, 180);
 			}
 		}
 	}

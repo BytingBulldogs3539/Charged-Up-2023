@@ -19,9 +19,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autoncommands.SetPoseCommand;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
+import frc.robot.commands.ConfigureArm;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
+import frc.robot.commands.SetConeLights;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
@@ -41,25 +43,21 @@ public class ThreePieceBlue extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "cone_cube_blue.txt";
+    private final String filename = "three_piece_blue.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
+        new SetConeLights(),
         new WaitCommand(.1),
         // Place cone
-        new SetArmSide(Sides.front),
-        new SetArmHeight(Arm.high),
-        new SetWristOrientationOverride(Wrist.cone),
+        new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
         new WaitCommand(1.75),
         new IntakeCommand(1).withTimeout(0.6),
         // Drive to first cube
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new SetWristOrientationOverride(Wrist.cube),
-                new SetArmSide(Sides.back),
-                new SetArmHeight(Arm.intake)
-            ),
+                new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
             new SequentialCommandGroup(
                 new WaitCommand(0.9),
                 new IntakeCommand(1).withTimeout(2.4)
@@ -71,8 +69,7 @@ public class ThreePieceBlue extends SequentialCommandGroup {
             )
         ),
         // Place first cube
-        new SetArmSide(Sides.front),
-        new SetArmHeight(Arm.high),
+        new ConfigureArm(Sides.front, Arm.high, Wrist.cube),
         new ParallelCommandGroup(
             paths[2],
             new SequentialCommandGroup(
@@ -86,8 +83,7 @@ public class ThreePieceBlue extends SequentialCommandGroup {
                 paths[3]
             ),
             new SequentialCommandGroup(
-                new SetArmSide(Sides.back),
-                new SetArmHeight(Arm.intake),
+                new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
                 new WaitCommand(1),
                 new IntakeCommand(1).withTimeout(2)
             )
@@ -96,13 +92,12 @@ public class ThreePieceBlue extends SequentialCommandGroup {
         new ParallelCommandGroup(
             paths[4],
             new SequentialCommandGroup(
-                new SetArmSide(Sides.front),
-                new SetArmHeight(Arm.middle),
+                new ConfigureArm(Sides.front, Arm.middle, Wrist.cube),
                 new WaitCommand(2.25),
                 new SetArmHeight(Arm.intake),
                 new IntakeCommand(-1).withTimeout(1)
             )
-        )
+        ))
     };
     /*
      * No changes necessary below

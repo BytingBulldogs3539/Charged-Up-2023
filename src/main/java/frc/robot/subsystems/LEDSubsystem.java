@@ -17,9 +17,16 @@ public class LEDSubsystem {
     boolean enabled;
     CANdle candle;
 
+    public enum PickedUp {
+        CONE,
+        CUBE
+    }
+
     final double FLASH_SPEED = 0.25;
     final int NUM_LEDS = 56;
     final double MAX_BRIGHTNESS = 0.2;
+
+    PickedUp pickedUp = null;
 
     public enum LEDState {
         OFF,
@@ -33,6 +40,10 @@ public class LEDSubsystem {
         DONE_CLIMBING
     }
     public LEDState state;
+
+    public void pickUp(PickedUp piece) {
+        this.pickedUp = piece;
+    }
 
     public LEDSubsystem(boolean enabled) {
         this.enabled = enabled;
