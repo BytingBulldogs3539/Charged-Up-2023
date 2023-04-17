@@ -18,6 +18,7 @@ import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -183,6 +184,11 @@ public class DriveSubsystem extends SubsystemBase {
 		driveTrainTab.addNumber("Pitch", this::getPitch);
 
 		setDefaultCommand(new DriveCommand(this));
+	}
+
+	public void setAllianceColor(OriginPosition alliance)
+	{
+		aprilTagFieldLayout.setOrigin(alliance);
 	}
 
 	/**

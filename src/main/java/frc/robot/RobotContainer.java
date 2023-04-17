@@ -154,9 +154,11 @@ public class RobotContainer {
     //try { chooser.addOption("Cone Cube Blue", new TwoPieceBlue()); } catch (Exception e) { }
     //try { chooser.addOption("Cone Cube Red", new TwoPieceRed()); } catch (Exception e) { }
     //try { chooser.addOption("Pick Up Balance", new PickUpBalance()); } catch (Exception e) { }
-    try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) { }
-    try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) { }
-    try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) { }
+    try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Red 3 Piece", new ThreePieceRed()); } catch (Exception e) {e.printStackTrace(); }
+
 
 		SmartDashboard.putData("Auto Chooser", chooser);
 	}

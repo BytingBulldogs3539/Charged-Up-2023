@@ -36,7 +36,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class ThreePieceBlue extends SequentialCommandGroup {
+public class ThreePieceRed extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -46,14 +46,14 @@ public class ThreePieceBlue extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "three_piece_blue.txt";
+    private final String filename = "three_piece_red.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
         new SetVision(true),
         new SetConeLights(),
-        new SetAllianceColor(OriginPosition.kBlueAllianceWallRightSide),
+        new SetAllianceColor(OriginPosition.kRedAllianceWallRightSide),
         new WaitCommand(.1),
         // Place cone
        new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
@@ -120,5 +120,5 @@ public class ThreePieceBlue extends SequentialCommandGroup {
      * No changes necessary below
      */
 
-    public ThreePieceBlue() { for (Command command : sequence) addCommands(command); }
+    public ThreePieceRed() { for (Command command : sequence) addCommands(command); }
 }
