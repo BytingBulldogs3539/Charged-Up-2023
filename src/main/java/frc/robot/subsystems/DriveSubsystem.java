@@ -87,13 +87,23 @@ public class DriveSubsystem extends SubsystemBase {
 
 	AprilTagFieldLayout aprilTagFieldLayout;
 
-	// Forward Camera
-	PhotonCamera cam;
-	Transform3d robotToCam = new Transform3d(new Translation3d(-0.1746 - .07, 0.2885, 0.3876),
+	PhotonCamera leftCam;
+	Transform3d robotToLeftCam = new Transform3d(new Translation3d(-0.1746 - .07, 0.2885, 0.3876),
 			new Rotation3d(Math.toRadians(0), 0, Math.toRadians(4)));
 
+	
+	PhotonCamera rightCam;
+	Transform3d robotTorightCam = new Transform3d(new Translation3d(-0.1746 - .07, -0.2885, 0.3876),
+					new Rotation3d(Math.toRadians(0), 0, Math.toRadians(-4)));
+	
+
 	// Construct PhotonPoseEstimator
-	PhotonPoseEstimator photonPoseEstimator;
+	PhotonPoseEstimator leftPhotonPoseEstimator;
+	
+	// Construct PhotonPoseEstimator
+	PhotonPoseEstimator rightPhotonPoseEstimator;
+
+
 	boolean useVision = false;
 
 	/** Creates a new DriveSubsystem. */
@@ -106,9 +116,9 @@ public class DriveSubsystem extends SubsystemBase {
 			aprilTagFieldLayout = null;
 		}
 
-		cam = new PhotonCamera("LeftCam");
-		photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP, cam,
-				robotToCam);
+		leftCam = new PhotonCamera("LeftCam");
+		leftPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP, leftCam,
+				robotToLeftCam);
 
 		setGyroscope(180);
 
@@ -189,6 +199,15 @@ public class DriveSubsystem extends SubsystemBase {
 	public void setAllianceColor(OriginPosition alliance)
 	{
 		aprilTagFieldLayout.setOrigin(alliance);
+		if (alliance == OriginPosition.kRedAllianceWallRightSide)
+		{
+			rightCam.setDriverMode(false);
+			leftCam.setDriverMode(true);
+		}
+		else{
+			rightCam.setDriverMode(true);
+			leftCam.setDriverMode(false);
+		}
 	}
 
 	/**
@@ -231,10 +250,15 @@ public class DriveSubsystem extends SubsystemBase {
 		return positions;
 	}
 
-	public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-		photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-		return photonPoseEstimator.update();
+	public Optional<EstimatedRobotPose> getEstimatedLeftGlobalPose(Pose2d prevEstimatedRobotPose) {
+		leftPhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+		return leftPhotonPoseEstimator.update();
 	}
+	public Optional<EstimatedRobotPose> getEstimatedRightGlobalPose(Pose2d prevEstimatedRobotPose) {
+		rightPhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+		return rightPhotonPoseEstimator.update();
+	}
+	
 
 	public void useVision(boolean useVision)
 	{
@@ -244,14 +268,24 @@ public class DriveSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		Optional<EstimatedRobotPose> result = getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
+		Optional<EstimatedRobotPose> resultLeft = getEstimatedLeftGlobalPose(m_poseEstimator.getEstimatedPosition());
+		Optional<EstimatedRobotPose> resultRight = getEstimatedLeftGlobalPose(m_poseEstimator.getEstimatedPosition());
+
 		if (useVision) {
-			if (result.isPresent()) {
-				EstimatedRobotPose camPose = result.get();
+			if (resultLeft.isPresent()) {
+				EstimatedRobotPose camPoseLeft = resultLeft.get();
 				m_poseEstimator.addVisionMeasurement(
-						camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-				SmartDashboard.putNumber("X Position", camPose.estimatedPose.toPose2d().getX());
-				SmartDashboard.putNumber("Y Position", camPose.estimatedPose.toPose2d().getY());
+						camPoseLeft.estimatedPose.toPose2d(), camPoseLeft.timestampSeconds);
+				SmartDashboard.putNumber("Left X Position", camPoseLeft.estimatedPose.toPose2d().getX());
+				SmartDashboard.putNumber("Left Y Position", camPoseLeft.estimatedPose.toPose2d().getY());
+
+			}
+			if (resultRight.isPresent()) {
+				EstimatedRobotPose camPoseRight = resultRight.get();
+				m_poseEstimator.addVisionMeasurement(
+						camPoseRight.estimatedPose.toPose2d(), camPoseRight.timestampSeconds);
+				SmartDashboard.putNumber("Right X Position", camPoseRight.estimatedPose.toPose2d().getX());
+				SmartDashboard.putNumber("Right Y Position", camPoseRight.estimatedPose.toPose2d().getY());
 
 			}
 		}
