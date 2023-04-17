@@ -6,30 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ElevatorSubsystem.Arm;
-import frc.robot.subsystems.ElevatorSubsystem.Sides;
-import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 
-public class ConfigureArm extends CommandBase {
-  /** Creates a new SetArmHeight. */
-  Sides side;
-  Arm position;
-  Wrist orientation;
-  public ConfigureArm(Sides side, Arm position, Wrist orientation) {
+public class SetVision extends CommandBase {
+  /** Creates a new SetVision. */
+  boolean useVision = false;
+  public SetVision( boolean useVision) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.side = side;
-    this.position = position;
-    this.orientation = orientation;
+    this.useVision = useVision;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.elevatorSubsystem.setSide(side);
-    RobotContainer.elevatorSubsystem.setArmLevel(position);
-    RobotContainer.elevatorSubsystem.setWristOrientationOverride(orientation);
-
-
+    RobotContainer.driveSubsystem.useVision(useVision);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

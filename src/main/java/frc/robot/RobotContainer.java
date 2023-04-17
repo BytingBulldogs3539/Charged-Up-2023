@@ -158,7 +158,6 @@ public class RobotContainer {
     try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) { }
     try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) { }
 
-
 		SmartDashboard.putData("Auto Chooser", chooser);
 	}
 

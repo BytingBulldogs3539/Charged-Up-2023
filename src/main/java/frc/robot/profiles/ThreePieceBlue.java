@@ -24,6 +24,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
 import frc.robot.commands.SetConeLights;
+import frc.robot.commands.SetVision;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
@@ -48,16 +49,20 @@ public class ThreePieceBlue extends SequentialCommandGroup {
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
+        new SetVision(true),
         new SetConeLights(),
         new WaitCommand(.1),
         // Place cone
-        new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
+       new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
         new WaitCommand(1.75),
         new IntakeCommand(1).withTimeout(0.6),
         // Drive to first cube
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
+               new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
+               new WaitCommand(2),
+               new SetVision(false)
+            ),
             new SequentialCommandGroup(
                 new WaitCommand(0.9),
                 new IntakeCommand(1).withTimeout(2.4)
@@ -75,6 +80,10 @@ public class ThreePieceBlue extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new WaitCommand(2.2),
                 new IntakeCommand(-1).withTimeout(0.5)
+            ),
+            new SequentialCommandGroup(
+                new WaitCommand(1.25),
+                new SetVision(true)
             )
         ),
         // Drive to second cube
@@ -85,6 +94,7 @@ public class ThreePieceBlue extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
                 new WaitCommand(1),
+                new SetVision(false),
                 new IntakeCommand(1).withTimeout(2)
             )
         ),
@@ -93,11 +103,15 @@ public class ThreePieceBlue extends SequentialCommandGroup {
             paths[4],
             new SequentialCommandGroup(
                 new ConfigureArm(Sides.front, Arm.middle, Wrist.cube),
-                new WaitCommand(2.25),
+                new WaitCommand(2.5),
                 new SetArmHeight(Arm.intake),
                 new IntakeCommand(-1).withTimeout(1)
+            ),
+            new SequentialCommandGroup(
+                new WaitCommand(1.7),
+                new SetVision(true)
             )
-        ))
+        )
     };
     /*
      * No changes necessary below

@@ -131,8 +131,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 		wrist.config_kI(0, ElevatorConstants.WristKi);
 		wrist.config_kD(0, ElevatorConstants.WristKd);
 		wrist.configSelectedFeedbackCoefficient(0.087890625);
-		wrist.configMotionAcceleration(60);
-		wrist.configMotionCruiseVelocity(36);
+		wrist.configMotionAcceleration(250);
+		wrist.configMotionCruiseVelocity(500);
 		wristEncoder.setPosition(wristEncoder.getAbsolutePosition());
 
 		elevatorTab.addNumber("Arm X", this::getGripperX);

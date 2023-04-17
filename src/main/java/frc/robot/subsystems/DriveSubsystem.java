@@ -34,6 +34,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DriveConstants;
 import frc.robot.IDConstants;
@@ -83,31 +84,32 @@ public class DriveSubsystem extends SubsystemBase {
 
 	ShuffleboardTab driveTrainTab = Shuffleboard.getTab("Drivetrain");
 
-	//AprilTagFieldLayout aprilTagFieldLayout;
-
-
+	AprilTagFieldLayout aprilTagFieldLayout;
 
 	// Forward Camera
-	//PhotonCamera cam;
-	//Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+	PhotonCamera cam;
+	Transform3d robotToCam = new Transform3d(new Translation3d(-0.1746 - .07, 0.2885, 0.3876),
+			new Rotation3d(Math.toRadians(0), 0, Math.toRadians(4)));
 
 	// Construct PhotonPoseEstimator
 	PhotonPoseEstimator photonPoseEstimator;
+	boolean useVision = false;
 
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
-		/*try {
+		try {
 			aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-			
+
 		} catch (Exception e) {
 			System.out.println("ERROR Loading April Tag DATA");
 			aprilTagFieldLayout = null;
 		}
 
-		photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam,
-					robotToCam);*/
+		cam = new PhotonCamera("LeftCam");
+		photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP, cam,
+				robotToCam);
 
-		setGyroscope(0);
+		setGyroscope(180);
 
 		m_frontLeftModule = SdsSwerveModuleHelper.createFalcon500(
 				// This parameter is optional, but will allow you to see the current state of
@@ -171,8 +173,8 @@ public class DriveSubsystem extends SubsystemBase {
 				m_kinematics,
 				getGyroscopeRotation(), getModulePositions(),
 				new Pose2d(0, 0, new Rotation2d()),
-				VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(3)),
-				VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+				VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(0)),
+				VecBuilder.fill(2, 2, Units.degreesToRadians(30)));
 
 		m_pose = m_poseEstimator.update(getGyroscopeRotation(), getModulePositions());
 		driveTrainTab.addNumber("X Pose", m_pose::getX);
@@ -223,20 +225,30 @@ public class DriveSubsystem extends SubsystemBase {
 		return positions;
 	}
 
-	/*public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+	public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
 		photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
 		return photonPoseEstimator.update();
-	}*/
+	}
+
+	public void useVision(boolean useVision)
+	{
+		this.useVision = useVision;
+	}
 
 	@Override
 	public void periodic() {
 
-		/*Optional<EstimatedRobotPose> result = getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
-		if (result.isPresent()) {
-			EstimatedRobotPose camPose = result.get();
-			m_poseEstimator.addVisionMeasurement(
-					camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-		}*/
+		Optional<EstimatedRobotPose> result = getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
+		if (useVision) {
+			if (result.isPresent()) {
+				EstimatedRobotPose camPose = result.get();
+				m_poseEstimator.addVisionMeasurement(
+						camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+				SmartDashboard.putNumber("X Position", camPose.estimatedPose.toPose2d().getX());
+				SmartDashboard.putNumber("Y Position", camPose.estimatedPose.toPose2d().getY());
+
+			}
+		}
 
 		SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
