@@ -39,11 +39,9 @@ public class LEDSubsystem {
         CLIMBING,
         DONE_CLIMBING
     }
-    public LEDState state;
 
-    public void pickUp(PickedUp piece) {
-        this.pickedUp = piece;
-    }
+    public LEDState state;
+    private LEDState savedState;
 
     public LEDSubsystem(boolean enabled) {
         this.enabled = enabled;
@@ -54,6 +52,10 @@ public class LEDSubsystem {
 		candle.configBrightnessScalar(MAX_BRIGHTNESS);
 
         setLEDs(LEDState.ON);
+    }
+
+    public void pickUp(PickedUp piece) {
+        this.pickedUp = piece;
     }
 
     public void flash() {
@@ -76,6 +78,15 @@ public class LEDSubsystem {
         } else {
             setLEDs(LEDState.CUBE);
         }
+    }
+
+    public void saveState() {
+        this.savedState = this.state;
+    }
+    
+    public void restoreState() {
+        if (this.savedState == null) return;
+        this.setLEDs(savedState);
     }
 
     public void setLEDs(LEDState state) {

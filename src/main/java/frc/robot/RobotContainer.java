@@ -30,6 +30,7 @@ import frc.robot.commands.RunAuton;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetConeLights;
 import frc.robot.commands.SetCubeLights;
+import frc.robot.commands.TrackToPole;
 import frc.robot.commands.ZeroGyroCommand;
 
 import frc.robot.subsystems.DriveSubsystem;
@@ -114,8 +115,8 @@ public class RobotContainer {
     operatorController.leftBumper().onTrue(new FlipArmSideCommand());
 
     driverController.y().onTrue(new SetConeLights());
-
     driverController.x().onTrue(new SetCubeLights());
+    driverController.b().whileTrue(new TrackToPole());
 
     operatorController.a().onTrue(new SetArmHeight(Arm.intake));
     operatorController.b().onTrue(new SetArmHeight(Arm.low));
