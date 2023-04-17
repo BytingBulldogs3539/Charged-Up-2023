@@ -24,12 +24,13 @@ import frc.robot.commands.ConfigureArm;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
+import frc.robot.commands.SetLEDs;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
 import frc.robot.subsystems.ElevatorSubsystem.Sides;
 import frc.robot.subsystems.ElevatorSubsystem.Wrist;
-
+import frc.robot.subsystems.LEDSubsystem.LEDState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
@@ -48,6 +49,7 @@ public class TwoPieceBalanceRed extends SequentialCommandGroup {
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
+        new SetLEDs(LEDState.CONE),
         new WaitCommand(.1),
         // Place cone
         new ConfigureArm(Sides.front, Arm.high, Wrist.cone),

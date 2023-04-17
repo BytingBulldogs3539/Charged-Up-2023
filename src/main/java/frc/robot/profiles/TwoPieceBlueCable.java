@@ -4,15 +4,6 @@
 
 package frc.robot.profiles;
 
-import com.swervedrivespecialties.swervelib.control.MaxAccelerationConstraint;
-import com.swervedrivespecialties.swervelib.control.MaxVelocityConstraint;
-import com.swervedrivespecialties.swervelib.control.SimplePathBuilder;
-import com.swervedrivespecialties.swervelib.control.TrajectoryConstraint;
-import com.swervedrivespecialties.swervelib.math.Rotation2;
-import com.swervedrivespecialties.swervelib.math.Vector2;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -22,12 +13,13 @@ import frc.robot.autoncommands.TrajectoryCommandGenerator;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
+import frc.robot.commands.SetLEDs;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
 import frc.robot.subsystems.ElevatorSubsystem.Sides;
 import frc.robot.subsystems.ElevatorSubsystem.Wrist;
-
+import frc.robot.subsystems.LEDSubsystem.LEDState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
@@ -46,6 +38,7 @@ public class TwoPieceBlueCable extends SequentialCommandGroup {
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
+        new SetLEDs(LEDState.CONE),
         new WaitCommand(.25),
         // Place cone
         new SetArmSide(Sides.front),

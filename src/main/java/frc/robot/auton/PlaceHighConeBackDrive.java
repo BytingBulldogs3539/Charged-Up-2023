@@ -21,11 +21,13 @@ import frc.robot.autoncommands.TrajectoryCommandGenerator;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
+import frc.robot.commands.SetLEDs;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
 import frc.robot.subsystems.ElevatorSubsystem.Sides;
 import frc.robot.subsystems.ElevatorSubsystem.Wrist;
+import frc.robot.subsystems.LEDSubsystem.LEDState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -35,7 +37,7 @@ public class PlaceHighConeBackDrive extends SequentialCommandGroup {
   public PlaceHighConeBackDrive() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ZeroGyroCommand(180),new WaitCommand(.25), new SetPoseCommand(new Pose2d(0,0, Rotation2d.fromDegrees(180))), new SetArmSide(Sides.front), new SetArmHeight(Arm.high), new SetWristOrientationOverride(Wrist.cone),
+    addCommands(new ZeroGyroCommand(180), new SetLEDs(LEDState.CONE), new WaitCommand(.25), new SetPoseCommand(new Pose2d(0,0, Rotation2d.fromDegrees(180))), new SetArmSide(Sides.front), new SetArmHeight(Arm.high), new SetWristOrientationOverride(Wrist.cone),
         new WaitCommand(4), new IntakeCommand(1).withTimeout(1.5),new SetArmSide(Sides.front), new SetArmHeight(Arm.intake), new WaitCommand(.5),new SetWristOrientationOverride(Wrist.cube)
         ,TrajectoryCommandGenerator.getMotionCommand(
           new SimplePathBuilder(

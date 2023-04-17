@@ -28,8 +28,6 @@ public class ConfigureArm extends CommandBase {
     RobotContainer.elevatorSubsystem.setSide(side);
     RobotContainer.elevatorSubsystem.setArmLevel(position);
     RobotContainer.elevatorSubsystem.setWristOrientationOverride(orientation);
-
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
