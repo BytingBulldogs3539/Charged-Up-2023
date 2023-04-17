@@ -28,15 +28,15 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.KillAuton;
 import frc.robot.commands.RunAuton;
 import frc.robot.commands.SetArmHeight;
-import frc.robot.commands.SetConeLights;
-import frc.robot.commands.SetCubeLights;
-import frc.robot.commands.TrackToPole;
+import frc.robot.commands.SetLEDs;
+import frc.robot.commands.AutoPoleAlign;
 import frc.robot.commands.ZeroGyroCommand;
 
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
+import frc.robot.subsystems.LEDSubsystem.LEDState;
 import frc.robot.subsystems.LEDSubsystem;
 
 import edu.wpi.first.net.PortForwarder;
@@ -114,9 +114,9 @@ public class RobotContainer {
 
     operatorController.leftBumper().onTrue(new FlipArmSideCommand());
 
-    driverController.y().onTrue(new SetConeLights());
-    driverController.x().onTrue(new SetCubeLights());
-    driverController.b().whileTrue(new TrackToPole());
+    driverController.y().onTrue(new SetLEDs(LEDState.CONE));
+    driverController.x().onTrue(new SetLEDs(LEDState.CUBE));
+    driverController.b().whileTrue(new AutoPoleAlign());
 
     operatorController.a().onTrue(new SetArmHeight(Arm.intake));
     operatorController.b().onTrue(new SetArmHeight(Arm.low));
@@ -142,15 +142,15 @@ public class RobotContainer {
     chooser.addOption("Place Cone High and Balance", new PlaceHighConeAndBalance());
     chooser.addOption("Place Cone High Balance Old", new PlaceHighConeBalanceOld());
     chooser.addOption("Place Cone High Back", new PlaceHighConeBackDrive());   
-    chooser.addOption("Place Cube High", new PlaceHighCube());
-    chooser.addOption("Place Cube High Balance", new PlaceHighCubeAndBalance());
-    chooser.addOption("Place Cube High Back", new PlaceHighCubeBackDrive());
-    chooser.addOption("Place Cone Mid", new PlaceMidCone());
-    chooser.addOption("Place Cone Mid Balance", new PlaceMidConeAndBalance());
-    chooser.addOption("Place Cone Mid Back", new PlaceMidConeBackDrive());
-    chooser.addOption("Place Cube Mid", new PlaceMidCube());
-    chooser.addOption("Place Cube Mid Balance", new PlaceMidCubeAndBalance());
-    chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
+    //chooser.addOption("Place Cube High", new PlaceHighCube());
+    //chooser.addOption("Place Cube High Balance", new PlaceHighCubeAndBalance());
+    //chooser.addOption("Place Cube High Back", new PlaceHighCubeBackDrive());
+    //chooser.addOption("Place Cone Mid", new PlaceMidCone());
+    //chooser.addOption("Place Cone Mid Balance", new PlaceMidConeAndBalance());
+    //chooser.addOption("Place Cone Mid Back", new PlaceMidConeBackDrive());
+    //chooser.addOption("Place Cube Mid", new PlaceMidCube());
+    //chooser.addOption("Place Cube Mid Balance", new PlaceMidCubeAndBalance());
+    //chooser.addOption("Place Cube Mid Back ", new PlaceMidCubeBackDrive());
 
     // Motion Profiles
     //try { chooser.addOption("MP Forward ", new ForwardTest()); } catch (Exception e) { }
@@ -159,12 +159,16 @@ public class RobotContainer {
     //try { chooser.addOption("Cone Cube Blue", new TwoPieceBlue()); } catch (Exception e) { }
     //try { chooser.addOption("Cone Cube Red", new TwoPieceRed()); } catch (Exception e) { }
     //try { chooser.addOption("Pick Up Balance", new PickUpBalance()); } catch (Exception e) { }
+
     try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) {e.printStackTrace(); }
+
+    try { chooser.addOption("Red 2 Piece Cable", new TwoPieceRedCable()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Red 2 Piece Balance", new TwoPieceBalanceRed()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Red 3 Piece", new ThreePieceRed()); } catch (Exception e) {e.printStackTrace(); }
 
-		SmartDashboard.putData("Auto Chooser", chooser);
+    SmartDashboard.putData("Auto Chooser", chooser);
 
     SmartDashboard.putData(new RunAuton());
     SmartDashboard.putData(new KillAuton());

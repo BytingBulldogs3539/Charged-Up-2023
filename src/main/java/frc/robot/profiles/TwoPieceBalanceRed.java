@@ -33,7 +33,7 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
-public class TwoPieceBalanceBlue extends SequentialCommandGroup {
+public class TwoPieceBalanceRed extends SequentialCommandGroup {
 
     /*
      * DIRECTIONS: To load from a motion profile file, specify the name
@@ -43,7 +43,7 @@ public class TwoPieceBalanceBlue extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "two_piece_bal_blue.txt";
+    private final String filename = "two_piece_bal_red.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
@@ -85,5 +85,5 @@ public class TwoPieceBalanceBlue extends SequentialCommandGroup {
      * No changes necessary below
      */
 
-    public TwoPieceBalanceBlue() { for (Command command : sequence) addCommands(command); }
+    public TwoPieceBalanceRed() { for (Command command : sequence) addCommands(command); }
 }

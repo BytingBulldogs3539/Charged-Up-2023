@@ -10,7 +10,7 @@ import frc.robot.RobotContainer;
 public class SetVision extends CommandBase {
   /** Creates a new SetVision. */
   boolean useVision = false;
-  public SetVision( boolean useVision) {
+  public SetVision(boolean useVision) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.useVision = useVision;
   }

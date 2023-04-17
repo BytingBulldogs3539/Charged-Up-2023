@@ -273,7 +273,7 @@ public class DriveSubsystem extends SubsystemBase {
 		rightPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
 	}
 
-	public void trackToPole() {
+	public void alignToPole() {
 		double[] poles = DriverStation.getAlliance() == Alliance.Red?
 			RED_POLES : BLUE_POLES;
 		double robotY = getPose().getY();
@@ -307,7 +307,7 @@ public class DriveSubsystem extends SubsystemBase {
 		autoAlign.schedule();
 	}
 
-	public void endTrackingToPole() {
+	public void endPoleAlignment() {
 		autoAlign.cancel();
 	}
 

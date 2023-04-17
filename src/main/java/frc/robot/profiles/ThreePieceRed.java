@@ -24,7 +24,7 @@ import frc.robot.commands.ConfigureArm;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
-import frc.robot.commands.SetConeLights;
+import frc.robot.commands.SetLEDs;
 import frc.robot.commands.SetVision;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
@@ -32,7 +32,7 @@ import frc.robot.subsystems.DriveSubsystem.StartPosition;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
 import frc.robot.subsystems.ElevatorSubsystem.Sides;
 import frc.robot.subsystems.ElevatorSubsystem.Wrist;
-
+import frc.robot.subsystems.LEDSubsystem.LEDState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utilities.MPLoader;
 
@@ -52,7 +52,7 @@ public class ThreePieceRed extends SequentialCommandGroup {
         // Setup
         new ZeroGyroCommand(180),
         new SetVision(true),
-        new SetConeLights(),
+        new SetLEDs(LEDState.CONE),
         new SetStartPosition(StartPosition.RED_SMOOTH),
         new WaitCommand(.1),
         // Place cone

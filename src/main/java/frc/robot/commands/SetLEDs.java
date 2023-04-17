@@ -8,34 +8,31 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LEDSubsystem.LEDState;
 
-public class TrackToPole extends CommandBase {
-  /** Creates a new SetArmHeight. */
-  public TrackToPole() {
+public class SetLEDs extends CommandBase {
+  /** Creates a new SetConeLights. */
+  LEDState state;
+  public SetLEDs(LEDState state) {
+    this.state = state;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.ledSubsystem.saveState();
-    RobotContainer.ledSubsystem.setLEDs(LEDState.CLIMBING);
-    RobotContainer.driveSubsystem.trackToPole();
+    RobotContainer.ledSubsystem.setLEDs(this.state);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() { }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    RobotContainer.ledSubsystem.restoreState();
-    RobotContainer.driveSubsystem.endTrackingToPole();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
