@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
-import frc.robot.autoncommands.SetAllianceColor;
+import frc.robot.autoncommands.SetStartPosition;
 import frc.robot.autoncommands.SetPoseCommand;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
 import frc.robot.commands.ConfigureArm;
@@ -29,6 +29,7 @@ import frc.robot.commands.SetConeLights;
 import frc.robot.commands.SetVision;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.subsystems.DriveSubsystem.StartPosition;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
 import frc.robot.subsystems.ElevatorSubsystem.Sides;
 import frc.robot.subsystems.ElevatorSubsystem.Wrist;
@@ -53,7 +54,7 @@ public class ThreePieceBlue extends SequentialCommandGroup {
         new ZeroGyroCommand(180),
         new SetVision(true),
         new SetConeLights(),
-        new SetAllianceColor(OriginPosition.kBlueAllianceWallRightSide),
+        new SetStartPosition(StartPosition.BLUE_SMOOTH),
         new WaitCommand(.1),
         // Place cone
        new ConfigureArm(Sides.front, Arm.high, Wrist.cone),

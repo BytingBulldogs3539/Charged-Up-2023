@@ -42,6 +42,13 @@ import frc.robot.IDConstants;
 import frc.robot.commands.DriveCommand;
 
 public class DriveSubsystem extends SubsystemBase {
+	public enum StartPosition {
+		RED_SMOOTH,
+		RED_CABLE,
+		BLUE_SMOOTH,
+		BLUE_CABLE
+	}
+
 	public static final double MAX_VOLTAGE = 12.0;
 
 	public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
@@ -117,8 +124,19 @@ public class DriveSubsystem extends SubsystemBase {
 		}
 
 		leftCam = new PhotonCamera("LeftCam");
-		leftPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP, leftCam,
-				robotToLeftCam);
+		leftPhotonPoseEstimator = new PhotonPoseEstimator(
+			aprilTagFieldLayout,
+			PoseStrategy.MULTI_TAG_PNP,
+			leftCam,
+			robotToLeftCam
+		);
+		rightCam = new PhotonCamera("RightCam");
+		rightPhotonPoseEstimator = new PhotonPoseEstimator(
+			aprilTagFieldLayout,
+			PoseStrategy.MULTI_TAG_PNP,
+			rightCam,
+			robotToLeftCam
+		);
 
 		setGyroscope(180);
 
@@ -196,18 +214,30 @@ public class DriveSubsystem extends SubsystemBase {
 		setDefaultCommand(new DriveCommand(this));
 	}
 
-	public void setAllianceColor(OriginPosition alliance)
+	public void setStartPosition(StartPosition position)
 	{
-		aprilTagFieldLayout.setOrigin(alliance);
-		if (alliance == OriginPosition.kRedAllianceWallRightSide)
-		{
-			rightCam.setDriverMode(false);
-			leftCam.setDriverMode(true);
+		// Configure which camera to use based on start position
+		switch (position) {
+			case RED_SMOOTH:
+				aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+				rightCam.setDriverMode(true);
+				leftCam.setDriverMode(false);
+			case RED_CABLE:
+				aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+				rightCam.setDriverMode(false);
+				leftCam.setDriverMode(true);
+			case BLUE_SMOOTH:
+				aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+				rightCam.setDriverMode(false);
+				leftCam.setDriverMode(true);
+			case BLUE_CABLE:
+				aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+				rightCam.setDriverMode(true);
+				leftCam.setDriverMode(false);
 		}
-		else{
-			rightCam.setDriverMode(true);
-			leftCam.setDriverMode(false);
-		}
+		// Update the april tag layout based on our start position
+		leftPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
+		rightPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
 	}
 
 	/**
