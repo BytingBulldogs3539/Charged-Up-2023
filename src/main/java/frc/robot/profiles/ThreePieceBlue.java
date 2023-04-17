@@ -57,7 +57,7 @@ public class ThreePieceBlue extends SequentialCommandGroup {
         new SetStartPosition(StartPosition.BLUE_SMOOTH),
         new WaitCommand(.1),
         // Place cone
-       new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
+        new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
         new WaitCommand(1.75),
         new IntakeCommand(1).withTimeout(0.6),
         // Drive to first cube

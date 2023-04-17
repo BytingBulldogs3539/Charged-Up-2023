@@ -222,18 +222,22 @@ public class DriveSubsystem extends SubsystemBase {
 				aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
 				rightCam.setDriverMode(true);
 				leftCam.setDriverMode(false);
+				break;
 			case RED_CABLE:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
 				rightCam.setDriverMode(false);
 				leftCam.setDriverMode(true);
+				break;
 			case BLUE_SMOOTH:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
 				rightCam.setDriverMode(false);
 				leftCam.setDriverMode(true);
+				break;
 			case BLUE_CABLE:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
 				rightCam.setDriverMode(true);
 				leftCam.setDriverMode(false);
+				break;
 		}
 		// Update the april tag layout based on our start position
 		leftPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);

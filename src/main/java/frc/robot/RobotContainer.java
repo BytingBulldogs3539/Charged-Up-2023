@@ -25,6 +25,8 @@ import frc.robot.commands.DisableBreakMode;
 import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.KillAuton;
+import frc.robot.commands.RunAuton;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetConeLights;
 import frc.robot.commands.SetCubeLights;
@@ -56,6 +58,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  public static Command autonTestCommand;
+
   public static IDConstants iDConstants = new IDConstants();
   public static DriveConstants driveConstants = new DriveConstants();
   public static ElevatorConstants elevatorConstants = new ElevatorConstants();
@@ -69,7 +73,7 @@ public class RobotContainer {
   public static CommandXboxController driverController = new CommandXboxController(1);
   public static CommandXboxController operatorController = new CommandXboxController(0);
 
-  public SendableChooser<Command> chooser;
+  public static SendableChooser<Command> chooser;
 
 
   /**
@@ -159,17 +163,28 @@ public class RobotContainer {
     try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Red 3 Piece", new ThreePieceRed()); } catch (Exception e) {e.printStackTrace(); }
 
-
 		SmartDashboard.putData("Auto Chooser", chooser);
+
+    SmartDashboard.putData(new RunAuton());
+    SmartDashboard.putData(new KillAuton());
 	}
+
+  public static void runAutonTestCommand() {
+    autonTestCommand = getAutonomousCommand();
+    autonTestCommand.schedule();
+  }
+
+  public static void killAutonTestCommand() {
+    autonTestCommand.cancel();
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public static Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return this.chooser.getSelected();
+    return chooser.getSelected();
   }
 }
