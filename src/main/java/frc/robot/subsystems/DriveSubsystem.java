@@ -51,7 +51,6 @@ import frc.robot.IDConstants;
 import frc.robot.RobotContainer;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
 import frc.robot.commands.DriveCommand;
-import frc.robot.subsystems.LEDSubsystem.LEDState;
 
 public class DriveSubsystem extends SubsystemBase {
 	public enum StartPosition {
@@ -125,13 +124,6 @@ public class DriveSubsystem extends SubsystemBase {
 
 	// Vision auto-alignment
 	Command autoAlign;
-	public final double VERTICAL_DISTANCE = 1.7;
-	public final double[] RED_POLES = {
-		7.51, 6.40, 5.84, 4.72, 4.16, 3.05
-	};
-	public final double[] BLUE_POLES = {
-		0.52, 1.63, 2.19, 3.31, 3.87, 4.98 
-	};
 
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
@@ -271,44 +263,6 @@ public class DriveSubsystem extends SubsystemBase {
 		// Update the april tag layout based on our start position
 		leftPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
 		rightPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
-	}
-
-	public void alignToPole() {
-		double[] poles = DriverStation.getAlliance() == Alliance.Red?
-			RED_POLES : BLUE_POLES;
-		double robotY = getPose().getY();
-
-		// Find the nearest pole Y coordinate
-		double nearestY = -1;
-		double smallestDist = 9999;
-		for (double y : poles) {
-			if (Math.abs(robotY - y) < smallestDist) {
-				smallestDist = Math.abs(robotY - y);
-				nearestY = y;
-			}
-		}
-
-		// Create command to move robot to the nearest pole
-		autoAlign = TrajectoryCommandGenerator.getMotionCommand(
-			new SimplePathBuilder(
-					new Vector2(getPose().getX(), getPose().getY()),
-					Rotation2.fromDegrees(getPose().getRotation().getDegrees()))
-				.lineTo(
-					new Vector2(VERTICAL_DISTANCE, nearestY),
-					Rotation2.fromDegrees(180))
-				.build(),
-			new TrajectoryConstraint[] {
-				(TrajectoryConstraint) new MaxAccelerationConstraint(1),
-				(TrajectoryConstraint) new MaxVelocityConstraint(1)
-			},
-			RobotContainer.driveSubsystem
-		);
-
-		autoAlign.schedule();
-	}
-
-	public void endPoleAlignment() {
-		autoAlign.cancel();
 	}
 
 	/**
