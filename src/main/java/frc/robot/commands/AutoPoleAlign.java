@@ -20,10 +20,12 @@ import frc.robot.autoncommands.TrajectoryCommandGenerator;
 import frc.robot.subsystems.LEDSubsystem.LEDState;
 
 public class AutoPoleAlign extends CommandBase {
-    /** Creates a new SetArmHeight. */
+    /** Wrapper command to generate a trajectory to the
+     * nearest pole column
+     */
 
     Command autoAlign;
-	public final double FORWARD_DISTANCE = 1.7;
+	public final double X_DISTANCE = 1.7;
 	public final double[] RED_POLES = {
 		7.51, 6.40, 5.84, 4.72, 4.16, 3.05
 	};
@@ -32,20 +34,25 @@ public class AutoPoleAlign extends CommandBase {
 	};
 
     public AutoPoleAlign() {
-        double[] poles = DriverStation.getAlliance() == Alliance.Red?
-            RED_POLES : BLUE_POLES;
+        this.autoAlign = null;
+    }
+
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
         double robotY = RobotContainer.driveSubsystem.getPose().getY();
         double nearestY = -1;
-        double smallestDist = 9999;
+        double smallestDist = 999999;
 
         // Find the nearest pole Y coordinate
-        for (double y : poles) {
+        for (double y : DriverStation.getAlliance() == Alliance.Red? RED_POLES : BLUE_POLES) {
             if (Math.abs(robotY - y) < smallestDist) {
                 smallestDist = Math.abs(robotY - y);
                 nearestY = y;
             }
         }
 
+        // Generate trajectory command to nearest coordinate
         this.autoAlign = TrajectoryCommandGenerator.getMotionCommand(
 			new SimplePathBuilder(
                 new Vector2(
@@ -55,7 +62,7 @@ public class AutoPoleAlign extends CommandBase {
                     RobotContainer.driveSubsystem.getPose().getRotation().getDegrees()
                 ))
 				.lineTo(
-					new Vector2(FORWARD_DISTANCE, nearestY),
+					new Vector2(X_DISTANCE, nearestY),
 					Rotation2.fromDegrees(180))
 				.build(),
 			new TrajectoryConstraint[] {
@@ -64,20 +71,16 @@ public class AutoPoleAlign extends CommandBase {
 			},
 			RobotContainer.driveSubsystem
 		);
-    }
 
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
+        // Indicate vision and start the trajectory command
         RobotContainer.ledSubsystem.saveState();
         RobotContainer.ledSubsystem.setLEDs(LEDState.CLIMBING);
-
         autoAlign.schedule();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() { }
+    public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override

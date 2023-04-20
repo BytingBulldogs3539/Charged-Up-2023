@@ -96,6 +96,9 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
+    RobotContainer.driveSubsystem.useVision(true);
+    RobotContainer.driveSubsystem.setLeftCamera(true);
+    RobotContainer.driveSubsystem.setRightCamera(true);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

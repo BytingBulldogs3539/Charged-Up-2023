@@ -4,20 +4,21 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class DisableBreakMode extends CommandBase {
-  /** Creates a new DisableBreakMode. */
-  public DisableBreakMode() {
-    addRequirements(RobotContainer.elevatorSubsystem);
+public class EnableLeftCamera extends CommandBase {
+  /** Creates a new SetArmHeight. */
+  public EnableLeftCamera() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.elevatorSubsystem.setBreakMode(false);
+    RobotContainer.driveSubsystem.useVision(true);
+    RobotContainer.driveSubsystem.setLeftCamera(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -27,7 +28,7 @@ public class DisableBreakMode extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.elevatorSubsystem.setBreakMode(true);
+    RobotContainer.driveSubsystem.setLeftCamera(false);
   }
 
   // Returns true when the command should end.

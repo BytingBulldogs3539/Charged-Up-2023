@@ -106,13 +106,13 @@ public class DriveSubsystem extends SubsystemBase {
 	// Vision tracking
 	AprilTagFieldLayout aprilTagFieldLayout;
 
-	PhotonCamera leftCam;
+	public PhotonCamera leftCam;
 	Transform3d robotToLeftCam = new Transform3d(
 		new Translation3d(-0.1746 - .07, 0.2885, 0.3876),
 		new Rotation3d(Math.toRadians(0), 0, Math.toRadians(4))
 	);
 	
-	PhotonCamera rightCam;
+	public PhotonCamera rightCam;
 	Transform3d robotTorightCam = new Transform3d(
 		new Translation3d(-0.1746 - .07, -0.2885, 0.3876),
 		new Rotation3d(Math.toRadians(0), 0, Math.toRadians(-4))
@@ -235,29 +235,49 @@ public class DriveSubsystem extends SubsystemBase {
 		setDefaultCommand(new DriveCommand(this));
 	}
 
+	public void setLeftCamera(boolean on) {
+		if (DriverStation.getAlliance() == Alliance.Red)
+			aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+		else
+			aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+		
+		leftCam.setDriverMode(!on);
+		leftPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
+	}
+
+	public void setRightCamera(boolean on) {
+		if (DriverStation.getAlliance() == Alliance.Red)
+			aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+		else
+			aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+
+		rightCam.setDriverMode(!on);
+		rightPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
+	}
+
 	public void setStartPosition(StartPosition position)
 	{
 		// Configure which camera to use based on start position
 		switch (position) {
 			case RED_SMOOTH:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
-				rightCam.setDriverMode(true);
-				leftCam.setDriverMode(false);
+				rightCam.setDriverMode(false);
+				leftCam.setDriverMode(true);
 				break;
 			case RED_CABLE:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
-				rightCam.setDriverMode(false);
-				leftCam.setDriverMode(true);
+				rightCam.setDriverMode(true);
+				leftCam.setDriverMode(false);
 				break;
 			case BLUE_SMOOTH:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-				rightCam.setDriverMode(false);
-				leftCam.setDriverMode(true);
+				rightCam.setDriverMode(true);
+				leftCam.setDriverMode(false);
 				break;
 			case BLUE_CABLE:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-				rightCam.setDriverMode(true);
-				leftCam.setDriverMode(false);
+				rightCam.setDriverMode(false);
+				leftCam.setDriverMode(true);
 				break;
 		}
 		// Update the april tag layout based on our start position
@@ -327,7 +347,7 @@ public class DriveSubsystem extends SubsystemBase {
 		Optional<EstimatedRobotPose> resultLeft = getEstimatedLeftGlobalPose(
 			m_poseEstimator.getEstimatedPosition()
 		);
-		Optional<EstimatedRobotPose> resultRight = getEstimatedLeftGlobalPose(
+		Optional<EstimatedRobotPose> resultRight = getEstimatedRightGlobalPose(
 			m_poseEstimator.getEstimatedPosition()
 		);
 
@@ -337,16 +357,16 @@ public class DriveSubsystem extends SubsystemBase {
 				m_poseEstimator.addVisionMeasurement(
 					camPoseLeft.estimatedPose.toPose2d(), camPoseLeft.timestampSeconds
 				);
-				SmartDashboard.putNumber("Left X Position", camPoseLeft.estimatedPose.toPose2d().getX());
-				SmartDashboard.putNumber("Left Y Position", camPoseLeft.estimatedPose.toPose2d().getY());
+				SmartDashboard.putNumber("LeftCam X Pos", camPoseLeft.estimatedPose.toPose2d().getX());
+				SmartDashboard.putNumber("LeftCam Y Pos", camPoseLeft.estimatedPose.toPose2d().getY());
 			}
 			if (resultRight.isPresent()) {
 				EstimatedRobotPose camPoseRight = resultRight.get();
 				m_poseEstimator.addVisionMeasurement(
 					camPoseRight.estimatedPose.toPose2d(), camPoseRight.timestampSeconds
 				);
-				SmartDashboard.putNumber("Right X Position", camPoseRight.estimatedPose.toPose2d().getX());
-				SmartDashboard.putNumber("Right Y Position", camPoseRight.estimatedPose.toPose2d().getY());
+				SmartDashboard.putNumber("RightCam X Pos", camPoseRight.estimatedPose.toPose2d().getX());
+				SmartDashboard.putNumber("RightCam Y Pos", camPoseRight.estimatedPose.toPose2d().getY());
 			}
 		}
 

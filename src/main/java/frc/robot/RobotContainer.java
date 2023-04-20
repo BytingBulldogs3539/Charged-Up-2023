@@ -22,6 +22,8 @@ import frc.robot.auton.PlaceMidCubeBackDrive;
 import frc.robot.profiles.*;
 
 import frc.robot.commands.DisableBreakMode;
+import frc.robot.commands.EnableLeftCamera;
+import frc.robot.commands.EnableRightCamera;
 import frc.robot.commands.FlipArmSideCommand;
 import frc.robot.commands.FlipWrist;
 import frc.robot.commands.IntakeCommand;
@@ -133,6 +135,8 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(new FlipWrist());
 
     SmartDashboard.putData(new DisableBreakMode());
+    SmartDashboard.putData(new EnableLeftCamera());
+    SmartDashboard.putData(new EnableRightCamera());
   }
 
   public void putAuton() {
@@ -160,12 +164,12 @@ public class RobotContainer {
     //try { chooser.addOption("Cone Cube Red", new TwoPieceRed()); } catch (Exception e) { }
     //try { chooser.addOption("Pick Up Balance", new PickUpBalance()); } catch (Exception e) { }
 
-    try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) {e.printStackTrace(); }
-    try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) {e.printStackTrace(); }
+    //try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) {e.printStackTrace(); }
+    //try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) {e.printStackTrace(); }
 
-    try { chooser.addOption("Red 2 Piece Cable", new TwoPieceRedCable()); } catch (Exception e) {e.printStackTrace(); }
-    try { chooser.addOption("Red 2 Piece Balance", new TwoPieceBalanceRed()); } catch (Exception e) {e.printStackTrace(); }
+    //try { chooser.addOption("Red 2 Piece Cable", new TwoPieceRedCable()); } catch (Exception e) {e.printStackTrace(); }
+    //try { chooser.addOption("Red 2 Piece Balance", new TwoPieceBalanceRed()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Red 3 Piece", new ThreePieceRed()); } catch (Exception e) {e.printStackTrace(); }
 
     SmartDashboard.putData("Auto Chooser", chooser);
