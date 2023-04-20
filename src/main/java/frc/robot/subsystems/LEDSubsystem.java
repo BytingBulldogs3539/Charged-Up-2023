@@ -17,16 +17,15 @@ public class LEDSubsystem {
     boolean enabled;
     CANdle candle;
 
-    public enum PickedUp {
+    public enum Piece {
         CONE,
         CUBE
     }
+    Piece pickedUp = null;
 
     final double FLASH_SPEED = 0.25;
     final int NUM_LEDS = 56;
     final double MAX_BRIGHTNESS = 0.2;
-
-    PickedUp pickedUp = null;
 
     public enum LEDState {
         OFF,
@@ -54,12 +53,8 @@ public class LEDSubsystem {
         setLEDs(LEDState.ON);
     }
 
-    public void pickUp(PickedUp piece) {
-        this.pickedUp = piece;
-    }
-
-    public void flash() {
-        if (!enabled) return;
+    public void intake() {
+        if (!enabled || pickedUp != null) return;
 
         if (RobotContainer.elevatorSubsystem.getWristOrientation() == Wrist.cone
               || RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake) {
@@ -69,23 +64,38 @@ public class LEDSubsystem {
         }
     }
 
-    public void solid() {
+    public void extake() {
         if (!enabled) return;
 
         if (RobotContainer.elevatorSubsystem.getWristOrientation() == Wrist.cone
-                || RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake) {
+              || RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake) {
+            setLEDs(LEDState.FLASH_CONE);
+            pickedUp = null;
+        } else {
+            setLEDs(LEDState.FLASH_CUBE);
+            pickedUp = null;
+        }
+    }
+
+    public void pieceTaken(Arm arm, Wrist wrist) {
+        if (!enabled || pickedUp != null) return;
+
+        if (wrist == Wrist.cone || arm == Arm.groundIntake) {
             setLEDs(LEDState.CONE);
+            pickedUp = Piece.CONE;
         } else {
             setLEDs(LEDState.CUBE);
+            pickedUp = Piece.CUBE;
         }
     }
 
     public void saveState() {
+        if (!enabled) return;
         this.savedState = this.state;
     }
     
     public void restoreState() {
-        if (this.savedState == null) return;
+        if (!enabled || this.savedState == null) return;
         this.setLEDs(savedState);
     }
 
@@ -110,7 +120,7 @@ public class LEDSubsystem {
                 break;
             case CONE:
                 candle.animate(null);
-                candle.setLEDs(255, 200, 0, 0, 0, ElevatorConstants.ledCount);
+                candle.setLEDs(255, 185, 0, 0, 0, ElevatorConstants.ledCount);
                 break;
             case CUBE:
                 candle.animate(null);
@@ -118,7 +128,7 @@ public class LEDSubsystem {
                 break;
             case FLASH_CONE:
                 candle.animate(
-                    new StrobeAnimation(255, 200, 0, 0, FLASH_SPEED, NUM_LEDS)
+                    new StrobeAnimation(255, 185, 0, 0, FLASH_SPEED, NUM_LEDS)
                 );
                 break;
             case FLASH_CUBE:

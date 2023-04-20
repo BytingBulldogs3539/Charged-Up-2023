@@ -13,82 +13,72 @@ import frc.robot.subsystems.ElevatorSubsystem.Wrist;
 import frc.robot.subsystems.LEDSubsystem.LEDState;
 
 public class IntakeCommand extends CommandBase {
-  /** Creates a new IntakeCommand. */
-  double intakeSpeed;
-  boolean useSensor = true;
-  Debouncer debouncer = new Debouncer(0.1,DebounceType.kBoth);
-  Arm initialArmPos;
+    /** Creates a new IntakeCommand. */
+    double intakeSpeed;
+    boolean useSensor = true;
+    Debouncer debouncer = new Debouncer(0.1,DebounceType.kBoth);
 
-  public IntakeCommand(double speed) {
-    this.intakeSpeed = speed;
+    Arm initialArm;
+    Wrist initialWrist;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-  
-  public IntakeCommand(double speed, boolean useSensor) {
-    this.intakeSpeed = speed;
-    this.useSensor = useSensor;
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    RobotContainer.intakeSubsystem.setIntakeSpeed(intakeSpeed);
-    this.initialArmPos = RobotContainer.elevatorSubsystem.getArmLevel();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    // When placing cube/cone, flash lights
-    if (intakeSpeed > 0) {
-      RobotContainer.ledSubsystem.flash();
+    public IntakeCommand(double speed) {
+        this.intakeSpeed = speed;
+        // Use addRequirements() here to declare subsystem dependencies.
     }
-
-    // When intaking cube/cone
-    else {
-      // If using sensor, lights go solid when piece detected
-      if (useSensor) {
-        boolean pieceDetected = debouncer.calculate(RobotContainer.elevatorSubsystem.getIntakeSensor());
-        if (pieceDetected) {
-          RobotContainer.ledSubsystem.solid();
-          // Cone detected in ground intake
-          if (RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake) {
-            RobotContainer.elevatorSubsystem.setArmLevel(Arm.intake);
-          }
-
-        } else {
-          // No piece detected, continue flashing
-          RobotContainer.ledSubsystem.flash();
-        }
-      } else {
-        // Not using sensor, always flash on intake
-        RobotContainer.ledSubsystem.flash();
-      }
-    }
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    RobotContainer.intakeSubsystem.setIntakeSpeed(0);
     
-    // If we were intaking a piece, set color to that piece
-    if (intakeSpeed < 0 && RobotContainer.elevatorSubsystem.getWristOrientation() == Wrist.cone
-        || intakeSpeed > 0 && RobotContainer.elevatorSubsystem.getWristOrientation() == Wrist.cube
-        || intakeSpeed < 0 && RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake) {
-      RobotContainer.ledSubsystem.solid();
+    public IntakeCommand(double speed, boolean useSensor) {
+        this.intakeSpeed = speed;
+        this.useSensor = useSensor;
+        // Use addRequirements() here to declare subsystem dependencies.
     }
-    // If we were placing a piece, set back to default lights
-    else {
-      RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
-    }
-  }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        RobotContainer.intakeSubsystem.setIntakeSpeed(intakeSpeed);
+
+        initialArm = RobotContainer.elevatorSubsystem.getArmLevel();
+        initialWrist = RobotContainer.elevatorSubsystem.getWristOrientation();
+
+        // Flash on intake/extake. Must keep track to prevent double intake lights
+        // i.e. when briefly intaking a piece you picked up earlier in a different mode
+        if (intakeSpeed < 0 && initialWrist == Wrist.cone 
+                || intakeSpeed < 0 && initialArm == Arm.groundIntake
+                || intakeSpeed > 0 && initialWrist == Wrist.cube) {
+            RobotContainer.ledSubsystem.intake();
+        }
+        else RobotContainer.ledSubsystem.extake();
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        // if (useSensor) {
+        //     boolean pieceDetected = debouncer.calculate(RobotContainer.elevatorSubsystem.getIntakeSensor());
+        //     if (pieceDetected && RobotContainer.elevatorSubsystem.getArmLevel() == Arm.groundIntake) {
+        //         RobotContainer.elevatorSubsystem.setArmLevel(Arm.intake);
+        //     } 
+        // }
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        RobotContainer.intakeSubsystem.setIntakeSpeed(0);
+        
+        // If we were intaking a piece, set color to that piece
+        if (intakeSpeed < 0 && initialWrist == Wrist.cone 
+                || intakeSpeed < 0 && initialArm == Arm.groundIntake
+                || intakeSpeed > 0 && initialWrist == Wrist.cube) {
+            RobotContainer.ledSubsystem.pieceTaken(initialArm, initialWrist);
+        }
+        // If we were placing a piece, set back to default lights
+        else RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
