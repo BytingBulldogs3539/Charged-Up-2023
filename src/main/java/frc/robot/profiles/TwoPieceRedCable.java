@@ -18,13 +18,16 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autoncommands.SetPoseCommand;
+import frc.robot.autoncommands.SetStartPosition;
 import frc.robot.autoncommands.TrajectoryCommandGenerator;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.SetArmSide;
 import frc.robot.commands.SetLEDs;
+import frc.robot.commands.SetVision;
 import frc.robot.commands.SetWristOrientationOverride;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.subsystems.DriveSubsystem.StartPosition;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
 import frc.robot.subsystems.ElevatorSubsystem.Sides;
 import frc.robot.subsystems.ElevatorSubsystem.Wrist;
@@ -42,11 +45,13 @@ public class TwoPieceRedCable extends SequentialCommandGroup {
      *  [0]:     the pose command (must be used first)
      *  [1-n]:   each individual path in order
      */
-    private final String filename = "cone_cube_red_cable.txt";
+    private final String filename = "two_piece_red_cable.txt";
     private Command[] paths = MPLoader.getCommandSequence(filename);
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
+        new SetVision(true),
+        new SetStartPosition(StartPosition.RED_CABLE),
         new SetLEDs(LEDState.CONE),
         new WaitCommand(.25),
         // Place cone
@@ -58,10 +63,14 @@ public class TwoPieceRedCable extends SequentialCommandGroup {
         // Drive to second piece
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new WaitCommand(2),
+                new WaitCommand(0.5),
                 new SetWristOrientationOverride(Wrist.cube),
                 new SetArmSide(Sides.back),
-                new SetArmHeight(Arm.intake)
+                new SetArmHeight(Arm.intake),
+                new WaitCommand(1),
+                new SetVision(false),
+                new WaitCommand(1),
+                new SetVision(true)
             ),
             new SequentialCommandGroup(
                 new WaitCommand(3.75),

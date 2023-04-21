@@ -18,7 +18,7 @@ import frc.robot.auton.PlaceMidConeBackDrive;
 import frc.robot.auton.PlaceMidCube;
 import frc.robot.auton.PlaceMidCubeAndBalance;
 import frc.robot.auton.PlaceMidCubeBackDrive;
-
+import frc.robot.auton.PlaceHighConeAndBalance.StartPole;
 import frc.robot.profiles.*;
 
 import frc.robot.commands.DisableBreakMode;
@@ -39,9 +39,18 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.Arm;
 import frc.robot.subsystems.LEDSubsystem.LEDState;
+import frc.robot.test.HighWeightsFull;
+import frc.robot.test.HighWeightsShort;
+import frc.robot.test.LowWeightsFull;
+import frc.robot.test.LowWeightsShort;
+import frc.robot.test.NormalWeightsFull;
+import frc.robot.test.NormalWeightsShort;
+import frc.robot.test.VeryHighWeightsFull;
+import frc.robot.test.VeryHighWeightsShort;
 import frc.robot.subsystems.LEDSubsystem;
 
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -135,16 +144,19 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(new FlipWrist());
 
     SmartDashboard.putData(new DisableBreakMode());
-    SmartDashboard.putData(new EnableLeftCamera());
-    SmartDashboard.putData(new EnableRightCamera());
+    //SmartDashboard.putData(new EnableLeftCamera());
+    //SmartDashboard.putData(new EnableRightCamera());
   }
 
   public void putAuton() {
 		chooser = new SendableChooser<Command>();
     chooser.addOption("TestDrive", new DriveTest());
 		chooser.setDefaultOption("Place Cone High", new PlaceHighCone()); 
-    chooser.addOption("Place Cone High and Balance", new PlaceHighConeAndBalance());
-    chooser.addOption("Place Cone High Balance Old", new PlaceHighConeBalanceOld());
+    chooser.addOption("Cone Balance Red Left", new PlaceHighConeAndBalance(Alliance.Red, StartPole.LEFT_POLE));
+    chooser.addOption("Cone Balance Red Right", new PlaceHighConeAndBalance(Alliance.Red, StartPole.RIGHT_POLE));
+    chooser.addOption("Cone Balance Blue Left", new PlaceHighConeAndBalance(Alliance.Blue, StartPole.LEFT_POLE));
+    chooser.addOption("Cone Balance Blue Right", new PlaceHighConeAndBalance(Alliance.Blue, StartPole.RIGHT_POLE));
+    //chooser.addOption("Place Cone High Balance Old", new PlaceHighConeBalanceOld());
     chooser.addOption("Place Cone High Back", new PlaceHighConeBackDrive());   
     //chooser.addOption("Place Cube High", new PlaceHighCube());
     //chooser.addOption("Place Cube High Balance", new PlaceHighCubeAndBalance());
@@ -167,15 +179,29 @@ public class RobotContainer {
     //try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) {e.printStackTrace(); }
     //try { chooser.addOption("Blue 2 Piece Balance", new TwoPieceBalanceBlue()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Blue 3 Piece", new ThreePieceBlue()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Blue 2 Piece Cable Test", new TwoPieceBlueCableTest()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Blue 2 Piece Cable", new TwoPieceBlueCable()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Blue 2.5 Piece", new TwoPieceBlue()); } catch (Exception e) {e.printStackTrace(); }
 
     //try { chooser.addOption("Red 2 Piece Cable", new TwoPieceRedCable()); } catch (Exception e) {e.printStackTrace(); }
     //try { chooser.addOption("Red 2 Piece Balance", new TwoPieceBalanceRed()); } catch (Exception e) {e.printStackTrace(); }
     try { chooser.addOption("Red 3 Piece", new ThreePieceRed()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Red 2 Piece Cable Test", new TwoPieceRedCableTest()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Red 2 Piece Cable", new TwoPieceRedCable()); } catch (Exception e) {e.printStackTrace(); }
+
+    try { chooser.addOption("Low Weights Short", new LowWeightsShort()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Low Weights Full", new LowWeightsFull()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Normal Weights Short", new NormalWeightsShort()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("Normal Weights Full", new NormalWeightsFull()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("High Weights Short", new HighWeightsShort()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("High Weights Full", new HighWeightsFull()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("V High Weights Short", new VeryHighWeightsShort()); } catch (Exception e) {e.printStackTrace(); }
+    try { chooser.addOption("V High Weights Full", new VeryHighWeightsFull()); } catch (Exception e) {e.printStackTrace(); }
 
     SmartDashboard.putData("Auto Chooser", chooser);
 
-    SmartDashboard.putData(new RunAuton());
-    SmartDashboard.putData(new KillAuton());
+    //SmartDashboard.putData(new RunAuton());
+    //SmartDashboard.putData(new KillAuton());
 	}
 
   public static void runAutonTestCommand() {

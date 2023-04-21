@@ -13,6 +13,8 @@ import com.swervedrivespecialties.swervelib.math.Vector2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -36,15 +38,32 @@ import frc.robot.subsystems.LEDSubsystem.LEDState;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PlaceHighConeAndBalance extends SequentialCommandGroup {
+    public enum StartPole {
+        LEFT_POLE,
+        RIGHT_POLE
+    }
     /** Creates a new Place_High_Cone. */
-    public PlaceHighConeAndBalance() {
+    public PlaceHighConeAndBalance(Alliance alliance, StartPole pole) {
+        SetPoseCommand pose;
+        if(alliance == Alliance.Red && pole == StartPole.LEFT_POLE) {
+            pose =  new SetPoseCommand(new Pose2d(1.756, 5.833, Rotation2d.fromDegrees(180)));
+        }
+        else if(alliance == Alliance.Red && pole == StartPole.RIGHT_POLE) {
+            pose =  new SetPoseCommand(new Pose2d(1.756, 4.712, Rotation2d.fromDegrees(180)));
+        }
+        else if(alliance == Alliance.Blue && pole == StartPole.LEFT_POLE) {
+            pose =  new SetPoseCommand(new Pose2d(1.756, 3.31, Rotation2d.fromDegrees(180)));
+        }
+        else {
+            pose =  new SetPoseCommand(new Pose2d(1.756, 2.202, Rotation2d.fromDegrees(180)));
+        }
         // Add your commands in the addCommands() call, e.g.
         // addCommands(new FooCommand(), new BarCommand());
         addCommands(
             new ZeroGyroCommand(180),
             new SetLEDs(LEDState.CONE),
             new WaitCommand(.25),
-            new SetPoseCommand(new Pose2d(0, 0, Rotation2d.fromDegrees(180))),
+            pose,
             new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
             new WaitCommand(2),
             new IntakeCommand(1).withTimeout(0.5),

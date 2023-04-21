@@ -54,6 +54,9 @@ public class DriveCommand extends CommandBase {
         value = deadband(value, 0.05);
 
         // Axis modifier function
+        if (RobotContainer.driverController.getRightTriggerAxis() > .1) {
+            return value;
+        }
         value = Math.copySign(value * value * value, value);
   
         return value;

@@ -112,7 +112,7 @@ public class ThreePieceBlue extends SequentialCommandGroup {
                 new IntakeCommand(-1).withTimeout(1)
             ),
             new SequentialCommandGroup(
-                new WaitCommand(1.7),
+                new WaitCommand(2),
                 new SetVision(true)
             )
         )

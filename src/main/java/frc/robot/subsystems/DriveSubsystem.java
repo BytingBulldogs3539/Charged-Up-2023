@@ -108,13 +108,13 @@ public class DriveSubsystem extends SubsystemBase {
 
 	public PhotonCamera leftCam;
 	Transform3d robotToLeftCam = new Transform3d(
-		new Translation3d(-0.1746 - .07, 0.2885, 0.3876),
+		new Translation3d(-0.1746 - .07 + 0.08, 0.2885 + 0.05, 0.3876),
 		new Rotation3d(Math.toRadians(0), 0, Math.toRadians(4))
 	);
 	
 	public PhotonCamera rightCam;
-	Transform3d robotTorightCam = new Transform3d(
-		new Translation3d(-0.1746 - .07, -0.2885, 0.3876),
+	Transform3d robotToRightCam = new Transform3d(
+		new Translation3d(-0.1746 - .07 + 0.09, -0.2885 - 0.01, 0.3876),
 		new Rotation3d(Math.toRadians(0), 0, Math.toRadians(-4))
 	);
 	
@@ -147,7 +147,7 @@ public class DriveSubsystem extends SubsystemBase {
 			aprilTagFieldLayout,
 			PoseStrategy.MULTI_TAG_PNP,
 			rightCam,
-			robotToLeftCam
+			robotToRightCam
 		);
 
 		setGyroscope(180);
@@ -222,8 +222,8 @@ public class DriveSubsystem extends SubsystemBase {
 			getGyroscopeRotation(),
 			getModulePositions(),
 			new Pose2d(0, 0, new Rotation2d()),
-			VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(0)),
-			VecBuilder.fill(2, 2, Units.degreesToRadians(30))
+			VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(0)),
+			VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10))
 		);
 
 		m_pose = m_poseEstimator.update(getGyroscopeRotation(), getModulePositions());
@@ -235,13 +235,19 @@ public class DriveSubsystem extends SubsystemBase {
 		setDefaultCommand(new DriveCommand(this));
 	}
 
+	public void setVisionWeights(double visionX, double visionY, int visionDeg) {
+		m_poseEstimator.setVisionMeasurementStdDevs(
+			VecBuilder.fill(visionX, visionY, Units.degreesToRadians(visionDeg))
+		);
+	}
+
 	public void setLeftCamera(boolean on) {
 		if (DriverStation.getAlliance() == Alliance.Red)
 			aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
 		else
 			aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
 		
-		leftCam.setDriverMode(!on);
+		leftCam.setDriverMode(false);
 		leftPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
 	}
 
@@ -251,13 +257,13 @@ public class DriveSubsystem extends SubsystemBase {
 		else
 			aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
 
-		rightCam.setDriverMode(!on);
+		rightCam.setDriverMode(false);
 		rightPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
 	}
 
 	public void setStartPosition(StartPosition position)
 	{
-		// Configure which camera to use based on start position
+		// Configure which camera to use in auton based on start position
 		switch (position) {
 			case RED_SMOOTH:
 				aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
@@ -374,6 +380,8 @@ public class DriveSubsystem extends SubsystemBase {
 
 		SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
+		//System.out.println(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE);
+
 		m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
 				states[0].angle.getRadians());
 		m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
@@ -384,5 +392,9 @@ public class DriveSubsystem extends SubsystemBase {
 				states[3].angle.getRadians());
 
 		m_pose = m_poseEstimator.update(getGyroscopeRotation(), getModulePositions());
+
+		SmartDashboard.putNumber("Pose X", getPose().getX());
+		SmartDashboard.putNumber("Pose Y", getPose().getY());
+
 	}
 }

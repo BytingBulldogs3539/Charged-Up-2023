@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -77,6 +79,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     RobotContainer.ledSubsystem.setLEDs(LEDState.ON);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_robotContainer.driveSubsystem.setLeftCamera(true);
+    m_robotContainer.driveSubsystem.setRightCamera(true);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -99,6 +103,7 @@ public class Robot extends TimedRobot {
     RobotContainer.driveSubsystem.useVision(true);
     RobotContainer.driveSubsystem.setLeftCamera(true);
     RobotContainer.driveSubsystem.setRightCamera(true);
+    RobotContainer.driveSubsystem.resetPose(new Pose2d(1.75, 7.54, Rotation2d.fromDegrees(180)));
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
