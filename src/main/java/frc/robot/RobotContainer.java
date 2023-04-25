@@ -18,7 +18,6 @@ import frc.robot.auton.PlaceMidConeBackDrive;
 import frc.robot.auton.PlaceMidCube;
 import frc.robot.auton.PlaceMidCubeAndBalance;
 import frc.robot.auton.PlaceMidCubeBackDrive;
-import frc.robot.auton.PlaceHighConeAndBalance.StartPole;
 import frc.robot.profiles.*;
 
 import frc.robot.commands.DisableBreakMode;
@@ -151,11 +150,11 @@ public class RobotContainer {
   public void putAuton() {
 		chooser = new SendableChooser<Command>();
     chooser.addOption("TestDrive", new DriveTest());
-		chooser.setDefaultOption("Place Cone High", new PlaceHighCone()); 
-    chooser.addOption("Cone Balance Red Left", new PlaceHighConeAndBalance(Alliance.Red, StartPole.LEFT_POLE));
-    chooser.addOption("Cone Balance Red Right", new PlaceHighConeAndBalance(Alliance.Red, StartPole.RIGHT_POLE));
-    chooser.addOption("Cone Balance Blue Left", new PlaceHighConeAndBalance(Alliance.Blue, StartPole.LEFT_POLE));
-    chooser.addOption("Cone Balance Blue Right", new PlaceHighConeAndBalance(Alliance.Blue, StartPole.RIGHT_POLE));
+		// chooser.setDefaultOption("Place Cone High", new PlaceHighCone()); 
+    // chooser.addOption("Cone Balance Red Left", new PlaceHighConeAndBalance(Alliance.Red, StartPole.LEFT_POLE));
+    // chooser.addOption("Cone Balance Red Right", new PlaceHighConeAndBalance(Alliance.Red, StartPole.RIGHT_POLE));
+    // chooser.addOption("Cone Balance Blue Left", new PlaceHighConeAndBalance(Alliance.Blue, StartPole.LEFT_POLE));
+    chooser.addOption("Cone Balance", new PlaceHighConeAndBalance());
     //chooser.addOption("Place Cone High Balance Old", new PlaceHighConeBalanceOld());
     chooser.addOption("Place Cone High Back", new PlaceHighConeBackDrive());   
     //chooser.addOption("Place Cube High", new PlaceHighCube());

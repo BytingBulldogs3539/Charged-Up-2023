@@ -222,7 +222,7 @@ public class DriveSubsystem extends SubsystemBase {
 			getGyroscopeRotation(),
 			getModulePositions(),
 			new Pose2d(0, 0, new Rotation2d()),
-			VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(0)),
+			VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(0)),
 			VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10))
 		);
 

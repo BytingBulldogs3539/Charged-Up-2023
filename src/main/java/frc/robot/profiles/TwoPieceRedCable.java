@@ -50,7 +50,7 @@ public class TwoPieceRedCable extends SequentialCommandGroup {
     private Command[] sequence = {
         // Setup
         new ZeroGyroCommand(180),
-        new SetVision(true),
+        new SetVision(false),
         new SetStartPosition(StartPosition.RED_CABLE),
         new SetLEDs(LEDState.CONE),
         new WaitCommand(.25),
@@ -63,17 +63,17 @@ public class TwoPieceRedCable extends SequentialCommandGroup {
         // Drive to second piece
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-                new WaitCommand(0.5),
+                new WaitCommand(1.3),
                 new SetWristOrientationOverride(Wrist.cube),
                 new SetArmSide(Sides.back),
-                new SetArmHeight(Arm.intake),
-                new WaitCommand(1),
-                new SetVision(false),
-                new WaitCommand(1),
-                new SetVision(true)
+                new SetArmHeight(Arm.intake)
+                // new WaitCommand(1),
+                // new SetVision(false),
+                // new WaitCommand(1),
+                // new SetVision(true)
             ),
             new SequentialCommandGroup(
-                new WaitCommand(3.75),
+                new WaitCommand(4),
                 new IntakeCommand(1).withTimeout(2)
             ),
             new SequentialCommandGroup(
@@ -95,8 +95,8 @@ public class TwoPieceRedCable extends SequentialCommandGroup {
             ),
             new SequentialCommandGroup(
                 new WaitCommand(3.75),
-             new IntakeCommand(-1).withTimeout(1),
-             new SetArmHeight(Arm.intake)
+                new IntakeCommand(-1).withTimeout(1),
+                new SetArmHeight(Arm.intake)
             )
         )   
     };

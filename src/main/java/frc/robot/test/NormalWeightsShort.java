@@ -58,13 +58,13 @@ public class NormalWeightsShort extends SequentialCommandGroup {
         new SetStartPosition(StartPosition.RED_SMOOTH),
         new WaitCommand(.1),
         // Place cone
-        // new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
+        new ConfigureArm(Sides.front, Arm.high, Wrist.cone),
         new WaitCommand(1.75),
         new IntakeCommand(1).withTimeout(0.6),
         // Drive to first cube
         new ParallelCommandGroup(
             new SequentialCommandGroup(
-            //    new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
+               new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
                new WaitCommand(1),
                new SetVision(false)
             ),
@@ -79,7 +79,7 @@ public class NormalWeightsShort extends SequentialCommandGroup {
             )
         ),
         // Place first cube
-        // new ConfigureArm(Sides.front, Arm.high, Wrist.cube),
+        new ConfigureArm(Sides.front, Arm.high, Wrist.cube),
         new ParallelCommandGroup(
             paths[2],
             new SequentialCommandGroup(
@@ -98,7 +98,7 @@ public class NormalWeightsShort extends SequentialCommandGroup {
                 paths[3]
             ),
             new SequentialCommandGroup(
-                // new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
+                new ConfigureArm(Sides.back, Arm.intake, Wrist.cube),
                 new WaitCommand(1),
                 new SetVision(false),
                 new IntakeCommand(1).withTimeout(2)
@@ -108,9 +108,9 @@ public class NormalWeightsShort extends SequentialCommandGroup {
         new ParallelCommandGroup(
             paths[4],
             new SequentialCommandGroup(
-                // new ConfigureArm(Sides.front, Arm.middle, Wrist.cube),
+                new ConfigureArm(Sides.front, Arm.middle, Wrist.cube),
                 new WaitCommand(2.5),
-                // new SetArmHeight(Arm.intake),
+                new SetArmHeight(Arm.intake),
                 new IntakeCommand(-1).withTimeout(1)
             ),
             new SequentialCommandGroup(

@@ -357,6 +357,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 			if (wristOrrientation == Wrist.cone && side == Sides.front) {
 				wrist.set(ControlMode.MotionMagic, 180);
 			}
+			
 		}
+		//wrist.set(ControlMode.PercentOutput, 0);
 	}
 }
